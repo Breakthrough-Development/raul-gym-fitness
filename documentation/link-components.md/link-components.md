@@ -1,0 +1,1 @@
+Use next.js Link component instead of a(nchor) element to link to pages.

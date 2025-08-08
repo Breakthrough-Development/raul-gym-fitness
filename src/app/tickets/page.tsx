@@ -1,7 +1,19 @@
-export default function TicketsPape() {
+import initialTickets from "@/app/tickets.data";
+import Link from "next/link";
+
+export default function TicketsPage() {
   return (
     <div>
-      <h1>Tickets</h1>
+      <ul>
+        {initialTickets.map((ticket) => (
+          <li key={ticket.id}>
+            <h2>{ticket.title}</h2>
+            <Link href={`/tickets/${ticket.id}`}>
+              View <span className="sr-only">ticket {ticket.id}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
