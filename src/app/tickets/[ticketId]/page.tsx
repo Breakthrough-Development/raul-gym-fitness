@@ -1,6 +1,6 @@
 import initialTickets from "@/tickets.data";
 import Link from "next/link";
-
+import { ticketsPath} from "@/paths"
 export type TicketPageProps = {
   params: {
     ticketId: string;
@@ -14,7 +14,7 @@ export default function TicketPage({ params }: TicketPageProps) {
     return (
       <section>
         <h1>Ticket not found</h1>
-        <Link href="/tickets">Back to tickets page</Link>
+        <Link href={ticketsPath()}>Back to tickets page</Link>
       </section>
     );
   }
@@ -23,7 +23,7 @@ export default function TicketPage({ params }: TicketPageProps) {
       <h2>{ticket.title}</h2>
       <p>{ticket.content}</p>
       <p>{ticket.status}</p>
-      <Link href="/tickets">Back to tickets page</Link>
+      <Link href={ticketsPath()}>Back to tickets page</Link>
     </section>
   );
 }
