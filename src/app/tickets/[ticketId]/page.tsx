@@ -1,4 +1,4 @@
-import initialTickets from "@/app/tickets.data";
+import initialTickets from "@/tickets.data";
 import Link from "next/link";
 
 export type TicketPageProps = {
