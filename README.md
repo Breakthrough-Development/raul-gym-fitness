@@ -34,6 +34,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 - Centralize routes: see `documentation/path-constants.md`
 - Use Next.js `Link` with path utilities: see `documentation/link-components.md`
 - Use `clsx` for conditional styling: see `documentation/file base routing/conditional-styling.md`
+- Styling SVGs: see `documentation/file base routing/styling-svgs.md`
 
 ## Deploy on Vercel
 
