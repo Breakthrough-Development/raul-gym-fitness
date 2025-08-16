@@ -51,6 +51,18 @@ className={clsx("px-3 py-1", {
 })}
 ```
 
+### Prefer `cn` over raw `clsx`
+
+We expose a `cn` helper that wraps `clsx` with `tailwind-merge` to merge and dedupe classes safely. Import from `@/lib/utils`.
+
+```tsx
+import { cn } from "@/lib/utils";
+
+<div
+  className={cn("p-2", isCompact ? "p-1" : "p-3", disabled && "opacity-50")}
+/>;
+```
+
 ### Notes
 
 - `clsx` is already installed and imported where needed (`import clsx from "clsx"`).
