@@ -1,6 +1,6 @@
 ## Animations and transitions with Tailwind
 
-We currently do not use Tailwind animations in the codebase. This guide shows how to add simple transitions and custom animations if/when needed.
+We use Tailwind transitions widely and can define lightweight keyframe animations for subtle motion.
 
 ### Transitions
 
@@ -25,12 +25,23 @@ With Tailwind v4, define custom keyframes in `@theme` and reference with the `an
 @theme inline {
   /* ...existing theme vars... */
   --animate-fade-in: fade-in 300ms ease-out both;
+  --animate-fade-from-top: fade-from-top 300ms ease-out both;
   @keyframes fade-in {
     from {
       opacity: 0;
     }
     to {
       opacity: 1;
+    }
+  }
+  @keyframes fade-from-top {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
@@ -40,6 +51,18 @@ Then use it in JSX:
 
 ```tsx
 <div className="animate-fade-in">Content</div>
+```
+
+Real example in our app:
+
+```73:79:src/app/tickets/page.tsx
+<ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
+  {initialTickets.map((ticket) => (
+    <li key={ticket.id} className="w-full max-w-[420px] p-4 border border-slate-100 rounded">
+      {/* ... */}
+    </li>
+  ))}
+</ul>
 ```
 
 ### Notes
