@@ -14,7 +14,7 @@ export default function TicketsPage() {
         </p>
       </header>
       <div>
-        <ul className="flex-1 flex flex-col items-center gap-y-4">
+        <ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
           {initialTickets.map((ticket) => (
             <li
               key={ticket.id}
