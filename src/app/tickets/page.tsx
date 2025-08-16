@@ -2,6 +2,7 @@ import initialTickets from "@/tickets.data";
 import Link from "next/link";
 import { ticketPath } from "@/paths";
 import type { Route } from "next";
+import clsx from "clsx";
 
 export default function TicketsPage() {
   return (
@@ -20,7 +21,11 @@ export default function TicketsPage() {
               className="w-full max-w-[420px] p-4 border border-slate-100 rounded"
             >
               <h3 className="text-lg font-semibold truncate">{ticket.title}</h3>
-              <p className="text-sm text-slate-500 truncate">
+              <p
+                className={clsx("text-sm text-slate-500 truncate", {
+                  "line-through": ticket.status === "DONE",
+                })}
+              >
                 {ticket.content}
               </p>
               <Link href={ticketPath(ticket.id.toString()) as Route}>
