@@ -15,3 +15,4 @@
 - Added Theming guide at `documentation/ui-library/ui-library-theming.md` and linked from README.
 - Documented `Heading` component in `documentation/component-folder/component-folder-heading.md` and linked from README.
 - Documented `Header` component in `documentation/component-folder/component-folder-header.md` and linked from README.
+- Documented `Placeholder` component in `documentation/component-folder/component-folder-placeholder.md` and linked from README.
