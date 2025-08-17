@@ -17,3 +17,4 @@
 - Documented `Header` component in `documentation/component-folder/component-folder-header.md` and linked from README.
 - Documented `Placeholder` component in `documentation/component-folder/component-folder-placeholder.md` and linked from README.
 - Added feature folder intro at `documentation/feature-folder/feature-folder-intro.md`, created `src/features/ticket/types.ts` and `src/features/ticket/constants.ts` with starter types/constants.
+- Added feature extraction guide at `documentation/feature-folder/feature-folder-extract.md`, created `src/features/ticket/components/ticket-item.tsx`, and refactored tickets page to use it.
