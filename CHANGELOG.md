@@ -12,3 +12,4 @@
 - Added UI Button component at `src/components/ui/button.tsx` and documentation at `documentation/ui-library/ui-library-button.md`. Linked from README.
 - Added UI Separator component at `src/components/ui/separator.tsx` and documentation at `documentation/ui-library/ui-library-separator.md`. Linked from README.
 - Added Icons guide at `documentation/ui-library/ui-library-icons.md` and fixed README links for UI library docs.
+- Added Theming guide at `documentation/ui-library/ui-library-theming.md` and linked from README.
