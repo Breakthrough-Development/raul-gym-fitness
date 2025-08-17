@@ -44,7 +44,7 @@ export default function RootLayout({
                 </Button>
               </li>
               <li>
-                <Button asChild variant="outline">
+                <Button asChild variant="default">
                   <Link href={ticketsPath() as Route}>Tickets</Link>
                 </Button>
               </li>
