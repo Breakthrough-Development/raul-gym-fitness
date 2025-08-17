@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ticketPath } from "@/paths";
 import type { Route } from "next";
 import clsx from "clsx";
+import { Separator } from "@/components/ui/separator";
 
 const PencilIcon = () => (
   <svg
@@ -69,6 +70,8 @@ export default function TicketsPage() {
           All your tickets at one place.
         </p>
       </header>
+
+      <Separator />
       <div>
         <ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
           {initialTickets.map((ticket) => (
