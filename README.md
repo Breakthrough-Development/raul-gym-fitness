@@ -35,9 +35,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 - Use Next.js `Link` with path utilities: see `documentation/link-components.md`
 - Use `clsx` for conditional styling: see `documentation/file base routing/conditional-styling.md`
 - Styling SVGs: see `documentation/file base routing/styling-svgs.md`
-- UI library setup (shadcn UI, `cn` util): see `documentation/file base routing/ui-library-setup.md`
+- UI library setup (shadcn UI, `cn` util): see `documentation/ui-library/ui-library-setup.md`
 - UI components: see `documentation/ui-library/ui-library-button.md`
 - UI components: see `documentation/ui-library/ui-library-separator.md`
+- Icons guide: see `documentation/ui-library/ui-library-icons.md`
 
 ## Deploy on Vercel
 
