@@ -5,6 +5,7 @@ import type { Route } from "next";
 import clsx from "clsx";
 import { Separator } from "@/components/ui/separator";
 import { LucideCircleCheck, LucideFileText, LucidePencil } from "lucide-react";
+import Heading from "@/components/heading";
 
 const TICKET_ICONS = {
   OPEN: <LucideFileText />,
@@ -15,14 +16,11 @@ const TICKET_ICONS = {
 export default function TicketsPage() {
   return (
     <section className="flex-1 flex flex-col gap-y-8">
-      <header>
-        <h2 className="text-3xl font-bold tracking-tight">Tickets Page</h2>
-        <p className="text-sm text-muted-foreground">
-          All your tickets at one place.
-        </p>
-      </header>
+      <Heading
+        title="Tickets Page"
+        description="All your tickets at one place."
+      />
 
-      <Separator />
       <div>
         <ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
           {initialTickets.map((ticket) => (
