@@ -10,36 +10,51 @@ import {
 } from "@/components/ui/card";
 import { TICKET_ICONS } from "../constants";
 import type { Ticket } from "../types";
+import { Button } from "@/components/ui/button";
+import { LucideSquareArrowOutUpRight } from "lucide-react";
+import clsx from "clsx";
 
 export type TicketItemProps = {
   ticket: Ticket;
+  isDetail?: boolean;
 };
 
-const TicketItem = ({ ticket }: TicketItemProps) => {
+const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
+  const detailButton = (
+    <Button asChild variant="outline" size="icon">
+      <Link href={ticketPath(ticket.id.toString()) as Route}>
+        <LucideSquareArrowOutUpRight className="h-4 w-4" />
+        <span className="sr-only">View ticket {ticket.id}</span>
+      </Link>
+    </Button>
+  );
   return (
-    <Card key={ticket.id} className="w-full max-w-[420px]">
-      <CardHeader>
-        <CardTitle className="flex gap-x-2">
-          <span>{TICKET_ICONS[ticket.status]}</span>
-          <span className="truncate">{ticket.title}</span>
-        </CardTitle>
-      </CardHeader>
+    <div
+      className={clsx("w-full flex gap-x-1", {
+        "max-w-[580px]": isDetail,
+        "max-w-[420px]": !isDetail,
+      })}
+    >
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex gap-x-2">
+            <span>{TICKET_ICONS[ticket.status]}</span>
+            <span className="truncate">{ticket.title}</span>
+          </CardTitle>
+        </CardHeader>
 
-      <CardContent className="text-sm text-slate-500 truncate">
-        <span className="line-clamp-3 whitespace-break-spaces">
-          {ticket.content}
-        </span>
-      </CardContent>
-
-      <CardFooter>
-        <Link
-          href={ticketPath(ticket.id.toString()) as Route}
-          className="underline"
-        >
-          View <span className="sr-only">ticket {ticket.id}</span>
-        </Link>
-      </CardFooter>
-    </Card>
+        <CardContent>
+          <span
+            className={clsx("whitespace-break-spaces", {
+              "line-clamp-3": !isDetail,
+            })}
+          >
+            {ticket.content}
+          </span>
+        </CardContent>
+      </Card>
+      {!isDetail && <div className="flex flex-col gap-y-1">{detailButton}</div>}
+    </div>
   );
 };
 
