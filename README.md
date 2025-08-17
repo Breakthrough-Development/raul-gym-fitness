@@ -29,6 +29,15 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Conventions
+
+- Centralize routes: see `documentation/path-constants.md`
+- Use Next.js `Link` with path utilities: see `documentation/link-components.md`
+- Use `clsx` for conditional styling: see `documentation/file base routing/conditional-styling.md`
+- Styling SVGs: see `documentation/file base routing/styling-svgs.md`
+- UI library setup (shadcn UI, `cn` util): see `documentation/file base routing/ui-library-setup.md`
+- UI components: see `documentation/ui-library/ui-library-button.md`
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
