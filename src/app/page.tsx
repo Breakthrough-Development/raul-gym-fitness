@@ -1,11 +1,22 @@
 import { ticketsPath } from "@/paths";
+import { Route } from "next";
 import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div>
-      <h1>Hello World!!!</h1>
-      <Link href={ticketsPath()}>Tickets</Link>
+    <div className="flex-1 flex flex-col gap-y-8">
+      <div>
+        <h2 className="text-3xl font-bold tracking-tight">Home</h2>
+        <p className="text-sm text-muted-foreground">
+          Your home place to start
+        </p>
+      </div>
+
+      <div className="flex-1 flex flex-col items-center">
+        <Link href={ticketsPath() as Route} className="text-sm underline">
+          Go to Tickets
+        </Link>
+      </div>
     </div>
   );
 }
