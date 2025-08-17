@@ -44,6 +44,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 - Components: see `documentation/component-folder/component-folder-header.md`
 - Components: see `documentation/component-folder/component-folder-placeholder.md`
 - Feature architecture: see `documentation/feature-folder/feature-folder-intro.md`
+- Feature extraction: see `documentation/feature-folder/feature-folder-extract.md`
 
 ## Deploy on Vercel
 
