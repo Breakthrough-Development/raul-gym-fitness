@@ -4,6 +4,7 @@ import { ticketsPath } from "@/paths";
 import type { Route } from "next";
 import Placeholder from "@/components/placeholder";
 import { Button } from "@/components/ui/button";
+import TicketItem from "@/features/ticket/components/ticket-item";
 
 export type TicketPageProps = {
   params: {
@@ -27,11 +28,8 @@ export default function TicketPage({ params }: TicketPageProps) {
     );
   }
   return (
-    <section>
-      <h2>{ticket.title}</h2>
-      <p>{ticket.content}</p>
-      <p>{ticket.status}</p>
-      <Link href={ticketsPath() as Route}>Back to tickets page</Link>
-    </section>
+    <div className="flex justify-center animate-fade-from-top">
+      <TicketItem ticket={ticket} isDetail />
+    </div>
   );
 }
