@@ -39,6 +39,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 - UI components: see `documentation/ui-library/ui-library-button.md`
 - UI components: see `documentation/ui-library/ui-library-separator.md`
 - Icons guide: see `documentation/ui-library/ui-library-icons.md`
+- Theming: see `documentation/ui-library/ui-library-theming.md`
 
 ## Deploy on Vercel
 
