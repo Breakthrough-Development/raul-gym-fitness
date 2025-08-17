@@ -4,6 +4,7 @@ import "./globals.css";
 import Link from "next/link";
 import { homePath, ticketsPath } from "@/paths";
 import type { Route } from "next";
+import { Button } from "@/components/ui/button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,17 +35,14 @@ export default function RootLayout({
           <nav>
             <ul className="supports-backdrop-blur:bg-background/60 fixed left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur w-full flex py-2.5 px-5 justify-between">
               <li>
-                <Link href={homePath() as Route} className="text-lg font-bold">
-                  Home
-                </Link>
+                <Button asChild variant="outline">
+                  <Link href={homePath() as Route}>Home</Link>
+                </Button>
               </li>
               <li>
-                <Link
-                  href={ticketsPath() as Route}
-                  className="text-sm underline"
-                >
-                  Tickets
-                </Link>
+                <Button asChild variant="outline">
+                  <Link href={ticketsPath() as Route}>Tickets</Link>
+                </Button>
               </li>
             </ul>
           </nav>
