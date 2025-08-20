@@ -1,4 +1,3 @@
-import initialTickets from "@/tickets.data";
 import Link from "next/link";
 import { ticketsPath } from "@/paths";
 import type { Route } from "next";
