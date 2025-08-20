@@ -13,6 +13,7 @@ export type TicketPageProps = {
 };
 
 export default async function TicketPage({ params }: TicketPageProps) {
+  throw new Error("Something went wrong");
   const ticketId = Number(params.ticketId);
   const ticket = await getTicket(ticketId);
   if (!ticket) {
