@@ -3,6 +3,7 @@ import { homePath, ticketsPath } from "@/paths";
 import type { Route } from "next";
 import { Button } from "@/components/ui/button";
 import { LucideKanban } from "lucide-react";
+import { ThemeSwitcher } from "./theme/theme-switcher";
 
 const Header = () => {
   return (
@@ -17,11 +18,16 @@ const Header = () => {
               </Link>
             </Button>
           </li>
-          <li>
-            <Button asChild variant="default">
-              <Link href={ticketsPath() as Route}>Tickets</Link>
-            </Button>
-          </li>
+          <div className="flex items-center gap-2">
+            <li>
+              <ThemeSwitcher />
+            </li>
+            <li>
+              <Button asChild variant="default">
+                <Link href={ticketsPath() as Route}>Tickets</Link>
+              </Button>
+            </li>
+          </div>
         </ul>
       </nav>
     </header>
