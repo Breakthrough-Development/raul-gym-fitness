@@ -207,24 +207,61 @@ export default function TicketPage({ params }: TicketPageProps) {
 - **Server-side validation**: Check data existence before rendering
 - **SEO-friendly**: Content is in the initial HTML
 
-### Example 2: Home Page with Static Content
+### Example 2: Tickets List Page (Current Implementation)
 
-Our home page shows simple server-side rendering:
+Our current tickets page uses async Server Component data fetching:
 
 ```typescript
-// src/app/page.tsx
-export default function HomePage() {
-  return (
-    <div className="flex-1 flex flex-col gap-y-8">
-      <Heading title="Home" description="Your home place to start" />
+// src/app/tickets/page.tsx - Current implementation
+import Heading from "@/components/heading";
+import TicketItem from "@/features/ticket/components/ticket-item";
+import { getTickets } from "@/features/ticket/queries/get-tickets";
 
-      <div className="flex-1 flex flex-col items-center">
-        <Link href={ticketsPath()}>Go to Tickets</Link>
+export default async function TicketsPage() {
+  const tickets = await getTickets(); // Server-side async data fetching
+
+  return (
+    <section className="flex-1 flex flex-col gap-y-8">
+      <Heading
+        title="Tickets Page"
+        description="All your tickets at one place."
+      />
+
+      <div>
+        <ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
+          {tickets.map((ticket) => (
+            <TicketItem key={ticket.id} ticket={ticket} />
+          ))}
+        </ul>
       </div>
-    </div>
+    </section>
   );
 }
 ```
+
+**Benefits demonstrated**:
+
+- **Async Server Component**: Uses `async` function for data fetching
+- **Direct data access**: No client-side loading states needed
+- **Type safety**: Full TypeScript support with typed data
+- **Performance**: The 2-second delay in `getTickets()` happens on server
+
+**Our `getTickets()` implementation:**
+
+```typescript
+// src/features/ticket/queries/get-tickets.ts
+import initialTickets from "@/tickets.data";
+import { Ticket } from "../types";
+
+export const getTickets = async (): Promise<Ticket[]> => {
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API delay
+  return new Promise((resolve) => {
+    resolve(initialTickets);
+  });
+};
+```
+
+This function simulates a real API call with a 2-second delay. In Server Components, this delay happens on the server, so users receive fully rendered content without seeing loading spinners.
 
 ## Advanced Patterns
 
@@ -549,17 +586,17 @@ export default function TicketsPage() {
 - Artificial 2-second delay from `getTickets()` function
 - Client-side JavaScript bundle impact
 
-### After (Server Component with Direct Access):
+### After (Server Component with Async Data Fetching):
 
 ```typescript
 // src/app/tickets/page.tsx - Current version
 import Heading from "@/components/heading";
 import TicketItem from "@/features/ticket/components/ticket-item";
-import initialTickets from "@/tickets.data";
+import { getTickets } from "@/features/ticket/queries/get-tickets";
 
-export default function TicketsPage() {
-  // Direct data access - no hooks needed!
-  const tickets = initialTickets;
+export default async function TicketsPage() {
+  // Async data fetching - no hooks needed!
+  const tickets = await getTickets();
 
   return (
     <section className="flex-1 flex flex-col gap-y-8">
@@ -592,17 +629,19 @@ export default function TicketsPage() {
 
 1. **Removed `"use client"` directive**: Component now runs on server
 2. **Eliminated React hooks**: No more `useState` and `useEffect`
-3. **Direct data import**: Changed from async `getTickets()` to direct `initialTickets` import
-4. **Simplified component logic**: Removed loading states and async effects
+3. **Added async to function**: Made component async to support server-side data fetching
+4. **Changed to async data fetching**: Using `await getTickets()` instead of hooks
+5. **Simplified component logic**: Removed loading states and async effects
 
 ### When This Migration Makes Sense:
 
 This migration was beneficial because:
 
-- **Static data**: Tickets don't change frequently during a user session
 - **Initial render data**: Data is needed immediately when page loads
-- **No user interaction**: No real-time updates or user-triggered changes needed
+- **Performance improvement**: 2-second delay now happens on server, not client
+- **No user interaction needed**: No real-time updates or user-triggered changes needed
 - **SEO important**: Ticket listings should be indexed by search engines
+- **Simpler data flow**: Direct async/await instead of hook-based state management
 
 ### Alternative Approach for Dynamic Data:
 
