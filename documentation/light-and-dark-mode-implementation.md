@@ -175,7 +175,6 @@ The implementation leverages Tailwind's built-in dark mode support using the `cl
 /* Example usage in components */
 .bg-background/* Light mode background */
 .dark: bg-background;
-.dark
 .dark/* Dark mode background */;
 ```
 
