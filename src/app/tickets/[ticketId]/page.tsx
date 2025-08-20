@@ -5,6 +5,7 @@ import type { Route } from "next";
 import Placeholder from "@/components/placeholder";
 import { Button } from "@/components/ui/button";
 import TicketItem from "@/features/ticket/components/ticket-item";
+import { getTicket } from "@/features/ticket/queries/get-ticket";
 
 export type TicketPageProps = {
   params: {
@@ -12,9 +13,9 @@ export type TicketPageProps = {
   };
 };
 
-export default function TicketPage({ params }: TicketPageProps) {
+export default async function TicketPage({ params }: TicketPageProps) {
   const ticketId = Number(params.ticketId);
-  const ticket = initialTickets.find((ticket) => ticket.id === ticketId);
+  const ticket = await getTicket(ticketId);
   if (!ticket) {
     return (
       <Placeholder
