@@ -1,10 +1,8 @@
 ## Streaming
 
-Streaming lets the server send HTML to the client in chunks as data becomes available, so users see the page shell immediately while slower parts load in later. In the App Router, Server Components can suspend during data fetching, and React/Next.js stream the completed parts as they resolve. 
-
+Streaming lets the server send HTML to the client in chunks as data becomes available, so users see the page shell immediately while slower parts load in later. In the App Router, Server Components can suspend during data fetching, and React/Next.js stream the completed parts as they resolve.
 
 > Streaming is especially useful for pages with slower data requirements. Rather than blocking the entire page render until all data is ready, we can show a fast-loading shell while streaming in the content-heavy sections as they complete.
-
 
 ### What we implemented
 
@@ -66,6 +64,22 @@ By default, `Suspense` without a `fallback` streams nothing in the boundary area
 ```
 
 You can also extract a proper skeleton component if you prefer.
+
+### Pairing with Error Boundaries
+
+To handle unexpected errors during render/data fetching inside a streamed boundary, pair `Suspense` with an Error Boundary. In our Tickets page we wrap the list with an Error Boundary that shows a friendly placeholder if something goes wrong:
+
+```tsx
+import { ErrorBoundary } from "react-error-boundary";
+import Placeholder from "@/components/placeholder";
+import { Spinner } from "@/components/spiner";
+
+<ErrorBoundary fallback={<Placeholder label="Error loading tickets" />}>
+  <Suspense fallback={<Spinner />}>
+    <TicketList />
+  </Suspense>
+</ErrorBoundary>;
+```
 
 ### Why this boundary works well here
 
