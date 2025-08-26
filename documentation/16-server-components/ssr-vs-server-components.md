@@ -56,30 +56,16 @@ export default async function TicketsPage() {
 
 ```tsx
 // src/app/tickets/[ticketId]/page.tsx
-import type { Route } from "next";
-import Link from "next/link";
-import Placeholder from "@/components/placeholder";
-import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
 import TicketItem from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
-import { ticketsPath } from "@/paths";
 
-export type TicketPageProps = { params: { ticketId: string } };
+export type TicketPageProps = { params: Promise<{ ticketId: string }> };
 
 export default async function TicketPage({ params }: TicketPageProps) {
-  const ticket = await getTicket(Number(params.ticketId));
-  if (!ticket) {
-    return (
-      <Placeholder
-        label="Ticket not found"
-        button={
-          <Button asChild variant="outline">
-            <Link href={ticketsPath() as Route}>Back to tickets</Link>
-          </Button>
-        }
-      />
-    );
-  }
+  const { ticketId } = await params;
+  const ticket = await getTicket(Number(ticketId));
+  if (!ticket) return notFound();
   return (
     <div className="flex justify-center animate-fade-from-top">
       <TicketItem ticket={ticket} isDetail />
