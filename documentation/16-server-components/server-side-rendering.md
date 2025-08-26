@@ -30,13 +30,16 @@ export default async function TicketsPage() {
 
 ```tsx
 // src/app/tickets/[ticketId]/page.tsx
+import { notFound } from "next/navigation";
+
 export default async function TicketPage({
   params,
 }: {
-  params: { ticketId: string };
+  params: Promise<{ ticketId: string }>;
 }) {
-  const ticket = await getTicket(Number(params.ticketId));
-  if (!ticket) return <Placeholder label="Ticket not found" />;
+  const { ticketId } = await params;
+  const ticket = await getTicket(Number(ticketId));
+  if (!ticket) return notFound();
   return <TicketItem ticket={ticket} isDetail />;
 }
 ```
