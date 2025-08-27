@@ -17,7 +17,7 @@ export type TicketItemProps = {
 const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
   const detailButton = (
     <Button asChild variant="outline" size="icon">
-      <Link href={ticketPath(ticket.id) as Route}>
+      <Link prefetch href={ticketPath(ticket.id) as Route}>
         <LucideSquareArrowOutUpRight className="h-4 w-4" />
         <span className="sr-only">View ticket {ticket.id}</span>
       </Link>
