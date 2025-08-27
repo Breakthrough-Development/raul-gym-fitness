@@ -36,6 +36,33 @@ In web applications, caching happens at multiple levels:
 
 ### Caching in Next.js
 
+Next.js has a comprehensive caching system with two main categories:
+
+```
+                    Caching in Next.js
+                           |
+          ┌────────────────┴────────────────┐
+          │                                 │
+    Client-Side Cache                Server-Side Cache
+      "Soft" Cache                    "Hard" Cache
+          │                                 │
+    ┌─────┴─────┐                    ┌─────┴─────┐
+    │           │                    │           │
+Router Cache  [Other]          Full Route Cache [Other]
+```
+
+#### Client-Side Cache ("Soft" Cache)
+
+- **Router Cache** - Caches navigation routes in the browser
+- **Temporary storage** - Can be cleared by user actions
+- **Immediate performance** - Instant navigation between cached routes
+
+#### Server-Side Cache ("Hard" Cache)
+
+- **Full Route Cache** - Caches entire rendered routes on the server
+- **Persistent storage** - Survives between user sessions
+- **Build-time optimization** - Pre-rendered pages served instantly
+
 Next.js applies caching extensively across different areas:
 
 - **Static Site Generation (SSG)** - Pre-built pages cached at build time
