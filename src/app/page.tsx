@@ -9,7 +9,7 @@ export default function HomePage() {
       <Heading title="Home" description="Your home place to start" />
 
       <div className="flex-1 flex flex-col items-center">
-        <Link href={ticketsPath() as Route} className="text-sm underline">
+        <Link href={ticketsPath()} className="text-sm underline">
           Go to Tickets
         </Link>
       </div>
