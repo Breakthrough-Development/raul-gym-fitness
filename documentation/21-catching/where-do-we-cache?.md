@@ -1,6 +1,6 @@
 ## Where Do We Cache? - Complete Next.js Caching Strategy
 
-Next.js provides multiple caching layers, each serving different purposes and use cases. Here's the complete hierarchy:
+Next.js provides multiple caching layers, each serving different purposes and use cases. Here's the complete hierarchy from your diagram:
 
 ```
                            Next.js Caching
