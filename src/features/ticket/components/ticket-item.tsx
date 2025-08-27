@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { ticketPath } from "@/paths";
 import type { Route } from "next";
@@ -16,10 +15,6 @@ export type TicketItemProps = {
 };
 
 const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
-  const handleDeleteTicket = async () => {
-    await deleteTicket(ticket.id);
-  };
-
   const detailButton = (
     <Button asChild variant="outline" size="icon">
       <Link href={ticketPath(ticket.id) as Route}>
@@ -29,10 +24,12 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   );
   const deleteButton = (
-    <Button variant="outline" size="icon" onClick={handleDeleteTicket}>
-      <LucideTrash className="h-4 w-4" />
-      <span className="sr-only">Delete ticket {ticket.id}</span>
-    </Button>
+    <form action={deleteTicket.bind(null, ticket.id)}>
+      <Button variant="outline" size="icon">
+        <LucideTrash className="h-4 w-4" />
+        <span className="sr-only">Delete ticket {ticket.id}</span>
+      </Button>
+    </form>
   );
   return (
     <div
