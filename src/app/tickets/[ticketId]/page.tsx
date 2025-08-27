@@ -10,8 +10,7 @@ export type TicketPageProps = {
 
 export default async function TicketPage({ params }: TicketPageProps) {
   const { ticketId } = await params;
-  const id = Number(ticketId);
-  const ticket = await getTicket(id);
+  const ticket = await getTicket(ticketId);
   if (!ticket) {
     return notFound();
   }
