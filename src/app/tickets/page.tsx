@@ -4,14 +4,8 @@ import { Spinner } from "@/components/spiner";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import Placeholder from "@/components/placeholder";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
-import { CardTitle } from "@/components/ui/card";
 import { TicketCreateForm } from "@/features/ticket/components/ticket-create-form";
+import { CardComp } from "@/components/card-comp";
 
 export default async function TicketsPage() {
   return (
@@ -21,15 +15,12 @@ export default async function TicketsPage() {
         description="All your tickets at one place."
       />
 
-      <Card className="w-full max-w-[420px] self-center">
-        <CardHeader>
-          <CardTitle>Tickets</CardTitle>
-          <CardDescription>All your tickets at one place.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <TicketCreateForm />
-        </CardContent>
-      </Card>
+      <CardComp
+        title="Tickets"
+        description="All your tickets at one place."
+        content={<TicketCreateForm />}
+        className="w-full max-w-[420px] self-center"
+      ></CardComp>
 
       <ErrorBoundary fallback={<Placeholder label="Error loading tickets" />}>
         <Suspense fallback={<Spinner />}>
