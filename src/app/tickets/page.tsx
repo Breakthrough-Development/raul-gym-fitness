@@ -4,8 +4,8 @@ import { Spinner } from "@/components/spiner";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import Placeholder from "@/components/placeholder";
-import { TicketCreateForm } from "@/features/ticket/components/ticket-create-form";
 import { CardComp } from "@/components/card-comp";
+import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
 
 export default async function TicketsPage() {
   return (
@@ -18,7 +18,7 @@ export default async function TicketsPage() {
       <CardComp
         title="Tickets"
         description="All your tickets at one place."
-        content={<TicketCreateForm />}
+        content={<TicketUpsertForm />}
         className="w-full max-w-[420px] self-center"
       ></CardComp>
 
