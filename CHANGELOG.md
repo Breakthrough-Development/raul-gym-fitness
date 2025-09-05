@@ -1,5 +1,16 @@
 ## Changelog
 
+### 2025-09-05
+
+- Added edit ticket flow:
+  - Page: `src/app/tickets/[ticketId]/edit/page.tsx`.
+  - Form: `src/features/ticket/components/ticket-update-form.tsx` using server action binding.
+  - Action: `src/features/ticket/actions/update-ticket.tsx` with revalidation and redirect.
+  - `TicketItem` now includes an Edit button via `ticketEditPath()`.
+- Documentation:
+  - Created `documentation/22-forms-with-server-actions/3-edit-form.md` with TL;DR and step-by-step guide.
+  - Simplified `documentation/22-forms-with-server-actions/2-configure-over-composition.md` with a TL;DR and practical checklist.
+
 ### 2025-08-16
 
 - Added `clsx` dependency and implemented conditional styling in `src/app/tickets/page.tsx` to strike through DONE ticket content.
