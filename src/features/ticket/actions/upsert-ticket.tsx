@@ -5,7 +5,11 @@ import { ticketPath, ticketsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-const upsertTicket = async (id: string | undefined, formData: FormData) => {
+const upsertTicket = async (
+  id: string | undefined,
+  _actionState: { message: string },
+  formData: FormData
+) => {
   const data = {
     title: formData.get("title") as string,
     content: formData.get("content") as string,
@@ -20,9 +24,10 @@ const upsertTicket = async (id: string | undefined, formData: FormData) => {
   revalidatePath(ticketsPath());
 
   if (!id) {
-    return;
+    return { message: "Ticket created" };
   }
   redirect(ticketPath(id));
+  return { message: "Ticket updated" };
 };
 
 export { upsertTicket };
