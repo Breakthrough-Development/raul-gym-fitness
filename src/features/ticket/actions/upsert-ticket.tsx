@@ -8,6 +8,7 @@ import z from "zod";
 import {
   ActionState,
   formErrorToActionState,
+  toActionState,
 } from "@/components/form/util/to-action-state";
 
 const upsertTicketSchema = z.object({
@@ -22,8 +23,8 @@ const upsertTicket = async (
 ): Promise<ActionState> => {
   try {
     const data = upsertTicketSchema.parse({
-      title: formData.get("title") as string,
-      content: formData.get("content") as string,
+      title: formData.get("title"),
+      content: formData.get("content"),
     });
 
     await prisma.ticket.upsert({
@@ -40,7 +41,7 @@ const upsertTicket = async (
   if (id) {
     redirect(ticketPath(id));
   }
-  return { message: "Ticket updated", fieldErrors: {} };
+  return toActionState("SUCCESS", "Ticket updated");
 };
 
 export { upsertTicket };
