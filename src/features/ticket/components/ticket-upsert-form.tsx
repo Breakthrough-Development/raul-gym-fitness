@@ -9,6 +9,7 @@ import { useActionState } from "react";
 import { FieldError } from "@/components/form/field-error";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { useActionFeedback } from "@/components/form/hooks/use-action-feedback";
+import { toast } from "sonner";
 
 export type TicketUpsertFormProps = {
   ticket?: Ticket;
@@ -21,10 +22,14 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
   );
   useActionFeedback(actionState, {
     onSuccess: () => {
-      console.log("Action successful");
+      if (actionState.message) {
+        toast.success(actionState.message);
+      }
     },
     onError: () => {
-      console.log("Action error");
+      if (actionState.message) {
+        toast.error(actionState.message);
+      }
     },
   });
   return (
