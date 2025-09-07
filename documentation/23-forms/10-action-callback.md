@@ -22,22 +22,37 @@ We use `useActionState` to invoke the server action and a small `useActionFeedba
 
 ```tsx
 // src/components/form/hooks/use-action-feedback.ts
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ActionState } from "../util/to-action-state";
 
+type OnArgs = {
+  actionState: ActionState;
+};
+
 type UseActionFeedbackOptions = {
-  onSuccess?: (args: { actionState: ActionState }) => void;
-  onError?: (args: { actionState: ActionState }) => void;
+  onSuccess?: (onArgs: OnArgs) => void;
+  onError?: (onArgs: OnArgs) => void;
 };
 
 export function useActionFeedback(
   actionState: ActionState,
   options: UseActionFeedbackOptions
 ) {
+  const previousTimestampRef = useRef(actionState.timestamp);
+  const isNewResult = previousTimestampRef.current !== actionState.timestamp;
+
   useEffect(() => {
-    if (actionState.status === "SUCCESS") options.onSuccess?.({ actionState });
-    if (actionState.status === "ERROR") options.onError?.({ actionState });
-  }, [actionState, options]);
+    if (!isNewResult) return;
+
+    if (actionState.status === "SUCCESS") {
+      options.onSuccess?.({ actionState });
+    }
+    if (actionState.status === "ERROR") {
+      options.onError?.({ actionState });
+    }
+
+    previousTimestampRef.current = actionState.timestamp;
+  }, [actionState, options, isNewResult]);
 }
 ```
 
@@ -99,3 +114,5 @@ src/
 - Keep callbacks small and idempotent; avoid heavy logic inside effects
 - Consider toasts, focus management, and analytics as typical callbacks
 - For complex flows, centralize feedback in a UI store rather than per-form
+- Guard callback execution using `actionState.timestamp` so effects don't fire on initial render or for unchanged results. Compare against a ref and update it after handling.
+- Ensure your action helpers set a fresh `timestamp` on every new result (both success and error) so the guard works reliably.
