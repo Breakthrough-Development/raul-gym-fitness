@@ -7,6 +7,7 @@ import { Ticket } from "@prisma/client";
 import { SubmitButton } from "@/components/form/submit-button";
 import { useActionState } from "react";
 import { FieldError } from "@/components/form/field-error";
+import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 
 export type TicketUpsertFormProps = {
   ticket?: Ticket;
@@ -15,10 +16,7 @@ export type TicketUpsertFormProps = {
 const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
   const [actionState, formAction] = useActionState(
     upsertTicket.bind(null, ticket?.id),
-    {
-      message: "",
-      fieldErrors: {},
-    }
+    EMPTY_ACTION_STATE
   );
   return (
     <form action={formAction} className="flex flex-col gap-y-2">
