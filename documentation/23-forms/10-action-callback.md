@@ -4,7 +4,7 @@ Trigger side effects in response to server action results without over-coupling 
 
 ### What is it? (Theory)
 
-Server actions return a lightweight `ActionState` describing `status`, messages, and field errors. An action callback pattern observes that state on the client and runs side effects when status changes (e.g., show toasts, close dialogs, track analytics) without embedding that logic into the action or form submit handler.
+Server actions return a lightweight `ActionState` describing `status`, `message`, field errors, a `timestamp` that changes on every new result, and an optional `payload` (e.g., the submitted `FormData`). An action callback pattern observes that state on the client and runs side effects when status changes (e.g., show toasts, close dialogs, track analytics) without embedding that logic into the action or form submit handler. The `timestamp` lets clients safely detect new results and avoid firing effects on initial render.
 
 ### Pros and Cons
 
@@ -116,3 +116,4 @@ src/
 - For complex flows, centralize feedback in a UI store rather than per-form
 - Guard callback execution using `actionState.timestamp` so effects don't fire on initial render or for unchanged results. Compare against a ref and update it after handling.
 - Ensure your action helpers set a fresh `timestamp` on every new result (both success and error) so the guard works reliably.
+- When returning validation errors, include the submitted data as `payload` so the client can repopulate inputs on error without losing user input.
