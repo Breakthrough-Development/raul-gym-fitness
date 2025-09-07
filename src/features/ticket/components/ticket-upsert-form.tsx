@@ -8,8 +8,7 @@ import { SubmitButton } from "@/components/form/submit-button";
 import { useActionState } from "react";
 import { FieldError } from "@/components/form/field-error";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { useActionFeedback } from "@/components/form/hooks/use-action-feedback";
-import { toast } from "sonner";
+import { Form } from "@/components/form/form";
 
 export type TicketUpsertFormProps = {
   ticket?: Ticket;
@@ -20,20 +19,9 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
     upsertTicket.bind(null, ticket?.id),
     EMPTY_ACTION_STATE
   );
-  useActionFeedback(actionState, {
-    onSuccess: () => {
-      if (actionState.message) {
-        toast.success(actionState.message);
-      }
-    },
-    onError: () => {
-      if (actionState.message) {
-        toast.error(actionState.message);
-      }
-    },
-  });
+
   return (
-    <form action={formAction} className="flex flex-col gap-y-2">
+    <Form action={formAction} actionState={actionState}>
       <Label htmlFor="title">Title</Label>
       <Input
         id="title"
@@ -56,7 +44,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
       <SubmitButton label={ticket ? "Edit" : "Create"} />
 
       {actionState.message}
-    </form>
+    </Form>
   );
 };
 
