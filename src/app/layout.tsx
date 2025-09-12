@@ -43,7 +43,6 @@ export default function RootLayout({
               reserved.
             </p>
           </footer>
-          <RedirectToast />
         </ThemeProvider>
       </body>
     </html>
