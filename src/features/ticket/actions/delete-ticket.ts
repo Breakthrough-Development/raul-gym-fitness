@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { setCookieByKey } from "@/actions/cookies";
 
 export const deleteTicket = async (id: string) => {
   await prisma.ticket.delete({
@@ -12,5 +13,6 @@ export const deleteTicket = async (id: string) => {
   });
 
   revalidatePath(ticketsPath());
+  await setCookieByKey("toast", "Ticket deleted");
   redirect(ticketsPath());
 };
