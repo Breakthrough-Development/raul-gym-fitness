@@ -14,7 +14,8 @@
     "prisma-schema": "npx prisma db push",
     "prisma-seed": "tsx prisma/seed.ts",
     "prisma-types": "npx prisma generate",
-    "prisma-studio": "npx prisma studio"
+    "prisma-studio": "npx prisma studio",
+    "branch-name": "git branch --show-current"
   },
   "dependencies": {
     "@prisma/client": "^6.14.0",
