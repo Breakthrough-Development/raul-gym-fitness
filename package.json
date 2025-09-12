@@ -11,7 +11,9 @@
     "lint-fix": "next lint --fix",
     "type": "tsc --noEmit",
     "postinstall": "prisma generate",
-    "prisma-seed": "tsx prisma/seed.ts"
+    "prisma-schema": "npx prisma db push",
+    "prisma-seed": "tsx prisma/seed.ts",
+    "prisma-types": "npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.14.0",
