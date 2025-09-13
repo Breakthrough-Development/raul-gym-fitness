@@ -10,6 +10,7 @@ import { FieldError } from "@/components/form/field-error";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { Form } from "@/components/form/form";
 import { toDollarAndCent } from "@/utility/currency";
+import { DatePicker } from "@/components/date-picker";
 
 export type TicketUpsertFormProps = {
   ticket?: Ticket;
@@ -46,10 +47,9 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
       <div className="flex gap-x-2 mb-1">
         <div className="w-1/2 flex flex-col gap-y-2">
           <Label htmlFor="deadline">Deadline</Label>
-          <Input
+          <DatePicker
             id="deadline"
             name="deadline"
-            type="date"
             defaultValue={
               (actionState.payload?.get("deadline") as string) ??
               ticket?.deadline
