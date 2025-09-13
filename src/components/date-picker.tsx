@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useImperativeHandle, useState } from "react";
 import { format } from "date-fns";
 import {
   Popover,
@@ -9,18 +9,35 @@ import {
 import { Button } from "./ui/button";
 import { LucideCalendar } from "lucide-react";
 import { Calendar } from "./ui/calendar";
+
+export type ImperativeHandleFromDatePicker = {
+  reset: () => void;
+};
+
 type DatePickerProps = {
   id: string;
   name: string;
   defaultValue?: string;
+  imperativeHandleRef?: React.RefObject<ImperativeHandleFromDatePicker | null>;
 };
 
-const DatePicker = ({ id, name, defaultValue }: DatePickerProps) => {
+const DatePicker = ({
+  id,
+  name,
+  defaultValue,
+  imperativeHandleRef,
+}: DatePickerProps) => {
   const [date, setDate] = useState<Date | undefined>(
     defaultValue ? new Date(defaultValue) : new Date()
   );
 
   const [open, setOpen] = useState(false);
+
+  useImperativeHandle(imperativeHandleRef, () => ({
+    reset: () => {
+      setDate(new Date());
+    },
+  }));
 
   const handleSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate);
