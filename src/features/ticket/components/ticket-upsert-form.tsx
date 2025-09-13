@@ -7,7 +7,10 @@ import { Ticket } from "@prisma/client";
 import { SubmitButton } from "@/components/form/submit-button";
 import { useActionState } from "react";
 import { FieldError } from "@/components/form/field-error";
-import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
+import {
+  ActionState,
+  EMPTY_ACTION_STATE,
+} from "@/components/form/util/to-action-state";
 import { Form } from "@/components/form/form";
 import { toDollarAndCent } from "@/utility/currency";
 import { DatePicker } from "@/components/date-picker";
@@ -22,8 +25,16 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertFormProps) => {
     EMPTY_ACTION_STATE
   );
 
+  const handleSuccess = (actionState: ActionState) => {
+    console.log("Success", actionState);
+  };
+
   return (
-    <Form action={formAction} actionState={actionState}>
+    <Form
+      action={formAction}
+      actionState={actionState}
+      onSuccess={handleSuccess}
+    >
       <Label htmlFor="title">Title</Label>
       <Input
         id="title"
