@@ -5,19 +5,29 @@ type FormProps = {
   action: (payload: FormData) => void;
   actionState: ActionState;
   children: React.ReactNode;
+  onSuccess?: (actionState: ActionState) => void;
+  onError?: (actionState: ActionState) => void;
 };
 
-const Form = ({ children, actionState, action }: FormProps) => {
+const Form = ({
+  children,
+  actionState,
+  action,
+  onSuccess,
+  onError,
+}: FormProps) => {
   useActionFeedback(actionState, {
     onSuccess: () => {
       if (actionState.message) {
         toast.success(actionState.message);
       }
+      onSuccess?.(actionState);
     },
     onError: () => {
       if (actionState.message) {
         toast.error(actionState.message);
       }
+      onError?.(actionState);
     },
   });
   return (
