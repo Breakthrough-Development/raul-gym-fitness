@@ -3,9 +3,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LucideTrash } from "lucide-react";
+import { TICKET_STATUS_LABELS } from "../constants";
 
 type TicketMoreMenuProps = {
   ticket: Ticket;
@@ -19,10 +23,26 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
       <span>Delete</span>
     </DropdownMenuItem>
   );
+
+  const ticketStatusRadioGroupItems = (
+    <DropdownMenuRadioGroup value={ticket.status}>
+      {(
+        Object.keys(TICKET_STATUS_LABELS) as Array<
+          keyof typeof TICKET_STATUS_LABELS
+        >
+      ).map((key) => (
+        <DropdownMenuRadioItem key={key} value={key}>
+          {TICKET_STATUS_LABELS[key]}
+        </DropdownMenuRadioItem>
+      ))}
+    </DropdownMenuRadioGroup>
+  );
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" side="right">
+        {ticketStatusRadioGroupItems}
+        <DropdownMenuSeparator />
         {deleteButton}
       </DropdownMenuContent>
     </DropdownMenu>
