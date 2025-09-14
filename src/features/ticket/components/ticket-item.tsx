@@ -20,6 +20,7 @@ import { Ticket } from "@prisma/client";
 import { deleteTicket } from "../actions/delete-ticket";
 import { toDisplayCurrency } from "@/utility/currency";
 import { TicketMoreMenu } from "./ticket-more-menu";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 
 export type TicketItemProps = {
   ticket: Ticket;
@@ -45,12 +46,17 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   );
   const deleteButton = (
-    <form action={deleteTicket.bind(null, ticket.id)}>
-      <Button variant="outline" size="icon">
-        <LucideTrash className="h-4 w-4" />
-        <span className="sr-only">Delete ticket {ticket.id}</span>
-      </Button>
-    </form>
+    <ConfirmDialog
+      title="Delete ticket"
+      description="Are you sure you want to delete this ticket?"
+      action={deleteTicket.bind(null, ticket.id)}
+      trigger={
+        <Button variant="outline" size="icon">
+          <LucideTrash className="h-4 w-4" />
+          <span className="sr-only">Delete ticket {ticket.id}</span>
+        </Button>
+      }
+    />
   );
   const moreMenu = (
     <TicketMoreMenu
