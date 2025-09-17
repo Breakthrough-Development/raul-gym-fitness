@@ -1,3 +1,4 @@
+import { cloneElement, useState } from "react";
 import {
   AlertDialogAction,
   AlertDialogTrigger,
@@ -10,21 +11,26 @@ import {
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 
-type ConfirmDialogProps = {
+type ConfirmDialogArgs = {
   title?: string;
   description?: string;
   action: (payload: FormData) => void;
   trigger: React.ReactElement;
 };
 
-const ConfirmDialog = ({
+const useConfirmDialog = ({
   title,
   description,
   action,
   trigger,
-}: ConfirmDialogProps) => {
-  return (
-    <AlertDialog>
+}: ConfirmDialogArgs) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dialogTrigger = cloneElement(trigger, {
+    onClick: () => setIsOpen((state) => !state),
+  } as React.HTMLAttributes<HTMLElement>);
+
+  const dialog = (
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -41,6 +47,8 @@ const ConfirmDialog = ({
       </AlertDialogContent>
     </AlertDialog>
   );
+
+  return [dialogTrigger, dialog];
 };
 
-export { ConfirmDialog };
+export { useConfirmDialog };
