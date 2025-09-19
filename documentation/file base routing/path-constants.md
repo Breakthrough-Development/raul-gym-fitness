@@ -72,10 +72,11 @@ import { ticketsPath } from "@/paths";
 export default function TicketPage({
   params,
 }: {
-  params: { ticketId: string };
+  params: Promise<{ ticketId: string }>;
 }) {
-  const ticketId = Number(params.ticketId);
-  const ticket = initialTickets.find((t) => t.id === ticketId);
+  const { ticketId } = await params;
+  const id = Number(ticketId);
+  const ticket = initialTickets.find((t) => t.id === id);
   if (!ticket) {
     return (
       <section>

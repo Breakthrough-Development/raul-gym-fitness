@@ -1,30 +1,22 @@
-import initialTickets from "@/tickets.data";
-import Link from "next/link";
-import { ticketsPath } from "@/paths";
-import type { Route } from "next";
+import TicketItem from "@/features/ticket/components/ticket-item";
+import { getTicket } from "@/features/ticket/queries/get-ticket";
+import { notFound } from "next/navigation";
+
 export type TicketPageProps = {
-  params: {
+  params: Promise<{
     ticketId: string;
-  };
+  }>;
 };
 
-export default function TicketPage({ params }: TicketPageProps) {
-  const ticketId = Number(params.ticketId);
-  const ticket = initialTickets.find((ticket) => ticket.id === ticketId);
+export default async function TicketPage({ params }: TicketPageProps) {
+  const { ticketId } = await params;
+  const ticket = await getTicket(ticketId);
   if (!ticket) {
-    return (
-      <section>
-        <h1>Ticket not found</h1>
-        <Link href={ticketsPath() as Route}>Back to tickets page</Link>
-      </section>
-    );
+    return notFound();
   }
   return (
-    <section>
-      <h2>{ticket.title}</h2>
-      <p>{ticket.content}</p>
-      <p>{ticket.status}</p>
-      <Link href={ticketsPath() as Route}>Back to tickets page</Link>
-    </section>
+    <div className="flex justify-center animate-fade-from-top">
+      <TicketItem ticket={ticket} isDetail />
+    </div>
   );
 }

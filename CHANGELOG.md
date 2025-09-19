@@ -1,5 +1,16 @@
 ## Changelog
 
+### 2025-09-05
+
+- Added edit ticket flow:
+  - Page: `src/app/tickets/[ticketId]/edit/page.tsx`.
+  - Form: `src/features/ticket/components/ticket-update-form.tsx` using server action binding.
+  - Action: `src/features/ticket/actions/update-ticket.tsx` with revalidation and redirect.
+  - `TicketItem` now includes an Edit button via `ticketEditPath()`.
+- Documentation:
+  - Created `documentation/22-forms-with-server-actions/3-edit-form.md` with TL;DR and step-by-step guide.
+  - Simplified `documentation/22-forms-with-server-actions/2-configure-over-composition.md` with a TL;DR and practical checklist.
+
 ### 2025-08-16
 
 - Added `clsx` dependency and implemented conditional styling in `src/app/tickets/page.tsx` to strike through DONE ticket content.
@@ -10,3 +21,12 @@
 - Initialized shadcn UI: added `components.json`, `src/lib/utils.ts` (`cn`), updated dependencies, and documented in `documentation/file base routing/ui-library-setup.md`.
 - Documented `animate-fade-from-top` usage in tickets list and how to define custom animations in Tailwind v4.
 - Added UI Button component at `src/components/ui/button.tsx` and documentation at `documentation/ui-library/ui-library-button.md`. Linked from README.
+- Added UI Separator component at `src/components/ui/separator.tsx` and documentation at `documentation/ui-library/ui-library-separator.md`. Linked from README.
+- Added Icons guide at `documentation/ui-library/ui-library-icons.md` and fixed README links for UI library docs.
+- Added Theming guide at `documentation/ui-library/ui-library-theming.md` and linked from README.
+- Documented `Heading` component in `documentation/component-folder/component-folder-heading.md` and linked from README.
+- Documented `Header` component in `documentation/component-folder/component-folder-header.md` and linked from README.
+- Documented `Placeholder` component in `documentation/component-folder/component-folder-placeholder.md` and linked from README.
+- Added feature folder intro at `documentation/feature-folder/feature-folder-intro.md`, created `src/features/ticket/types.ts` and `src/features/ticket/constants.ts` with starter types/constants.
+- Added feature extraction guide at `documentation/feature-folder/feature-folder-extract.md`, created `src/features/ticket/components/ticket-item.tsx`, and refactored tickets page to use it.
+- Added feature reuse guide at `documentation/feature-folder/feature-folder-reuse.md` and linked from README.

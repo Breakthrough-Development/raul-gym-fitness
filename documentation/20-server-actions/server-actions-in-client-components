@@ -1,0 +1,81 @@
+## Server Actions in Client Components
+
+Server Actions allow you to run server-side code directly from client components, providing a seamless way to handle database operations and other server-side logic.
+
+### Server Action Definition
+
+Created `src/features/ticket/actions/delete-ticket.ts`:
+
+```typescript
+"use server";
+import { prisma } from "@/lib/prisma";
+
+export const deleteTicket = async (id: string) => {
+  await prisma.ticket.delete({
+    where: {
+      id,
+    },
+  });
+};
+```
+
+**Key points:**
+
+- `"use server"` directive marks this as a server action
+- Runs on the server, not in the browser
+- Can directly access database and other server-only resources
+- Automatically serializes the function for client use
+
+### Using in Client Components
+
+In `src/features/ticket/components/ticket-item.tsx`:
+
+```typescript
+"use client";
+import { deleteTicket } from "../actions/delete-ticket";
+
+const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
+  const handleDeleteTicket = async () => {
+    await deleteTicket(ticket.id);
+  };
+
+  const deleteButton = (
+    <Button variant="outline" size="icon" onClick={handleDeleteTicket}>
+      <LucideTrash className="h-4 w-4" />
+      <span className="sr-only">Delete ticket {ticket.id}</span>
+    </Button>
+  );
+
+  // Rest of component...
+};
+```
+
+### How It Works
+
+1. **Client component** (`"use client"`) handles UI interactions
+2. **Server action** (`"use server"`) handles database operations
+3. **Direct import** - Server actions can be imported like regular functions
+4. **Automatic serialization** - Next.js handles the client-server communication
+5. **Type safety** - Full TypeScript support across the boundary
+
+### Benefits
+
+- **Direct database access** from client components
+- **No API routes needed** for simple operations
+- **Type safety** across client-server boundary
+- **Automatic error handling** and loading states (with React features)
+- **Progressive enhancement** - Works without JavaScript
+
+### Best Practices
+
+- Keep server actions focused on single operations
+- Use server actions for mutations (create, update, delete)
+- Handle errors appropriately in the client component
+- Consider adding loading states for better UX
+- Validate input data in server actions
+
+### What's Next
+
+- Add error handling and loading states
+- Implement optimistic updates
+- Add form validation and submission handling

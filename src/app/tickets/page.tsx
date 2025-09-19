@@ -1,97 +1,32 @@
-import initialTickets from "@/tickets.data";
-import Link from "next/link";
-import { ticketPath } from "@/paths";
-import type { Route } from "next";
-import clsx from "clsx";
+import Heading from "@/components/heading";
+import TicketList from "@/features/ticket/components/ticket-list";
+import { Spinner } from "@/components/spiner";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import Placeholder from "@/components/placeholder";
+import { CardComp } from "@/components/card-comp";
+import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
 
-const PencilIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="size-6"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="m4.5 12.75 6 6 9-13.5"
-    />
-  </svg>
-);
-const DocumentIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="size-6"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-    />
-  </svg>
-);
-
-const CheckIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="size-6"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="m4.5 12.75 6 6 9-13.5"
-    />
-  </svg>
-);
-
-const TICKET_ICONS = {
-  OPEN: <DocumentIcon />,
-  IN_PROGRESS: <PencilIcon />,
-  DONE: <CheckIcon />,
-};
-
-export default function TicketsPage() {
+export default async function TicketsPage() {
   return (
     <section className="flex-1 flex flex-col gap-y-8">
-      <header>
-        <h2 className="text-3xl font-bold tracking-tight">Tickets Page</h2>
-        <p className="text-sm text-muted-foreground">
-          All your tickets at one place.
-        </p>
-      </header>
-      <div>
-        <ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
-          {initialTickets.map((ticket) => (
-            <li
-              key={ticket.id}
-              className="w-full max-w-[420px] p-4 border border-slate-100 rounded"
-            >
-              <div>{TICKET_ICONS[ticket.status]}</div>
-              <h3 className="text-lg font-semibold truncate">{ticket.title}</h3>
-              <p
-                className={clsx("text-sm text-slate-500 truncate", {
-                  "line-through": ticket.status === "DONE",
-                })}
-              >
-                {ticket.content}
-              </p>
-              <Link href={ticketPath(ticket.id.toString()) as Route}>
-                View <span className="sr-only">ticket {ticket.id}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Heading
+        title="Tickets Page"
+        description="All your tickets at one place."
+      />
+
+      <CardComp
+        title="Tickets"
+        description="All your tickets at one place."
+        content={<TicketUpsertForm />}
+        className="w-full max-w-[420px] self-center"
+      ></CardComp>
+
+      <ErrorBoundary fallback={<Placeholder label="Error loading tickets" />}>
+        <Suspense fallback={<Spinner />}>
+          <TicketList />
+        </Suspense>
+      </ErrorBoundary>
     </section>
   );
 }
