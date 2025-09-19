@@ -8,6 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogCancel,
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 
@@ -19,8 +20,8 @@ type ConfirmDialogArgs = {
 };
 
 const useConfirmDialog = ({
-  title,
-  description,
+  title = "Are you absolutely sure?",
+  description = "This action cannot be undone. Make sure you undestand the consequences.",
   action,
   trigger,
 }: ConfirmDialogArgs) => {
@@ -31,13 +32,13 @@ const useConfirmDialog = ({
 
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
             <form action={action}>
               <Button type="submit">Confirm</Button>
