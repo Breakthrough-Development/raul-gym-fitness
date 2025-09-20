@@ -8,7 +8,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { lucia } from "@/lib/lucia";
 import { cookies } from "next/headers";
-import { ticketPath, ticketsPath } from "@/paths";
+import { ticketsPath } from "@/paths";
 import { redirect } from "next/navigation";
 
 const signUpSchema = z
