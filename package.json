@@ -15,7 +15,7 @@
     "prisma-types": "npx prisma generate",
     "prisma-seed": "tsx prisma/seed.ts",
     "prisma-studio": "npx prisma studio",
-    "branch-name": "git branch --show-current"
+    "branch": "git branch --show-current"
   },
   "dependencies": {
     "@lucia-auth/adapter-prisma": "^4.0.1",
