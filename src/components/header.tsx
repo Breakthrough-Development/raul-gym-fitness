@@ -1,10 +1,38 @@
 import Link from "next/link";
-import { homePath, ticketsPath } from "@/paths";
-import { Button } from "@/components/ui/button";
+import { homePath, signInPath, signUpPath, ticketsPath } from "@/paths";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { LucideKanban } from "lucide-react";
 import { ThemeSwitcher } from "./theme/theme-switcher";
 
 const Header = () => {
+  const navItems = (
+    <>
+      <li>
+        <Link
+          href={ticketsPath()}
+          className={buttonVariants({ variant: "outline" })}
+        >
+          Tickets
+        </Link>
+      </li>
+      <li>
+        <Link
+          href={signUpPath()}
+          className={buttonVariants({ variant: "outline" })}
+        >
+          Sign Up
+        </Link>
+      </li>
+      <li>
+        <Link
+          href={signInPath()}
+          className={buttonVariants({ variant: "outline" })}
+        >
+          Sign In
+        </Link>
+      </li>
+    </>
+  );
   return (
     <header>
       <nav>
@@ -21,11 +49,7 @@ const Header = () => {
             <li>
               <ThemeSwitcher />
             </li>
-            <li>
-              <Button asChild variant="default">
-                <Link href={ticketsPath()}>Tickets</Link>
-              </Button>
-            </li>
+            {navItems}
           </div>
         </ul>
       </nav>
