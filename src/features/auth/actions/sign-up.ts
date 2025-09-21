@@ -30,7 +30,7 @@ const signUpSchema = z
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         message: "Passwords do not match",
         path: ["confirmPassword"],
       });
