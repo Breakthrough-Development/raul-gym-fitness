@@ -1,6 +1,5 @@
 import Heading from "@/components/heading";
 import { ticketsPath } from "@/paths";
-import { Route } from "next";
 import Link from "next/link";
 
 export default function HomePage() {

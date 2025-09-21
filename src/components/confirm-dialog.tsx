@@ -1,7 +1,6 @@
 import { cloneElement, useActionState, useState } from "react";
 import {
   AlertDialogAction,
-  AlertDialogTrigger,
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
@@ -28,10 +27,7 @@ const useConfirmDialog = ({
   trigger,
 }: ConfirmDialogArgs) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [actionState, formAction] = useActionState(
-    action,
-    EMPTY_ACTION_STATE
-  );
+  const [actionState, formAction] = useActionState(action, EMPTY_ACTION_STATE);
   const handleSuccess = () => {
     setIsOpen(false);
   };
