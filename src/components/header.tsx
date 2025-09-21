@@ -5,9 +5,11 @@ import { LucideKanban, LucideLogOut } from "lucide-react";
 import { ThemeSwitcher } from "./theme/theme-switcher";
 import { SubmitButton } from "./form/submit-button";
 import { signOut } from "@/features/auth/actions/sign-out";
+import { getAuth } from "@/features/auth/queries/get-auth";
 
-const Header = () => {
-  const navItems = (
+const Header = async () => {
+  const { user } = await getAuth();
+  const navItems = user ? (
     <>
       <li>
         <Link
@@ -17,6 +19,14 @@ const Header = () => {
           Tickets
         </Link>
       </li>
+      <li>
+        <form action={signOut}>
+          <SubmitButton label="Sign Out" icon={<LucideLogOut />} />
+        </form>
+      </li>
+    </>
+  ) : (
+    <>
       <li>
         <Link
           href={signUpPath()}
@@ -32,11 +42,6 @@ const Header = () => {
         >
           Sign In
         </Link>
-      </li>
-      <li>
-        <form action={signOut}>
-          <SubmitButton label="Sign Out" icon={<LucideLogOut />} />
-        </form>
       </li>
     </>
   );
