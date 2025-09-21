@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { homePath, signInPath, signUpPath, ticketsPath } from "@/paths";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -6,9 +7,20 @@ import { ThemeSwitcher } from "./theme/theme-switcher";
 import { SubmitButton } from "./form/submit-button";
 import { signOut } from "@/features/auth/actions/sign-out";
 import { getAuth } from "@/features/auth/queries/get-auth";
+import { useEffect, useState } from "react";
+import { User as AuthUser } from "lucia";
 
-const Header = async () => {
-  const { user } = await getAuth();
+const Header = () => {
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { user } = await getAuth();
+      setUser(user);
+    };
+    fetchUser();
+  }, []);
+
   const navItems = user ? (
     <>
       <li>
