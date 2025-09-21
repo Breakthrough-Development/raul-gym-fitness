@@ -7,6 +7,7 @@ import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { FieldError } from "@/components/form/field-error";
 import { Input } from "@/components/ui/input";
+import { PasswordField } from "@/components/password-field";
 
 const SignUpForm = () => {
   const [actionState, action] = useActionState(signUp, EMPTY_ACTION_STATE);
@@ -27,7 +28,7 @@ const SignUpForm = () => {
       />
       <FieldError actionState={actionState} name="email" />
 
-      <Input
+      <PasswordField
         type="password"
         name="password"
         placeholder="Password"
@@ -35,7 +36,7 @@ const SignUpForm = () => {
       />
       <FieldError actionState={actionState} name="password" />
 
-      <Input
+      <PasswordField
         type="password"
         name="confirmPassword"
         placeholder="Confirm Password"

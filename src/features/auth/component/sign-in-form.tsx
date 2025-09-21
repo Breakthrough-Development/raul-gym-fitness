@@ -7,6 +7,7 @@ import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { FieldError } from "@/components/form/field-error";
 import { Input } from "@/components/ui/input";
+import { PasswordField } from "@/components/password-field";
 
 const SignInForm = () => {
   const [actionState, action] = useActionState(signIn, EMPTY_ACTION_STATE);
@@ -20,8 +21,7 @@ const SignInForm = () => {
       />
       <FieldError actionState={actionState} name="email" />
 
-      <Input
-        type="password"
+      <PasswordField
         name="password"
         placeholder="Password"
         defaultValue={actionState.payload?.get("password") as string}
