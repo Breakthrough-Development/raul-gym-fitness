@@ -10,7 +10,7 @@ const users = [
   },
   {
     username: "royeradames",
-    email: "royeradam@gmail.com",
+    email: "royeradames@gmail.com",
   },
 ];
 const tickets = [
@@ -44,7 +44,7 @@ const seed = async () => {
   await prisma.user.deleteMany();
   await prisma.ticket.deleteMany();
 
-  const passwordHash = await hash("gemeimnis");
+  const passwordHash = await hash(process.env.SEED_PASSWORD || "gemeimnis");
   const dbUsers = await prisma.user.createManyAndReturn({
     data: users.map((user) => ({
       ...user,
