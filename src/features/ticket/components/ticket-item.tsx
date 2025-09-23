@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { ticketPath, ticketEditPath } from "@/paths";
 import {
@@ -18,6 +19,8 @@ import clsx from "clsx";
 import { toDisplayCurrency } from "@/utils/currency";
 import { TicketMoreMenu } from "./ticket-more-menu";
 import { TicketWithMetadata } from "../types/types";
+import { useAuth } from "@/features/auth/hooks/use-auth";
+import { isOwner } from "@/features/auth/utils/is-owner";
 
 export type TicketItemProps = {
   ticket: TicketWithMetadata;
@@ -25,24 +28,27 @@ export type TicketItemProps = {
 };
 
 const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
-  const detailButton = (
+  const { user } = useAuth();
+  const isTicketOwner = isOwner(user, ticket);
+
+  const detailButton = isTicketOwner ? (
     <Button asChild variant="outline" size="icon">
       <Link prefetch href={ticketPath(ticket.id)}>
         <LucideSquareArrowOutUpRight className="h-4 w-4" />
         <span className="sr-only">View ticket {ticket.id}</span>
       </Link>
     </Button>
-  );
+  ) : null;
 
-  const editButton = (
+  const editButton = isTicketOwner ? (
     <Button asChild variant="outline" size="icon">
       <Link prefetch href={ticketEditPath(ticket.id)}>
         <LucidePencil className="h-4 w-4" />
         <span className="sr-only">Edit ticket {ticket.id}</span>
       </Link>
     </Button>
-  );
-  const moreMenu = (
+  ) : null;
+  const moreMenu = isTicketOwner ? (
     <TicketMoreMenu
       ticket={ticket}
       trigger={
@@ -52,7 +58,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         </Button>
       }
     />
-  );
+  ) : null;
   return (
     <div
       className={clsx("w-full flex gap-x-1", {
