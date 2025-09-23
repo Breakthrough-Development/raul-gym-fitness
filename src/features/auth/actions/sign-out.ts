@@ -4,7 +4,7 @@ import { signInPath } from "@/paths";
 import { getAuth } from "../queries/get-auth";
 import { redirect } from "next/navigation";
 import { invalidateSession } from "@/lib/aslo";
-import { deleteSessionCookie } from "../util/session-cookie";
+import { deleteSessionCookie } from "../utils/session-cookie";
 
 export const signOut = async () => {
   const { session } = await getAuth();

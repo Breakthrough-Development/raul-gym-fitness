@@ -2,7 +2,7 @@
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { validateSession } from "@/lib/aslo";
-import { SESSION_COOKIE_NAME } from "../util/session-cookie";
+import { SESSION_COOKIE_NAME } from "../utils/session-cookie";
 
 const getAuth = cache(async () => {
   const sessionToken =

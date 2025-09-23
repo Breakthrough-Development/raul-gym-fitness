@@ -12,7 +12,7 @@ import { Prisma } from "@prisma/client";
 import { hashPassword } from "@/features/password/util/hash-and-verify";
 import { createSession } from "@/lib/aslo";
 import { generateRandomToken } from "@/utils/crypto";
-import { setSessionCookie } from "../util/session-cookie";
+import { setSessionCookie } from "../utils/session-cookie";
 
 const signUpSchema = z
   .object({
