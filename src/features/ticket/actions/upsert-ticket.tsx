@@ -11,7 +11,7 @@ import {
   toActionState,
 } from "@/components/form/util/to-action-state";
 import { setCookieByKey } from "@/actions/cookies";
-import { toCent } from "@/utility/currency";
+import { toCent } from "@/utils/currency";
 
 const upsertTicketSchema = z.object({
   title: z.string().min(1).max(191),

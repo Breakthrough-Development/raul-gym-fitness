@@ -9,7 +9,7 @@ import { useActionState, useRef } from "react";
 import { FieldError } from "@/components/form/field-error";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { Form } from "@/components/form/form";
-import { toDollarAndCent } from "@/utility/currency";
+import { toDollarAndCent } from "@/utils/currency";
 import {
   DatePicker,
   ImperativeHandleFromDatePicker,

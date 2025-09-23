@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { Ticket } from "@prisma/client";
-import { toDisplayCurrency } from "@/utility/currency";
+import { toDisplayCurrency } from "@/utils/currency";
 import { TicketMoreMenu } from "./ticket-more-menu";
 
 export type TicketItemProps = {
