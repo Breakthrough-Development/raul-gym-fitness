@@ -23,7 +23,6 @@ export const createSession = async (sessionToken: string, userId: string) => {
 export const validateSession = async (sessionToken: string) => {
   const sessionId = hashToken(sessionToken);
 
-  console.log("validateSession sessionId", sessionId);
   // failing here
   const result = await prisma.session.findUnique({
     where: {
@@ -34,12 +33,10 @@ export const validateSession = async (sessionToken: string) => {
     },
   });
 
-  console.log("not empty validateSession result", result);
   // if there is no session, return null
   if (!result) {
     return { user: null, session: null };
   }
-  console.log("validateSession result", result);
   const { user, ...session } = result;
 
   // if the session is expired, delete it
