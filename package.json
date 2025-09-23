@@ -11,6 +11,8 @@
     "lint-fix": "next lint --fix",
     "type": "tsc --noEmit",
     "postinstall": "prisma generate",
+    "prisma": "npm run prisma-schema && npm run prisma-types && npm run prisma-seed ",
+    "prismaa": "npm run prisma-schema && npm run prisma-types && npm run prisma-seed && npm run prisma-studio",
     "prisma-schema": "npx prisma db push",
     "prisma-types": "npx prisma generate",
     "prisma-seed": "tsx prisma/seed.ts",
