@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { signInPath, ticketPath, ticketsPath } from "@/paths";
+import { ticketPath, ticketsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import z from "zod";
@@ -12,7 +12,6 @@ import {
 } from "@/components/form/util/to-action-state";
 import { setCookieByKey } from "@/actions/cookies";
 import { toCent } from "@/utils/currency";
-import { getAuth } from "@/features/auth/queries/get-auth";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
 
