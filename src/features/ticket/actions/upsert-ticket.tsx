@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { ticketPath, ticketsPath } from "@/paths";
+import { signInPath, ticketPath, ticketsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import z from "zod";
@@ -12,6 +12,7 @@ import {
 } from "@/components/form/util/to-action-state";
 import { setCookieByKey } from "@/actions/cookies";
 import { toCent } from "@/utils/currency";
+import { getAuth } from "@/features/auth/queries/get-auth";
 
 const upsertTicketSchema = z.object({
   title: z.string().min(1).max(191),
@@ -25,6 +26,12 @@ const upsertTicket = async (
   _actionState: ActionState,
   formData: FormData
 ): Promise<ActionState> => {
+  const { user } = await getAuth();
+
+  if (!user) {
+    redirect(signInPath());
+  }
+
   try {
     const data = upsertTicketSchema.parse({
       title: formData.get("title"),
@@ -33,8 +40,10 @@ const upsertTicket = async (
       bounty: formData.get("bounty"),
     });
 
+    // TODO: don't allow unauthorized users to update the ticket
     const dbData = {
       ...data,
+      userId: user.id,
       bounty: toCent(data.bounty),
     };
 
