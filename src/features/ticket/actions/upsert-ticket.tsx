@@ -13,6 +13,8 @@ import {
 import { setCookieByKey } from "@/actions/cookies";
 import { toCent } from "@/utils/currency";
 import { getAuth } from "@/features/auth/queries/get-auth";
+import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { isOwner } from "@/features/auth/utils/is-owner";
 
 const upsertTicketSchema = z.object({
   title: z.string().min(1).max(191),
@@ -26,13 +28,20 @@ const upsertTicket = async (
   _actionState: ActionState,
   formData: FormData
 ): Promise<ActionState> => {
-  const { user } = await getAuth();
-
-  if (!user) {
-    redirect(signInPath());
-  }
+  const { user } = await getAuthOrRedirect();
 
   try {
+    if (id) {
+      const ticket = await prisma.ticket.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!ticket || !isOwner(user, ticket)) {
+        return toActionState("ERROR", "Not authorized", formData);
+      }
+    }
     const data = upsertTicketSchema.parse({
       title: formData.get("title"),
       content: formData.get("content"),
@@ -40,7 +49,6 @@ const upsertTicket = async (
       bounty: formData.get("bounty"),
     });
 
-    // TODO: don't allow unauthorized users to update the ticket
     const dbData = {
       ...data,
       userId: user.id,
