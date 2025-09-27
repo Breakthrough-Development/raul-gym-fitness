@@ -6,8 +6,10 @@ import { ErrorBoundary } from "react-error-boundary";
 import Placeholder from "@/components/placeholder";
 import { CardComp } from "@/components/card-comp";
 import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
+import { getAuth } from "@/features/auth/queries/get-auth";
 
 export default async function TicketsPage() {
+  const { user } = await getAuth();
   return (
     <section className="flex-1 flex flex-col gap-y-8">
       <Heading
@@ -24,7 +26,7 @@ export default async function TicketsPage() {
 
       <ErrorBoundary fallback={<Placeholder label="Error loading tickets" />}>
         <Suspense fallback={<Spinner />}>
-          <TicketList />
+          <TicketList userId={user?.id} />
         </Suspense>
       </ErrorBoundary>
     </section>
