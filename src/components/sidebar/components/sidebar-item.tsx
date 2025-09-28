@@ -1,9 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Route } from "next";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cloneElement } from "react";
 import { closedClassName } from "../constants";
 import { NavItem } from "../types";
@@ -11,12 +9,10 @@ import { NavItem } from "../types";
 type SidebarItemProps = {
   isOpen: boolean;
   navItem: NavItem;
+  isActive: boolean;
 };
 
-function SidebarItem({ isOpen, navItem }: SidebarItemProps) {
-  const path = usePathname();
-  const isActive = (path as Route) === navItem.href;
-
+function SidebarItem({ isOpen, navItem, isActive }: SidebarItemProps) {
   return (
     <>
       {navItem.separator && <Separator />}
