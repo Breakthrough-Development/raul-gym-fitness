@@ -1,10 +1,12 @@
 "use client";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { navItems } from "../constants";
 import { SidebarItem } from "./sidebar-item";
 
 const Sidebar = () => {
+  const { user, isFetched } = useAuth();
   const [isTransition, setTransition] = useState(false);
   const [isOpen, setOpen] = useState(false);
 
@@ -16,9 +18,14 @@ const Sidebar = () => {
     }, 200);
   };
 
+  if (!user || !isFetched) {
+    return <div className="h-screen w-[78px] absolute" />;
+  }
+
   return (
     <nav
       className={cn(
+        "animate-sidebar-from-left absolute peer",
         "h-screen border-r pt-24",
         isTransition && "duration-200",
         isOpen ? "md:w-60 w-[78px]" : "w-[78px]"
