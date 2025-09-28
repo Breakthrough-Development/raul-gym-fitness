@@ -9,3 +9,6 @@ export const homePath = () => "/" as Route;
 export const signUpPath = () => "/sign-up" as Route;
 export const signInPath = () => "/sign-in" as Route;
 export const passwordForgotPath = () => "/password-forgot" as Route;
+
+export const accountProfilePath = () => "/account/profile" as Route;
+export const accountPasswordPath = () => "/account/password" as Route;
