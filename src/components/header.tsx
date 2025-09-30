@@ -6,6 +6,7 @@ import { LucideKanban } from "lucide-react";
 import Link from "next/link";
 import { AccountDropdown } from "./account-dropdown";
 import { ThemeSwitcher } from "./theme/theme-switcher";
+import { SidebarTrigger } from "./ui/sidebar";
 
 const Header = () => {
   const { isFetched, user } = useAuth();
@@ -42,14 +43,19 @@ const Header = () => {
     <header>
       <nav>
         <ul className="animate-header-from-top supports-backdrop-blur:bg-background/60 fixed left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur w-full flex py-2.5 px-5 justify-between">
-          <li>
-            <Button asChild variant="ghost">
-              <Link href={homePath()}>
-                <LucideKanban />
-                <h1 className="text-lg font-bold">TicketBounty</h1>
-              </Link>
-            </Button>
-          </li>
+          <div className="flex items-center gap-2">
+            <li>
+              <SidebarTrigger className="cursor-pointer" />
+            </li>
+            <li>
+              <Button asChild variant="ghost">
+                <Link href={homePath()}>
+                  <LucideKanban />
+                  <h1 className="text-lg font-bold">TicketBounty</h1>
+                </Link>
+              </Button>
+            </li>
+          </div>
           <div className="flex items-center gap-2">
             <li>
               <ThemeSwitcher />
