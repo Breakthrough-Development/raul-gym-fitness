@@ -1,13 +1,13 @@
 "use client";
 
-import { signUp } from "../actions/sign-up";
-import { useActionState } from "react";
-import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
+import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
-import { FieldError } from "@/components/form/field-error";
-import { Input } from "@/components/ui/input";
+import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { PasswordField } from "@/components/password-field";
+import { Input } from "@/components/ui/input";
+import { useActionState } from "react";
+import { signUp } from "../actions/sign-up";
 
 const SignUpForm = () => {
   const [actionState, action] = useActionState(signUp, EMPTY_ACTION_STATE);
@@ -20,6 +20,20 @@ const SignUpForm = () => {
         defaultValue={actionState.payload?.get("username") as string}
       />
       <FieldError actionState={actionState} name="username" />
+
+      <Input
+        name="firstName"
+        placeholder="First Name"
+        defaultValue={actionState.payload?.get("firstName") as string}
+      />
+      <FieldError actionState={actionState} name="firstName" />
+
+      <Input
+        name="lastName"
+        placeholder="Last Name"
+        defaultValue={actionState.payload?.get("lastName") as string}
+      />
+      <FieldError actionState={actionState} name="lastName" />
 
       <Input
         name="email"

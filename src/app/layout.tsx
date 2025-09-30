@@ -1,5 +1,5 @@
+import { Sidebar } from "@/app/_navigation/sidebar/sidebar";
 import Header from "@/components/header";
-import { Sidebar } from "@/components/sidebar/sidebar";
 import { Toaster } from "@/components/sonner";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";

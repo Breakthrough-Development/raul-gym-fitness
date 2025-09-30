@@ -1,5 +1,5 @@
+import { AccountTabs } from "@/app/(authenticated)/account/_navigation/account-tabs";
 import Heading from "@/components/heading";
-import { AccountTabs } from "@/features/account/components/account-tabs";
 import { ResetPasswordForm } from "@/features/auth/component/update-password-form";
 
 const passwordPage = () => {

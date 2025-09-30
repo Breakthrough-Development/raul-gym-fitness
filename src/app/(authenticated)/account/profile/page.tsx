@@ -1,5 +1,5 @@
+import { AccountTabs } from "@/app/(authenticated)/account/_navigation/account-tabs";
 import Heading from "@/components/heading";
-import { AccountTabs } from "@/features/account/components/account-tabs";
 import { UserUpdateForm } from "@/features/auth/component/user-update-form";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 
@@ -14,7 +14,11 @@ const profilePage = async () => {
         tabs={<AccountTabs />}
       />
       <div className="w-full max-w-[420px] self-center">
-        <UserUpdateForm lastName={authUser.lastName} firstName={authUser.firstName} username={authUser.username} />
+        <UserUpdateForm
+          lastName={authUser.lastName}
+          firstName={authUser.firstName}
+          username={authUser.username}
+        />
       </div>
     </section>
   );
