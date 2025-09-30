@@ -9,19 +9,21 @@ datasource db {
 }
 
 model User {
-    id       String    @id @default(cuid())
-    username String    @unique
-    email    String    @unique
-    password String
-    sessions Session[]
-    tickets  Ticket[]
+    id        String    @id @default(cuid())
+    firstName String
+    lastName  String
+    username  String    @unique
+    email     String    @unique
+    password  String
+    sessions  Session[]
+    tickets   Ticket[]
 }
 
 model Session {
     id        String   @id
     expiresAt DateTime
     userId    String
-    user      User     @relation(references: [id], fields: [userId])
+    user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
 model Ticket {

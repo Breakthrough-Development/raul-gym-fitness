@@ -7,10 +7,14 @@ const users = [
   {
     username: "admin",
     email: "admin@admin.com",
+    firstName: "Admin",
+    lastName: "Admin",
   },
   {
     username: "royeradames",
-    email: "royeradames@gmail.com",
+    email: "royeraadames@gmail.com",
+    firstName: "Royer",
+    lastName: "Adames",
   },
 ];
 const tickets = [
