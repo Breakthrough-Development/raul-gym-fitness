@@ -35,9 +35,9 @@ export default function RootLayout({
         <ThemeProvider>
           <SidebarProvider className="flex-col" defaultOpen={false}>
             <Header />
-            <div className="flex h-screen overflow-hidden border-collapse">
+            <div className="flex min-h-svh border-collapse">
               <Sidebar />
-              <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/20 flex flex-col">
+              <main className="flex-1 py-24 px-8 bg-secondary/20 flex flex-col">
                 {children}
               </main>
             </div>
