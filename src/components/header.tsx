@@ -5,7 +5,7 @@ import { homePath, signInPath, signUpPath } from "@/paths";
 import { LucideKanban } from "lucide-react";
 import Link from "next/link";
 import { AccountDropdown } from "./account-dropdown";
-import { ThemeSwitcher } from "./theme/theme-switcher";
+import { AnimatedThemeToggler } from "./ui/animated-theme-toggler";
 import { SidebarTrigger } from "./ui/sidebar";
 
 const Header = () => {
@@ -58,7 +58,7 @@ const Header = () => {
           </div>
           <div className="flex items-center gap-2">
             <li>
-              <ThemeSwitcher />
+              <AnimatedThemeToggler />
             </li>
             {navItems}
           </div>
