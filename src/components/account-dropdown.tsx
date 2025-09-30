@@ -15,17 +15,26 @@ import Link from "next/link";
 
 type AccountDropdownProps = {
   user: User;
+  showName?: boolean;
 };
 
-const AccountDropdown = ({ user }: AccountDropdownProps) => {
+const AccountDropdown = ({ user, showName = false }: AccountDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        <Avatar>
-          <AvatarFallback>
-            {user.username.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex items-center gap-2">
+          <Avatar>
+            <AvatarFallback>
+              {user.username.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          {showName && (
+            <>
+              <span>{user.firstName}</span>
+              <span>{user.lastName}</span>
+            </>
+          )}
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Account</DropdownMenuLabel>
