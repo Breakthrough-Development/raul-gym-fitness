@@ -3,6 +3,16 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const BASE_DEADLINE = new Date("2025-01-01");
+
+const addDays = (date: Date, days: number) => {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+};
+
+const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
 const users = [
   {
     username: "admin",
@@ -47,7 +57,7 @@ const tickets = [
     bounty: 299,
   },
   {
-    title: "Ticket 5", 
+    title: "Ticket 5",
     content: "This is the fifth ticket",
     status: "DONE" as const,
     deadline: new Date().toISOString().split("T")[0],
@@ -55,7 +65,7 @@ const tickets = [
   },
   {
     title: "Ticket 6",
-    content: "This is the sixth ticket", 
+    content: "This is the sixth ticket",
     status: "OPEN" as const,
     deadline: new Date().toISOString().split("T")[0],
     bounty: 449,
@@ -175,9 +185,10 @@ const seed = async () => {
     })),
   });
   await prisma.ticket.createMany({
-    data: tickets.map((ticket) => ({
+    data: tickets.map((ticket, index) => ({
       ...ticket,
-      userId: dbUsers[0].id,
+      deadline: formatDate(addDays(BASE_DEADLINE, index)),
+      userId: dbUsers[1] && index < 7 ? dbUsers[1].id : dbUsers[0].id,
     })),
   });
 
