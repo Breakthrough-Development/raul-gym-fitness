@@ -5,7 +5,8 @@ import { Spinner } from "@/components/spiner";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import TicketList from "@/features/ticket/components/ticket-list";
 import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
-import { SearchParams } from "@/features/ticket/search-params";
+import { SearchParamsCache } from "@/features/ticket/search-params";
+import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -31,7 +32,10 @@ export default async function TicketsPage({ searchParams }: TicketsPageProps) {
 
       <ErrorBoundary fallback={<Placeholder label="Error loading tickets" />}>
         <Suspense fallback={<Spinner />}>
-          <TicketList userId={user?.id} searchParams={await searchParams} />
+          <TicketList
+            userId={user?.id}
+            searchParams={SearchParamsCache.parse(await searchParams)}
+          />
         </Suspense>
       </ErrorBoundary>
     </section>
