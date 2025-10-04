@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { SORT } from "../constants";
 import { ParsedSearchParams } from "../search-params";
 
 export const getTickets = async (
@@ -13,35 +12,9 @@ export const getTickets = async (
         contains: searchParams.search,
         mode: "insensitive",
       },
-      ...(searchParams.sort === SORT.STATUS_OPEN && {
-        status: "OPEN",
-      }),
-      ...(searchParams.sort === SORT.STATUS_DONE && {
-        status: "DONE",
-      }),
-      ...(searchParams.sort === SORT.STATUS_IN_PROGRESS && {
-        status: "IN_PROGRESS",
-      }),
     },
     orderBy: {
-      ...(searchParams.sort === SORT.NEWEST && {
-        deadline: "desc",
-      }),
-      ...(searchParams.sort === SORT.OLDEST && {
-        deadline: "asc",
-      }),
-      ...(searchParams.sort === SORT.BOUNTY_ASC && {
-        bounty: "asc",
-      }),
-      ...(searchParams.sort === SORT.BOUNTY_DESC && {
-        bounty: "desc",
-      }),
-      ...(searchParams.sort === SORT.TITLE_ASC && {
-        title: "asc",
-      }),
-      ...(searchParams.sort === SORT.TITLE_DESC && {
-        title: "desc",
-      }),
+      [searchParams.sortKey]: searchParams.sortValue,
     },
     include: {
       user: {
