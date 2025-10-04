@@ -10,14 +10,22 @@ type PageAndSize = {
 type PaginationProps = {
   pagination: PageAndSize;
   onPageAndSize: (pageAndSize: PageAndSize) => void;
+  paginatedMetaData: {
+    count: number;
+    hasNextPage: boolean;
+  };
 };
 
-export const Pagination = ({ pagination, onPageAndSize }: PaginationProps) => {
+export const Pagination = ({
+  pagination,
+  onPageAndSize,
+  paginatedMetaData: { count, hasNextPage },
+}: PaginationProps) => {
   const startOffset = pagination.page * pagination.size + 1;
   const endOffset = startOffset + pagination.size - 1;
+  const actualEndOffset = Math.min(endOffset, count);
 
-  //   TODO
-  const label = `${startOffset} - ${endOffset} of X`;
+  const label = `${startOffset} - ${actualEndOffset} of ${count}`;
 
   const handlePreviousPage = () => {
     onPageAndSize({ ...pagination, page: pagination.page - 1 });
@@ -38,8 +46,7 @@ export const Pagination = ({ pagination, onPageAndSize }: PaginationProps) => {
   );
   const NextButton = () => (
     <Button
-      //   TODO: add disabled
-      // disabled={false}
+      disabled={!hasNextPage}
       size="sm"
       variant="outline"
       onClick={handleNextPage}
