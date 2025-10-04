@@ -3,6 +3,7 @@ import { SORT_OPTIONS } from "../constants";
 import { getTickets } from "../queries/get-tickets";
 import { ParsedSearchParams } from "../search-params";
 import TicketItem from "./ticket-item";
+import { TicketPagination } from "./ticket-pagination";
 import { TicketSearchInput } from "./ticket-search-input";
 import { TicketSortSelect } from "./ticket-sort-select";
 
@@ -33,6 +34,9 @@ export default async function TicketList({
           <Placeholder label="No tickets found" />
         )}
       </ul>
+      <footer className="w-full max-w-[420px] self-center">
+        <TicketPagination />
+      </footer>
     </section>
   );
 }
