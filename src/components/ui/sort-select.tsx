@@ -7,34 +7,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { sortParser } from "@/features/ticket/search-params";
-import { useQueryState } from "nuqs";
+import { sortOptions, sortParser } from "@/features/ticket/search-params";
+import { useQueryStates } from "nuqs";
 
 type Option = {
-  value: string;
+  sortKey: string;
+  sortValue: string;
   label: string;
 };
 
 type SortSelectProps = {
-  defaultValue?: string;
   options: Option[];
 };
 
-export const SortSelect = ({ defaultValue, options }: SortSelectProps) => {
-  const [sort, setSort] = useQueryState("sort", sortParser);
+export const SortSelect = ({ options }: SortSelectProps) => {
+  const [sort, setSort] = useQueryStates(sortParser, sortOptions);
 
-  const handleSort = (value: string) => {
-    setSort(value);
+  const handleSort = (label: string) => {
+    const sortOption = options.find((option) => option.label === label);
+    setSort({
+      sortKey: sortOption?.sortKey,
+      sortValue: sortOption?.sortValue,
+      sortLabel: sortOption?.label,
+    });
   };
 
   return (
-    <Select defaultValue={sort || defaultValue} onValueChange={handleSort}>
+    <Select defaultValue={sort.sortLabel} onValueChange={handleSort}>
       <SelectTrigger>
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
+          <SelectItem key={option.label} value={option.label}>
             {option.label}
           </SelectItem>
         ))}
