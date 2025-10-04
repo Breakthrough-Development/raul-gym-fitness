@@ -1,10 +1,10 @@
 import Placeholder from "@/components/placeholder";
-import { SearchInput } from "@/components/search-input";
-import { SortSelect } from "@/components/ui/sort-select";
 import { SORT_OPTIONS } from "../constants";
 import { getTickets } from "../queries/get-tickets";
 import { ParsedSearchParams } from "../search-params";
 import TicketItem from "./ticket-item";
+import { TicketSearchInput } from "./ticket-search-input";
+import { TicketSortSelect } from "./ticket-sort-select";
 
 export type TicketListProps = {
   userId?: string;
@@ -21,8 +21,8 @@ export default async function TicketList({
     <section className="flex flex-col gap-y-4 animate-fade-from-top">
       <header className="self-center max-w-[420px] w-full flex gap-x-2">
         <h2 className="sr-only">Tickets</h2>
-        <SearchInput placeholder="Search tickets" />
-        <SortSelect options={SORT_OPTIONS} />
+        <TicketSearchInput placeholder="Search tickets" />
+        <TicketSortSelect options={SORT_OPTIONS} />
       </header>
       <ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
         {tickets.length ? (
