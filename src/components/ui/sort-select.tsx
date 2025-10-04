@@ -23,23 +23,28 @@ type SortSelectProps = {
 export const SortSelect = ({ options }: SortSelectProps) => {
   const [sort, setSort] = useQueryStates(sortParser, sortOptions);
 
-  const handleSort = (label: string) => {
-    const sortOption = options.find((option) => option.label === label);
+  const handleSort = (compositeKey: string) => {
+    const [sortKey, sortValue] = compositeKey.split("_");
     setSort({
-      sortKey: sortOption?.sortKey,
-      sortValue: sortOption?.sortValue,
-      sortLabel: sortOption?.label,
+      sortKey: sortKey,
+      sortValue: sortValue,
     });
   };
 
   return (
-    <Select defaultValue={sort.sortLabel} onValueChange={handleSort}>
+    <Select
+      defaultValue={sort.sortKey + "_" + sort.sortValue}
+      onValueChange={handleSort}
+    >
       <SelectTrigger>
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option.label} value={option.label}>
+          <SelectItem
+            key={option.label}
+            value={option.sortKey + "_" + option.sortValue}
+          >
             {option.label}
           </SelectItem>
         ))}
