@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Route } from "next";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { sortParser } from "@/features/ticket/search-params";
+import { useQueryState } from "nuqs";
 
 type Option = {
   value: string;
@@ -21,30 +21,14 @@ type SortSelectProps = {
 };
 
 export const SortSelect = ({ defaultValue, options }: SortSelectProps) => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+  const [sort, setSort] = useQueryState("sort", sortParser);
 
   const handleSort = (value: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (value) {
-      params.set("sort", value);
-    } else {
-      params.delete("sort");
-    }
-    replace(
-      `${pathname}?${params.toString()}` as Route<`${string}?${string}`>,
-      {
-        scroll: false,
-      }
-    );
+    setSort(value);
   };
 
   return (
-    <Select
-      defaultValue={searchParams.get("sort")?.toString() || defaultValue}
-      onValueChange={handleSort}
-    >
+    <Select defaultValue={sort || defaultValue} onValueChange={handleSort}>
       <SelectTrigger>
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
