@@ -16,7 +16,7 @@ export default async function TicketList({
   userId,
   searchParams,
 }: TicketListProps) {
-  const tickets = await getTickets(userId, searchParams);
+  const { list: tickets, metadata } = await getTickets(userId, searchParams);
 
   return (
     <section className="flex flex-col gap-y-4 animate-fade-from-top">
@@ -35,7 +35,7 @@ export default async function TicketList({
         )}
       </ul>
       <footer className="w-full max-w-[420px] self-center">
-        <TicketPagination />
+        <TicketPagination paginatedMetaData={metadata} />
       </footer>
     </section>
   );
