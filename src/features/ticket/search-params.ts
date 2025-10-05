@@ -3,7 +3,12 @@ import {
   parseAsInteger,
   parseAsString,
 } from "nuqs/server";
-import { SORT_VALUES, TICKET_KEYS } from "./constants";
+import {
+  PAGINATION_PAGE_DEFAULT,
+  PAGINATION_SIZE_DEFAULT,
+  SORT_VALUES,
+  TICKET_KEYS,
+} from "./constants";
 
 export const searchParser = parseAsString.withDefault("").withOptions({
   shallow: false,
@@ -21,8 +26,8 @@ export const sortOptions = {
 };
 
 export const paginationParser = {
-  page: parseAsInteger.withDefault(1),
-  size: parseAsInteger.withDefault(10),
+  page: parseAsInteger.withDefault(PAGINATION_PAGE_DEFAULT),
+  size: parseAsInteger.withDefault(PAGINATION_SIZE_DEFAULT),
 };
 
 export const paginationOptions = {
