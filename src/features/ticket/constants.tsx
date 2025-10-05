@@ -63,3 +63,14 @@ export const SORT_OPTIONS = [
     label: SORT_LABELS.Z_A,
   },
 ];
+
+export const PAGINATION_PAGE_DEFAULT = 0;
+export const PAGINATION_SIZE_DEFAULT = 5;
+
+export const PAGINATION_SIZE_OPTIONS = [
+  { value: `${PAGINATION_SIZE_DEFAULT}`, label: `${PAGINATION_SIZE_DEFAULT}` },
+  { value: "10", label: "10" },
+  { value: "25", label: "25" },
+  { value: "50", label: "50" },
+  { value: "100", label: "100" },
+];
