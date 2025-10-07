@@ -170,12 +170,64 @@ const tickets = [
   },
 ];
 
+const comments = [
+  {
+    content: "This is the first comment",
+  },
+  {
+    content: "This is the second comment",
+  },
+  {
+    content: "This is the third comment",
+  },
+  {
+    content: "This is the fourth comment",
+  },
+  {
+    content: "This is the fifth comment",
+  },
+  {
+    content: "This is the sixth comment",
+  },
+  {
+    content: "This is the seventh comment",
+  },
+  {
+    content: "This is the eighth comment",
+  },
+  {
+    content: "This is the ninth comment",
+  },
+  {
+    content: "This is the tenth comment",
+  },
+  {
+    content: "This is the eleventh comment",
+  },
+  {
+    content: "This is the twelfth comment",
+  },
+  {
+    content: "This is the thirteenth comment",
+  },
+  {
+    content: "This is the fourteenth comment",
+  },
+  {
+    content: "This is the fifteenth comment",
+  },
+  {
+    content: "This is the sixteenth comment",
+  },
+];
+
 const seed = async () => {
   const t0 = performance.now();
   console.log("DB seed: Started ...");
 
-  await prisma.user.deleteMany();
+  await prisma.comment.deleteMany();
   await prisma.ticket.deleteMany();
+  await prisma.user.deleteMany();
 
   const passwordHash = await hash(process.env.SEED_PASSWORD || "gemeimnis");
   const dbUsers = await prisma.user.createManyAndReturn({
@@ -184,10 +236,18 @@ const seed = async () => {
       password: passwordHash,
     })),
   });
-  await prisma.ticket.createMany({
+  const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket, index) => ({
       ...ticket,
       deadline: formatDate(addDays(BASE_DEADLINE, index)),
+      userId: dbUsers[1] && index < 7 ? dbUsers[1].id : dbUsers[0].id,
+    })),
+  });
+
+  await prisma.comment.createMany({
+    data: comments.map((comment, index) => ({
+      ...comment,
+      ticketId: dbTickets[0].id,
       userId: dbUsers[1] && index < 7 ? dbUsers[1].id : dbUsers[0].id,
     })),
   });
