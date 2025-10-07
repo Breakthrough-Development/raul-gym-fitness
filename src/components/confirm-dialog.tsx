@@ -33,6 +33,7 @@ const useConfirmDialog = ({
   };
   const dialogTrigger = cloneElement(trigger, {
     onClick: () => setIsOpen((state) => !state),
+    className: "cursor-pointer",
   } as React.HTMLAttributes<HTMLElement>);
 
   const dialog = (
@@ -43,7 +44,7 @@ const useConfirmDialog = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
             <Form
               action={formAction}
