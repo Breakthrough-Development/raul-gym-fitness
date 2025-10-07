@@ -1,6 +1,5 @@
 "use client";
-import Link from "next/link";
-import { ticketPath, ticketEditPath } from "@/paths";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,26 +7,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { TICKET_ICONS } from "../constants";
-import { Button } from "@/components/ui/button";
+import { useAuth } from "@/features/auth/hooks/use-auth";
+import { isOwner } from "@/features/auth/utils/is-owner";
+import { Comments } from "@/features/comment/components/comments";
+import { CommetWithMetaData } from "@/features/comment/types";
+import { ticketEditPath, ticketPath } from "@/paths";
+import { toDisplayCurrency } from "@/utils/currency";
+import clsx from "clsx";
 import {
   LucideMoreVertical,
   LucidePencil,
   LucideSquareArrowOutUpRight,
 } from "lucide-react";
-import clsx from "clsx";
-import { toDisplayCurrency } from "@/utils/currency";
-import { TicketMoreMenu } from "./ticket-more-menu";
+import Link from "next/link";
+import { TICKET_ICONS } from "../constants";
 import { TicketWithMetadata } from "../types/types";
-import { useAuth } from "@/features/auth/hooks/use-auth";
-import { isOwner } from "@/features/auth/utils/is-owner";
+import { TicketMoreMenu } from "./ticket-more-menu";
 
 export type TicketItemProps = {
   ticket: TicketWithMetadata;
   isDetail?: boolean;
+  comments: CommetWithMetaData[];
 };
 
-const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
+const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
   const { user } = useAuth();
   const isTicketOwner = isOwner(user, ticket);
 
@@ -61,52 +64,55 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
   ) : null;
   return (
     <div
-      className={clsx("w-full flex gap-x-1", {
+      className={clsx("w-full flex flex-col gap-y-4", {
         "max-w-[580px]": isDetail,
         "max-w-[420px]": !isDetail,
       })}
     >
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="flex gap-x-2">
-            <span>{TICKET_ICONS[ticket.status]}</span>
-            <span className="truncate">{ticket.title}</span>
-          </CardTitle>
-        </CardHeader>
+      <div className="flex gap-x-2">
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle className="flex gap-x-2">
+              <span>{TICKET_ICONS[ticket.status]}</span>
+              <span className="truncate">{ticket.title}</span>
+            </CardTitle>
+          </CardHeader>
 
-        <CardContent>
-          <span
-            className={clsx("whitespace-break-spaces", {
-              "line-clamp-3": !isDetail,
-            })}
-          >
-            {ticket.content}
-          </span>
-        </CardContent>
+          <CardContent>
+            <span
+              className={clsx("whitespace-break-spaces", {
+                "line-clamp-3": !isDetail,
+              })}
+            >
+              {ticket.content}
+            </span>
+          </CardContent>
 
-        <CardFooter className="flex justify-between">
-          <p className="text-sm text-muted-foreground">
-            {ticket.deadline} by {ticket.user.username}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {toDisplayCurrency(ticket.bounty)}
-          </p>
-        </CardFooter>
-      </Card>
+          <CardFooter className="flex justify-between">
+            <p className="text-sm text-muted-foreground">
+              {ticket.deadline} by {ticket.user.username}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {toDisplayCurrency(ticket.bounty)}
+            </p>
+          </CardFooter>
+        </Card>
 
-      <div className="flex flex-col gap-y-1">
-        {isDetail ? (
-          <>
-            {editButton}
-            {moreMenu}
-          </>
-        ) : (
-          <>
-            {detailButton}
-            {editButton}
-          </>
-        )}
+        <div className="flex flex-col gap-y-1">
+          {isDetail ? (
+            <>
+              {editButton}
+              {moreMenu}
+            </>
+          ) : (
+            <>
+              {detailButton}
+              {editButton}
+            </>
+          )}
+        </div>
       </div>
+      {isDetail ? <Comments comments={comments} /> : null}
     </div>
   );
 };
