@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,10 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { getAuth } from "@/features/auth/queries/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { Comments } from "@/features/comment/components/comments";
-import { CommetWithMetaData } from "@/features/comment/types";
 import { ticketEditPath, ticketPath } from "@/paths";
 import { toDisplayCurrency } from "@/utils/currency";
 import clsx from "clsx";
@@ -27,11 +25,10 @@ import { TicketMoreMenu } from "./ticket-more-menu";
 export type TicketItemProps = {
   ticket: TicketWithMetadata;
   isDetail?: boolean;
-  comments: CommetWithMetaData[];
 };
 
-const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
-  const { user } = useAuth();
+const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
+  const { user } = await getAuth();
   const isTicketOwner = isOwner(user, ticket);
 
   const detailButton = isTicketOwner ? (
@@ -112,7 +109,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
           )}
         </div>
       </div>
-      {isDetail ? <Comments comments={comments} /> : null}
+      {isDetail ? <Comments ticketId={ticket.id} /> : null}
     </div>
   );
 };
