@@ -4,6 +4,7 @@ import { isOwner } from "@/features/auth/utils/is-owner";
 import { getComments } from "../queries/get-comments";
 import { CommentCreateForm } from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
+import { CommentEditButton } from "./comment-edit-button";
 import { CommentItem } from "./comment-item";
 
 type CommentsProps = {
@@ -28,7 +29,14 @@ export const Comments = async ({ ticketId }: CommentsProps) => {
               comment={comment}
               buttons={[
                 ...(isOwner(user, comment)
-                  ? [<CommentDeleteButton key="0" id={comment.id} />]
+                  ? [
+                      <CommentDeleteButton key="0" id={comment.id} />,
+                      <CommentEditButton
+                        key="1"
+                        id={comment.id}
+                        content={comment.content}
+                      />,
+                    ]
                   : []),
               ]}
             />
