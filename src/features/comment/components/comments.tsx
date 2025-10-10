@@ -1,7 +1,7 @@
 import { CardComp } from "@/components/card-comp";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
-import { getComments } from "../queries/get-comments";
+import { CommetWithMetaData } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
 import { CommentEditButton } from "./comment-edit-button";
@@ -9,10 +9,10 @@ import { CommentItem } from "./comment-item";
 
 type CommentsProps = {
   ticketId: string;
+  comments?: CommetWithMetaData[];
 };
 
-export const Comments = async ({ ticketId }: CommentsProps) => {
-  const comments = await getComments(ticketId);
+export const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
   const { user } = await getAuth();
 
   return (
