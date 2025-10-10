@@ -1,6 +1,5 @@
+"use client";
 import { CardComp } from "@/components/card-comp";
-import { getAuth } from "@/features/auth/queries/get-auth";
-import { isOwner } from "@/features/auth/utils/is-owner";
 import { CommetWithMetaData } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
@@ -12,9 +11,7 @@ type CommentsProps = {
   comments?: CommetWithMetaData[];
 };
 
-export const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
-  const { user } = await getAuth();
-
+export const Comments = ({ ticketId, comments = [] }: CommentsProps) => {
   return (
     <>
       <CardComp
@@ -28,7 +25,7 @@ export const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
             <CommentItem
               comment={comment}
               buttons={[
-                ...(isOwner(user, comment)
+                ...(comment.isOwner
                   ? [
                       <CommentDeleteButton key="0" id={comment.id} />,
                       <CommentEditButton
