@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,7 +28,7 @@ export type TicketItemProps = {
   comments?: CommetWithMetaData[];
 };
 
-const TicketItem = async ({ ticket, isDetail, comments }: TicketItemProps) => {
+const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
   const detailButton = ticket.isOwner ? (
     <Button asChild variant="outline" size="icon">
       <Link prefetch href={ticketPath(ticket.id)}>
