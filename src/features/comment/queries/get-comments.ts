@@ -40,7 +40,6 @@ export const getComments = async (ticketId: string, offset?: number) => {
     ...comment,
     isOwner: isOwner(user, comment),
   }));
-  console.log(list);
   return {
     list,
     metadata: {
