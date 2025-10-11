@@ -1,7 +1,7 @@
 "use server";
 import {
   ActionState,
-  formErrorToActionState,
+  fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
@@ -37,7 +37,7 @@ export const editComment = async (
       },
     });
   } catch (error) {
-    return formErrorToActionState(error, formData);
+    return fromErrorToActionState(error, formData);
   }
   revalidatePath(ticketPath(comment.ticketId));
   return toActionState("SUCCESS", "Comment Updated");
