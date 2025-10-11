@@ -1,24 +1,21 @@
 import { useActionFeedback } from "@/components/form/hooks/use-action-feedback";
-import { CommentWithMetaData } from "@/features/comment/types";
 import { toast } from "sonner";
 import { ActionState } from "./util/to-action-state";
-type FormProps = {
+type FormProps<T = unknown> = {
   action: (payload: FormData) => void;
-  actionState: ActionState;
+  actionState: ActionState<T>;
   children: React.ReactNode;
-  onSuccess?: (
-    actionState: ActionState
-  ) => void;
+  onSuccess?: (actionState: ActionState<T>) => void;
   onError?: (actionState: ActionState) => void;
 };
 
-const Form = ({
+const Form = <T,>({
   children,
   actionState,
   action,
   onSuccess,
   onError,
-}: FormProps) => {
+}: FormProps<T>) => {
   useActionFeedback(actionState, {
     onSuccess: () => {
       if (actionState.message) {
