@@ -1,11 +1,14 @@
-import { ActionState } from "./util/to-action-state";
 import { useActionFeedback } from "@/components/form/hooks/use-action-feedback";
+import { CommentWithMetaData } from "@/features/comment/types";
 import { toast } from "sonner";
+import { ActionState } from "./util/to-action-state";
 type FormProps = {
   action: (payload: FormData) => void;
   actionState: ActionState;
   children: React.ReactNode;
-  onSuccess?: (actionState: ActionState) => void;
+  onSuccess?: (
+    actionState: ActionState
+  ) => void;
   onError?: (actionState: ActionState) => void;
 };
 

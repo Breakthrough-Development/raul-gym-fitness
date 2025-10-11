@@ -1,12 +1,13 @@
 import { ZodError, flattenError } from "zod";
 
-export type ActionState = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ActionState<T = any> = {
   status: "IDLE" | "SUCCESS" | "ERROR";
   message: string;
   fieldErrors: Record<string, string[] | undefined>;
   timestamp: number;
   payload?: FormData;
-  data?: unknown;
+  data?: T;
 };
 
 export const EMPTY_ACTION_STATE: ActionState = {
