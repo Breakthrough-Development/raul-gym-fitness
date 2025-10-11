@@ -10,7 +10,7 @@ export const getComments = async (ticketId: string, offset?: number) => {
     ticketId,
   };
   const skip = offset ?? 0;
-  const take = 10;
+  const take = 2;
 
   const [comments, count] = await prisma.$transaction([
     prisma.comment.findMany({
