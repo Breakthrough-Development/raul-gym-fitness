@@ -3,7 +3,7 @@ import { CardComp } from "@/components/card-comp";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { getComments } from "../queries/get-comments";
-import { CommetWithMetaData } from "../types";
+import { CommentWithMetaData } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
 import { CommentEditButton } from "./comment-edit-button";
@@ -12,7 +12,7 @@ import { CommentItem } from "./comment-item";
 type CommentsProps = {
   ticketId: string;
   paginatedComments: {
-    list: CommetWithMetaData[];
+    list: CommentWithMetaData[];
     metadata: { count: number; hasNextPage: boolean };
   };
 };
@@ -29,12 +29,23 @@ export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
   const handleDeleteComment = (id: string) => {
     setComments((prev) => prev.filter((c) => c.id !== id));
   };
+  const handleCreateComment = (comment: CommentWithMetaData | undefined) => {
+    if (!comment) {
+      return;
+    }
+    setComments((prevComment) => [comment, ...prevComment]);
+  };
   return (
     <>
       <CardComp
         title="Comment"
         description="A comment on a ticket"
-        content={<CommentCreateForm ticketId={ticketId} />}
+        content={
+          <CommentCreateForm
+            ticketId={ticketId}
+            onCreateComment={handleCreateComment}
+          />
+        }
       />
       <ul className="flex flex-col gap-y-2 ml-8">
         {comments.map((comment) => (
