@@ -19,10 +19,12 @@ type CommentsProps = {
 
 export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
   const [comments, setComments] = useState(paginatedComments.list);
+  const [metadata, setMetadata] = useState(paginatedComments.metadata);
   const handleMore = async () => {
-    const morePaginatedComments = await getComments(ticketId);
+    const morePaginatedComments = await getComments(ticketId, comments.length);
     const moreComments = morePaginatedComments.list;
     setComments([...comments, ...moreComments]);
+    setMetadata(morePaginatedComments.metadata);
   };
   return (
     <>
@@ -33,6 +35,7 @@ export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
       />
       <ul className="flex flex-col gap-y-2 ml-8">
         {comments.map((comment) => (
+          // TODO: fix bug, getting repeated comments
           <li key={comment.id} className="w-full">
             <CommentItem
               comment={comment}
@@ -52,11 +55,13 @@ export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
           </li>
         ))}
       </ul>
-      <div className="flex flex-col justify-center ml-8">
-        <Button variant="ghost" onClick={handleMore}>
-          More
-        </Button>
-      </div>
+      {metadata.hasNextPage && (
+        <div className="flex flex-col justify-center ml-8">
+          <Button variant="ghost" onClick={handleMore}>
+            More
+          </Button>
+        </div>
+      )}
     </>
   );
 };
