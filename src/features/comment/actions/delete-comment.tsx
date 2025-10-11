@@ -1,6 +1,6 @@
 "use server";
 import {
-  formErrorToActionState,
+  fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
@@ -22,7 +22,7 @@ export const deleteComment = async (id: string) => {
       where: { id },
     });
   } catch (error) {
-    return formErrorToActionState(error);
+    return fromErrorToActionState(error);
   }
   revalidatePath(ticketPath(comment.ticketId));
   return toActionState("SUCCESS", "Comment deleted");
