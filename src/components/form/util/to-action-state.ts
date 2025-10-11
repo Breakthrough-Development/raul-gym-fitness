@@ -1,7 +1,7 @@
 import { ZodError, flattenError } from "zod";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ActionState<T = any> = {
+export type ActionState<T = unknown> = {
   status: "IDLE" | "SUCCESS" | "ERROR";
   message: string;
   fieldErrors: Record<string, string[] | undefined>;
@@ -10,17 +10,17 @@ export type ActionState<T = any> = {
   data?: T;
 };
 
-export const EMPTY_ACTION_STATE: ActionState = {
+export const EMPTY_ACTION_STATE: ActionState<undefined> = {
   status: "IDLE",
   message: "",
   fieldErrors: {},
   timestamp: Date.now(),
 };
 
-export const formErrorToActionState = (
+export const fromErrorToActionState = <T = unknown>(
   error: unknown,
   formData?: FormData
-): ActionState => {
+): ActionState<T> => {
   if (error instanceof ZodError) {
     return {
       status: "ERROR",
@@ -48,12 +48,12 @@ export const formErrorToActionState = (
   }
 };
 
-export const toActionState = (
+export const toActionState = <T = unknown>(
   status: ActionState["status"],
   message: string,
   formData?: FormData,
-  data?: unknown
-): ActionState => {
+  data?: T
+): ActionState<T> => {
   return {
     status,
     message,
