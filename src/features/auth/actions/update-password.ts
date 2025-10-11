@@ -1,7 +1,7 @@
 "use server";
 import {
   ActionState,
-  formErrorToActionState,
+  fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
 import {
@@ -88,7 +88,7 @@ export const resetPassword = async (
     ) {
       return toActionState("ERROR", "Couldn't update password", formData);
     }
-    return formErrorToActionState(error, formData);
+    return fromErrorToActionState(error, formData);
   }
 
   return toActionState("SUCCESS", "Password updated");
