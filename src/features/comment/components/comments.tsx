@@ -10,14 +10,18 @@ import { CommentItem } from "./comment-item";
 
 type CommentsProps = {
   ticketId: string;
-  comments?: CommetWithMetaData[];
+  paginatedComments?: {
+    list: CommetWithMetaData[];
+    metadata: { count: number; hasNextPage: boolean };
+  };
 };
 
-export const Comments = ({ ticketId, comments = [] }: CommentsProps) => {
+export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
+  const comments = paginatedComments?.list ?? [];
   const handleMore = async () => {
-    const results = await getComments(ticketId);
-    console.log("More");
-    console.log(results);
+    const morePaginatedComments = await getComments(ticketId);
+    const moreComments = morePaginatedComments.list;
+    console.log(moreComments);
   };
   return (
     <>
