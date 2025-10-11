@@ -1,7 +1,7 @@
 "use server";
 import {
   ActionState,
-  formErrorToActionState,
+  fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
 import { prisma } from "@/lib/prisma";
@@ -73,7 +73,7 @@ export const updateUser = async (
     ) {
       return toActionState("ERROR", "Couldn't update user", formData);
     }
-    return formErrorToActionState(error, formData);
+    return fromErrorToActionState(error, formData);
   }
 
   return toActionState("SUCCESS", "User updated", formData);
