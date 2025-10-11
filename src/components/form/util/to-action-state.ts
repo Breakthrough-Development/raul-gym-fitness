@@ -6,6 +6,7 @@ export type ActionState = {
   fieldErrors: Record<string, string[] | undefined>;
   timestamp: number;
   payload?: FormData;
+  data?: unknown;
 };
 
 export const EMPTY_ACTION_STATE: ActionState = {
@@ -49,7 +50,8 @@ export const formErrorToActionState = (
 export const toActionState = (
   status: ActionState["status"],
   message: string,
-  formData?: FormData
+  formData?: FormData,
+  data?: unknown
 ): ActionState => {
   return {
     status,
@@ -57,5 +59,6 @@ export const toActionState = (
     fieldErrors: {},
     payload: formData,
     timestamp: Date.now(),
+    data,
   };
 };
