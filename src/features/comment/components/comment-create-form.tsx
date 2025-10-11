@@ -9,24 +9,27 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useActionState } from "react";
 import { createComment } from "../actions/create-comment";
-import { CommentWithMetaData } from "../types";
+import { CommentWithMetadata } from "../types";
 
 type CommentCreateForm = {
   ticketId: string;
-  onCreateComment?: (comment: CommentWithMetaData | undefined) => void;
+  onCreateComment?: (comment: CommentWithMetadata | undefined) => void;
 };
 
 export const CommentCreateForm = ({
   ticketId,
   onCreateComment,
 }: CommentCreateForm) => {
-  const [actionState, action] = useActionState(
-    createComment.bind(null, ticketId),
-    EMPTY_ACTION_STATE
-  );
+  const createCommentWithPromise = createComment<
+    CommentWithMetadata | undefined
+  >;
+  const [actionState, action] = useActionState<
+    ActionState<CommentWithMetadata | undefined>,
+    FormData
+  >(createCommentWithPromise.bind(null, ticketId), EMPTY_ACTION_STATE);
 
   const handleSuccess = (
-    actionState: ActionState<CommentWithMetaData | undefined>
+    actionState: ActionState<CommentWithMetadata | undefined>
   ) => {
     onCreateComment?.(actionState.data);
   };
