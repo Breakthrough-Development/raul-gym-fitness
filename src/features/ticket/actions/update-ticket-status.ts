@@ -1,14 +1,14 @@
 "use server";
-import { ticketsPath } from "@/paths";
-import { revalidatePath } from "next/cache";
 import {
-  formErrorToActionState,
+  fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
-import { prisma } from "@/lib/prisma";
-import { TicketStatus } from "@prisma/client";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
+import { prisma } from "@/lib/prisma";
+import { ticketsPath } from "@/paths";
+import { TicketStatus } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export const updateTicketStatus = async (id: string, status: TicketStatus) => {
   const { user } = await getAuthOrRedirect();
@@ -25,7 +25,7 @@ export const updateTicketStatus = async (id: string, status: TicketStatus) => {
       data: { status },
     });
   } catch (error) {
-    return formErrorToActionState(error);
+    return fromErrorToActionState(error);
   }
 
   revalidatePath(ticketsPath());
