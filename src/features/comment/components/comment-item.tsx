@@ -1,10 +1,10 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
-import { CommetWithMetaData } from "../types";
+import { CommentWithMetaData } from "../types";
 
 type CommentItemProps = {
-  comment: CommetWithMetaData;
+  comment: CommentWithMetaData;
   buttons: React.ReactNode[];
 };
 
