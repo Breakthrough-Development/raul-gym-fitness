@@ -1,6 +1,7 @@
 "use client";
 import { CardComp } from "@/components/card-comp";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { getComments } from "../queries/get-comments";
 import { CommetWithMetaData } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
@@ -10,18 +11,18 @@ import { CommentItem } from "./comment-item";
 
 type CommentsProps = {
   ticketId: string;
-  paginatedComments?: {
+  paginatedComments: {
     list: CommetWithMetaData[];
     metadata: { count: number; hasNextPage: boolean };
   };
 };
 
 export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
-  const comments = paginatedComments?.list ?? [];
+  const [comments, setComments] = useState(paginatedComments.list);
   const handleMore = async () => {
     const morePaginatedComments = await getComments(ticketId);
     const moreComments = morePaginatedComments.list;
-    console.log(moreComments);
+    setComments([...comments, ...moreComments]);
   };
   return (
     <>
