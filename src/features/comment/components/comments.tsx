@@ -1,6 +1,7 @@
 "use client";
 import { CardComp } from "@/components/card-comp";
 import { Button } from "@/components/ui/button";
+import { getComments } from "../queries/get-comments";
 import { CommetWithMetaData } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
@@ -13,8 +14,10 @@ type CommentsProps = {
 };
 
 export const Comments = ({ ticketId, comments = [] }: CommentsProps) => {
-  const handleMore = () => {
+  const handleMore = async () => {
+    const results = await getComments(ticketId);
     console.log("More");
+    console.log(results);
   };
   return (
     <>
