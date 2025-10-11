@@ -1,23 +1,24 @@
 import { cloneElement, useActionState, useState } from "react";
+import { Form } from "./form/form";
+import { ActionState, EMPTY_ACTION_STATE } from "./form/util/to-action-state";
 import {
-  AlertDialogAction,
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogCancel,
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
-import { ActionState, EMPTY_ACTION_STATE } from "./form/util/to-action-state";
-import { Form } from "./form/form";
 
 type ConfirmDialogArgs = {
   title?: string;
   description?: string;
   action: () => Promise<ActionState>;
   trigger: React.ReactElement;
+  onSuccess?: (actionState: ActionState) => void;
 };
 
 const useConfirmDialog = ({
@@ -25,11 +26,13 @@ const useConfirmDialog = ({
   description = "This action cannot be undone. Make sure you undestand the consequences.",
   action,
   trigger,
+  onSuccess,
 }: ConfirmDialogArgs) => {
   const [isOpen, setIsOpen] = useState(false);
   const [actionState, formAction] = useActionState(action, EMPTY_ACTION_STATE);
   const handleSuccess = () => {
     setIsOpen(false);
+    onSuccess?.(actionState);
   };
   const dialogTrigger = cloneElement(trigger, {
     onClick: () => setIsOpen((state) => !state),
@@ -44,7 +47,9 @@ const useConfirmDialog = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="cursor-pointer">
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction asChild>
             <Form
               action={formAction}
