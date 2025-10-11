@@ -1,5 +1,6 @@
-"use server";
+"use client";
 import { CardComp } from "@/components/card-comp";
+import { Button } from "@/components/ui/button";
 import { CommetWithMetaData } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
@@ -11,7 +12,10 @@ type CommentsProps = {
   comments?: CommetWithMetaData[];
 };
 
-export const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
+export const Comments = ({ ticketId, comments = [] }: CommentsProps) => {
+  const handleMore = () => {
+    console.log("More");
+  };
   return (
     <>
       <CardComp
@@ -40,6 +44,11 @@ export const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
           </li>
         ))}
       </ul>
+      <div className="flex flex-col justify-center ml-8">
+        <Button variant="ghost" onClick={handleMore}>
+          More
+        </Button>
+      </div>
     </>
   );
 };
