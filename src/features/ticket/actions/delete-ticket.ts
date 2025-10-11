@@ -1,15 +1,15 @@
 "use server";
-import { prisma } from "@/lib/prisma";
-import { ticketsPath } from "@/paths";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { setCookieByKey } from "@/actions/cookies";
 import {
-  formErrorToActionState,
+  fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { isOwner } from "@/features/auth/utils/is-owner";
+import { prisma } from "@/lib/prisma";
+import { ticketsPath } from "@/paths";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const deleteTicket = async (id: string) => {
   const { user } = await getAuthOrRedirect();
@@ -27,7 +27,7 @@ export const deleteTicket = async (id: string) => {
       },
     });
   } catch (error) {
-    return formErrorToActionState(error);
+    return fromErrorToActionState(error);
   }
 
   revalidatePath(ticketsPath());
