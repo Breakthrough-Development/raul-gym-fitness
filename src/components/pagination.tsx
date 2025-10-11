@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PAGINATION_SIZE_OPTIONS } from "@/features/ticket/constants";
+import { PaginatedData } from "@/types/pagination";
 
 type PageAndSize = {
   page: number;
@@ -18,9 +19,7 @@ type PageAndSize = {
 type PaginationProps = {
   pagination: PageAndSize;
   onPageAndSize: (pageAndSize: PageAndSize) => void;
-  paginatedMetaData: {
-    count: number;
-  };
+  paginatedMetaData: PaginatedData<unknown>["metadata"];
 };
 
 export const Pagination = ({
