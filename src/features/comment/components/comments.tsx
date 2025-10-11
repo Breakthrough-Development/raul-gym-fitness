@@ -1,4 +1,4 @@
-"use client";
+"use server";
 import { CardComp } from "@/components/card-comp";
 import { CommetWithMetaData } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
@@ -11,7 +11,7 @@ type CommentsProps = {
   comments?: CommetWithMetaData[];
 };
 
-export const Comments = ({ ticketId, comments = [] }: CommentsProps) => {
+export const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
   return (
     <>
       <CardComp
