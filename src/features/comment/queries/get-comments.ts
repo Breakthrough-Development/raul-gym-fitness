@@ -13,6 +13,7 @@ export const getComments = async (
     ticketId,
   };
   const take = 2;
+  const overFetch = take + 1;
 
   const [comments, count] = await prisma.$transaction([
     prisma.comment.findMany({
@@ -21,7 +22,7 @@ export const getComments = async (
         ? { createdAt: new Date(cursor.createdAt), id: cursor.id }
         : undefined,
       skip: cursor ? 1 : 0,
-      take,
+      take: overFetch,
       include: {
         user: {
           select: {
@@ -41,10 +42,11 @@ export const getComments = async (
     }),
   ]);
 
-  const hasNextPage = true;
+  const hasNextPage = comments.length > take;
+  const finalComments = hasNextPage ? comments.slice(0, -1) : comments;
   const lastComment = comments.at(-1);
 
-  const list = comments.map((comment) => ({
+  const list = finalComments.map((comment) => ({
     ...comment,
     isOwner: isOwner(user, comment),
   }));
