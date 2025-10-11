@@ -1,5 +1,12 @@
-import { cloneElement, useActionState, useState } from "react";
-import { Form } from "./form/form";
+import {
+  cloneElement,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { toast } from "sonner";
+import { useActionFeedback } from "./form/hooks/use-action-feedback";
 import { ActionState, EMPTY_ACTION_STATE } from "./form/util/to-action-state";
 import {
   AlertDialog,
@@ -29,11 +36,40 @@ const useConfirmDialog = ({
   onSuccess,
 }: ConfirmDialogArgs) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [actionState, formAction] = useActionState(action, EMPTY_ACTION_STATE);
-  const handleSuccess = () => {
-    setIsOpen(false);
-    onSuccess?.(actionState);
-  };
+  const [actionState, formAction, isPending] = useActionState(
+    action,
+    EMPTY_ACTION_STATE
+  );
+
+  const toastRef = useRef<string | number | null>(null);
+
+  useEffect(() => {
+    if (isPending) {
+      toastRef.current = toast.loading("Deleting...");
+    } else if (toastRef.current) {
+      toast.dismiss(toastRef.current);
+    }
+    return () => {
+      if (toastRef.current) {
+        toast.dismiss(toastRef.current);
+      }
+    };
+  }, [isPending]);
+
+  useActionFeedback(actionState, {
+    onSuccess: () => {
+      if (actionState.message) {
+        toast.success(actionState.message);
+      }
+      onSuccess?.(actionState);
+    },
+    onError: () => {
+      if (actionState.message) {
+        toast.error(actionState.message);
+      }
+    },
+  });
+
   const dialogTrigger = cloneElement(trigger, {
     onClick: () => setIsOpen((state) => !state),
     className: "cursor-pointer",
@@ -51,13 +87,9 @@ const useConfirmDialog = ({
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Form
-              action={formAction}
-              actionState={actionState}
-              onSuccess={handleSuccess}
-            >
+            <form action={formAction}>
               <Button type="submit">Confirm</Button>
-            </Form>
+            </form>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
