@@ -2,16 +2,16 @@
 
 import {
   ActionState,
-  formErrorToActionState,
+  fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
-import z from "zod";
-import { prisma } from "@/lib/prisma";
-import { ticketsPath } from "@/paths";
-import { redirect } from "next/navigation";
 import { verifyPasswordHash } from "@/features/password/util/hash-and-verify";
 import { createSession } from "@/lib/aslo";
+import { prisma } from "@/lib/prisma";
+import { ticketsPath } from "@/paths";
 import { generateRandomToken } from "@/utils/crypto";
+import { redirect } from "next/navigation";
+import z from "zod";
 import { setSessionCookie } from "../utils/session-cookie";
 
 const signInSchema = z.object({
@@ -46,7 +46,7 @@ const signIn = async (_actionState: ActionState, formData: FormData) => {
 
     await setSessionCookie(sessionToken, sessionCookie.expiresAt);
   } catch (error) {
-    return formErrorToActionState(error, formData);
+    return fromErrorToActionState(error, formData);
   }
   redirect(ticketsPath());
 };
