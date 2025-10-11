@@ -1,7 +1,7 @@
 "use server";
 import {
   ActionState,
-  formErrorToActionState,
+  fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
 import { hashPassword } from "@/features/password/util/hash-and-verify";
@@ -28,12 +28,18 @@ const signUpSchema = z
       .string()
       .min(1)
       .max(191)
-      .refine((value) => !value.includes(" "), "First Name cannot contain spaces"),
+      .refine(
+        (value) => !value.includes(" "),
+        "First Name cannot contain spaces"
+      ),
     lastName: z
       .string()
       .min(1)
       .max(191)
-      .refine((value) => !value.includes(" "), "Last Name cannot contain spaces"),
+      .refine(
+        (value) => !value.includes(" "),
+        "Last Name cannot contain spaces"
+      ),
     email: z.email().min(1, { message: "Is required" }).max(191),
     password: z.string().min(6).max(191),
     confirmPassword: z.string().min(6).max(191),
@@ -50,9 +56,8 @@ const signUpSchema = z
 
 export const signUp = async (_actionState: ActionState, formData: FormData) => {
   try {
-    const { username, email, password, firstName, lastName  } = signUpSchema.parse(
-      Object.fromEntries(formData)
-    );
+    const { username, email, password, firstName, lastName } =
+      signUpSchema.parse(Object.fromEntries(formData));
 
     const passwordHash = await hashPassword(password);
 
@@ -81,7 +86,7 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
         formData
       );
     }
-    return formErrorToActionState(error, formData);
+    return fromErrorToActionState(error, formData);
   }
 
   redirect(ticketsPath());
