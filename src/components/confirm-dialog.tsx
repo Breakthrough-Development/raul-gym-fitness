@@ -24,7 +24,7 @@ type ConfirmDialogArgs = {
   title?: string;
   description?: string;
   action: () => Promise<ActionState>;
-  trigger: React.ReactElement;
+  trigger: React.ReactElement | ((isLoading: boolean) => React.ReactElement);
   onSuccess?: (actionState: ActionState) => void;
 };
 
@@ -70,10 +70,13 @@ const useConfirmDialog = ({
     },
   });
 
-  const dialogTrigger = cloneElement(trigger, {
-    onClick: () => setIsOpen((state) => !state),
-    className: "cursor-pointer",
-  } as React.HTMLAttributes<HTMLElement>);
+  const dialogTrigger = cloneElement(
+    typeof trigger === "function" ? trigger(isPending) : trigger,
+    {
+      onClick: () => setIsOpen((state) => !state),
+      className: "cursor-pointer",
+    } as React.HTMLAttributes<HTMLElement>
+  );
 
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
