@@ -24,9 +24,12 @@ export const getComments = async (ticketId: string, offset?: number) => {
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [
+        {
+          createdAt: "desc",
+        },
+        { id: "desc" },
+      ],
     }),
     prisma.comment.count({
       where,
@@ -37,6 +40,7 @@ export const getComments = async (ticketId: string, offset?: number) => {
     ...comment,
     isOwner: isOwner(user, comment),
   }));
+  console.log(list);
   return {
     list,
     metadata: {
