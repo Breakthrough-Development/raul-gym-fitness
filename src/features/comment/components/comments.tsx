@@ -16,7 +16,7 @@ type CommentsProps = {
 };
 
 export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
     useInfiniteQuery({
       queryKey: ["comments", ticketId],
       queryFn: ({ pageParam }) => getComments(ticketId, pageParam),
@@ -38,12 +38,8 @@ export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
   const handleMore = () => fetchNextPage();
   const comments = data.pages.flatMap((page) => page.list);
 
-  const handleDeleteComment = (id: string) => {
-    // TODO
-  };
-  const handleCreateComment = (comment: CommentWithMetadata | undefined) => {
-    // TODO
-  };
+  const handleDeleteComment = () => refetch();
+  const handleCreateComment = () => refetch();
   return (
     <>
       <CardComp
