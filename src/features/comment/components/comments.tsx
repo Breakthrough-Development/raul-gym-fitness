@@ -15,7 +15,7 @@ type CommentsProps = {
   paginatedComments: PaginatedData<CommentWithMetadata>;
 };
 
-export const Comments = ({ ticketId }: CommentsProps) => {
+export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["comments", ticketId],
@@ -24,10 +24,19 @@ export const Comments = ({ ticketId }: CommentsProps) => {
         undefined as PaginatedData<CommentWithMetadata>["metadata"]["cursor"],
       getNextPageParam: (lastPage) =>
         lastPage.metadata.hasNextPage ? lastPage.metadata.cursor : undefined,
+      initialData: {
+        pages: [
+          {
+            list: paginatedComments.list,
+            metadata: paginatedComments.metadata,
+          },
+        ],
+        pageParams: [undefined],
+      },
     });
 
   const handleMore = () => fetchNextPage();
-  const comments = data?.pages.flatMap((page) => page.list) ?? [];
+  const comments = data.pages.flatMap((page) => page.list);
 
   const handleDeleteComment = (id: string) => {
     // TODO
