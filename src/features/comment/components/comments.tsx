@@ -1,8 +1,10 @@
 "use client";
 import { CardComp } from "@/components/card-comp";
-import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PaginatedData } from "@/types/pagination";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { getComments } from "../queries/get-comments";
 import { CommentWithMetadata } from "../types";
 import { CommentCreateForm } from "./comment-create-form";
@@ -17,7 +19,7 @@ type CommentsProps = {
 
 export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
   const queryKey = ["comments", ticketId];
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey,
       queryFn: ({ pageParam }) => getComments(ticketId, pageParam),
@@ -36,11 +38,17 @@ export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
       },
     });
 
-  const handleMore = () => fetchNextPage();
   const comments = data.pages.flatMap((page) => page.list);
   const queryClient = useQueryClient();
   const handleDeleteComment = () => queryClient.invalidateQueries({ queryKey });
   const handleCreateComment = () => queryClient.invalidateQueries({ queryKey });
+
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
   return (
     <>
       <CardComp
@@ -77,18 +85,24 @@ export const Comments = ({ ticketId, paginatedComments }: CommentsProps) => {
             />
           </li>
         ))}
+        {isFetchingNextPage && (
+          <li className="w-full flex flex-col gap-y-2">
+            <div className="flex gap-x-2">
+              <Skeleton className="h-[82px] w-full" />
+              <Skeleton className="h-[40px] w-[40px]]" />
+            </div>
+            <div className="flex gap-x-2">
+              <Skeleton className="h-[82px] w-full" />
+              <Skeleton className="h-[40px] w-[40px]]" />
+            </div>
+          </li>
+        )}
       </ul>
-      {hasNextPage && (
-        <div className="flex flex-col justify-center ml-8">
-          <Button
-            variant="ghost"
-            onClick={handleMore}
-            disabled={isFetchingNextPage}
-          >
-            More
-          </Button>
-        </div>
-      )}
+      <div ref={ref}>
+        {!hasNextPage && (
+          <p className="text-right text-xs italic">No more comments</p>
+        )}
+      </div>
     </>
   );
 };
