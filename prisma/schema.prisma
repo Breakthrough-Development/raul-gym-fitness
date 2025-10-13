@@ -10,9 +10,10 @@ datasource db {
 model User {
     id        String    @id @default(cuid())
     firstName String
-    lastName  String
+    lastName  String?
     username  String    @unique
-    email     String    @unique
+    email     String?   @unique
+    phone     String?
     password  String
     sessions  Session[]
     Payment   Payment[]
@@ -26,13 +27,14 @@ model Session {
 }
 
 model Payment {
-    id        String        @id @default(cuid())
-    createdAt DateTime      @default(now())
-    updatedAt DateTime      @updatedAt
-    amount    Int
-    status    PaymentStatus @default(OPEN)
-    user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId    String
+    id         String           @id @default(cuid())
+    createdAt  DateTime         @default(now())
+    updatedAt  DateTime         @updatedAt
+    amount     Int
+    status     PaymentStatus    @default(OPEN)
+    user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId     String
+    membership MembershipStatus @default(DAILY)
 
     @@index([userId])
 }
@@ -47,5 +49,4 @@ enum PaymentStatus {
 enum MembershipStatus {
     DAILY
     MONTHLY
-    NONE
 }
