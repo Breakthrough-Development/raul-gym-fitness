@@ -25,6 +25,7 @@ model Client {
     email     String?   @unique
     phone     String?
     Payment   Payment[]
+    createdAt DateTime  @default(now())
 }
 
 model Session {
