@@ -1,10 +1,13 @@
+import { Sidebar } from "@/app/_navigation/sidebar/sidebar";
+import Header from "@/components/header";
+import { Toaster } from "@/components/sonner";
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ReactQueryProvider } from "./_providers/react-query/react-query-provider";
 import "./globals.css";
-import Header from "@/components/header";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import { Toaster } from "@/components/sonner";
-import { RedirectToast } from "@/components/redirect-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,19 +34,28 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
-          <Header />
-          <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/20 flex flex-col">
-            {children}
-          </main>
-          <Toaster expand />
-          <footer>
-            <p>
-              &copy; {new Date().getFullYear()} The Road to Next. All rights
-              reserved.
-            </p>
-          </footer>
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <NuqsAdapter>
+            <ThemeProvider>
+              <SidebarProvider className="flex-col" defaultOpen={false}>
+                <Header />
+                <div className="flex min-h-svh border-collapse">
+                  <Sidebar />
+                  <main className="flex-1 py-24 px-8 bg-secondary/20 flex flex-col">
+                    {children}
+                  </main>
+                </div>
+                <Toaster expand />
+                <footer>
+                  <p>
+                    &copy; {new Date().getFullYear()} The Road to Next. All
+                    rights reserved.
+                  </p>
+                </footer>
+              </SidebarProvider>
+            </ThemeProvider>
+          </NuqsAdapter>
+        </ReactQueryProvider>
       </body>
     </html>
   );

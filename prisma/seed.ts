@@ -1,7 +1,32 @@
+import { hash } from "@node-rs/argon2";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const BASE_DEADLINE = new Date("2025-01-01");
+
+const addDays = (date: Date, days: number) => {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+};
+
+const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
+const users = [
+  {
+    username: "admin",
+    email: "admin@admin.com",
+    firstName: "Admin",
+    lastName: "Admin",
+  },
+  {
+    username: "royeradames",
+    email: "royeraadames@gmail.com",
+    firstName: "Royer",
+    lastName: "Adames",
+  },
+];
 const tickets = [
   {
     title: "Ticket 1",
@@ -24,15 +49,207 @@ const tickets = [
     deadline: new Date().toISOString().split("T")[0],
     bounty: 599,
   },
+  {
+    title: "Ticket 4",
+    content: "This is the fourth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 299,
+  },
+  {
+    title: "Ticket 5",
+    content: "This is the fifth ticket",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 699,
+  },
+  {
+    title: "Ticket 6",
+    content: "This is the sixth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 449,
+  },
+  {
+    title: "Ticket 7",
+    content: "This is the seventh ticket",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 549,
+  },
+  {
+    title: "Ticket 8",
+    content: "This is the eighth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 399,
+  },
+  {
+    title: "Ticket 9",
+    content: "This is the ninth ticket",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 649,
+  },
+  {
+    title: "Ticket 10",
+    content: "This is the tenth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 499,
+  },
+  {
+    title: "Ticket 11",
+    content: "This is the eleventh ticket",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 799,
+  },
+  {
+    title: "Ticket 12",
+    content: "This is the twelfth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 349,
+  },
+  {
+    title: "Ticket 13",
+    content: "This is the thirteenth ticket",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 599,
+  },
+  {
+    title: "Ticket 14",
+    content: "This is the fourteenth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 449,
+  },
+  {
+    title: "Ticket 15",
+    content: "This is the fifteenth ticket",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 699,
+  },
+  {
+    title: "Ticket 16",
+    content: "This is the sixteenth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 549,
+  },
+  {
+    title: "Ticket 17",
+    content: "This is the seventeenth ticket",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 899,
+  },
+  {
+    title: "Ticket 18",
+    content: "This is the eighteenth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 399,
+  },
+  {
+    title: "Ticket 19",
+    content: "This is the nineteenth ticket",
+    status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 649,
+  },
+  {
+    title: "Ticket 20",
+    content: "This is the twentieth ticket",
+    status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 499,
+  },
+];
+
+const comments = [
+  {
+    content: "This is the first comment",
+  },
+  {
+    content: "This is the second comment",
+  },
+  {
+    content: "This is the third comment",
+  },
+  {
+    content: "This is the fourth comment",
+  },
+  {
+    content: "This is the fifth comment",
+  },
+  {
+    content: "This is the sixth comment",
+  },
+  {
+    content: "This is the seventh comment",
+  },
+  {
+    content: "This is the eighth comment",
+  },
+  {
+    content: "This is the ninth comment",
+  },
+  {
+    content: "This is the tenth comment",
+  },
+  {
+    content: "This is the eleventh comment",
+  },
+  {
+    content: "This is the twelfth comment",
+  },
+  {
+    content: "This is the thirteenth comment",
+  },
+  {
+    content: "This is the fourteenth comment",
+  },
+  {
+    content: "This is the fifteenth comment",
+  },
+  {
+    content: "This is the sixteenth comment",
+  },
 ];
 
 const seed = async () => {
   const t0 = performance.now();
   console.log("DB seed: Started ...");
 
+  await prisma.comment.deleteMany();
   await prisma.ticket.deleteMany();
-  await prisma.ticket.createMany({
-    data: tickets,
+  await prisma.user.deleteMany();
+
+  const passwordHash = await hash(process.env.SEED_PASSWORD || "gemeimnis");
+  const dbUsers = await prisma.user.createManyAndReturn({
+    data: users.map((user) => ({
+      ...user,
+      password: passwordHash,
+    })),
+  });
+  const dbTickets = await prisma.ticket.createManyAndReturn({
+    data: tickets.map((ticket, index) => ({
+      ...ticket,
+      deadline: formatDate(addDays(BASE_DEADLINE, index)),
+      userId: dbUsers[1] && index < 7 ? dbUsers[1].id : dbUsers[0].id,
+    })),
+  });
+
+  await prisma.comment.createMany({
+    data: comments.map((comment, index) => ({
+      ...comment,
+      ticketId: dbTickets[0].id,
+      userId: dbUsers[1] && index < 7 ? dbUsers[1].id : dbUsers[0].id,
+    })),
   });
 
   const t1 = performance.now();

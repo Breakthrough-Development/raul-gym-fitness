@@ -1,18 +1,24 @@
 import Heading from "@/components/heading";
-import { ticketsPath } from "@/paths";
-import { Route } from "next";
-import Link from "next/link";
+import { Spinner } from "@/components/spiner";
+import TicketList from "@/features/ticket/components/ticket-list";
+import { SearchParamsCache } from "@/features/ticket/search-params";
+import { SearchParams } from "nuqs/server";
+import { Suspense } from "react";
 
-export default function HomePage() {
+type HomePageProps = {
+  searchParams: Promise<SearchParams>;
+};
+
+export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <div className="flex-1 flex flex-col gap-y-8">
       <Heading title="Home" description="Your home place to start" />
 
-      <div className="flex-1 flex flex-col items-center">
-        <Link href={ticketsPath()} className="text-sm underline">
-          Go to Tickets
-        </Link>
-      </div>
+      <Suspense fallback={<Spinner />}>
+        <TicketList
+          searchParams={SearchParamsCache.parse(await searchParams)}
+        />
+      </Suspense>
     </div>
   );
 }

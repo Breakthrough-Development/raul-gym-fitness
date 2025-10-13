@@ -1,17 +1,19 @@
 "use server";
 
+import { setCookieByKey } from "@/actions/cookies";
+import {
+  ActionState,
+  fromErrorToActionState,
+  toActionState,
+} from "@/components/form/util/to-action-state";
+import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { isOwner } from "@/features/auth/utils/is-owner";
 import { prisma } from "@/lib/prisma";
 import { ticketPath, ticketsPath } from "@/paths";
+import { toCent } from "@/utils/currency";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import z from "zod";
-import {
-  ActionState,
-  formErrorToActionState,
-  toActionState,
-} from "@/components/form/util/to-action-state";
-import { setCookieByKey } from "@/actions/cookies";
-import { toCent } from "@/utility/currency";
 
 const upsertTicketSchema = z.object({
   title: z.string().min(1).max(191),
@@ -25,7 +27,20 @@ const upsertTicket = async (
   _actionState: ActionState,
   formData: FormData
 ): Promise<ActionState> => {
+  const { user } = await getAuthOrRedirect();
+
   try {
+    if (id) {
+      const ticket = await prisma.ticket.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!ticket || !isOwner(user, ticket)) {
+        return toActionState("ERROR", "Not authorized", formData);
+      }
+    }
     const data = upsertTicketSchema.parse({
       title: formData.get("title"),
       content: formData.get("content"),
@@ -35,6 +50,7 @@ const upsertTicket = async (
 
     const dbData = {
       ...data,
+      userId: user.id,
       bounty: toCent(data.bounty),
     };
 
@@ -44,7 +60,7 @@ const upsertTicket = async (
       create: dbData,
     });
   } catch (error) {
-    return formErrorToActionState(error, formData);
+    return fromErrorToActionState(error, formData);
   }
 
   revalidatePath(ticketsPath());

@@ -8,15 +8,52 @@ datasource db {
     directUrl = env("DIRECT_URL")
 }
 
+model User {
+    id        String    @id @default(cuid())
+    firstName String
+    lastName  String
+    username  String    @unique
+    email     String    @unique
+    password  String
+    sessions  Session[]
+    tickets   Ticket[]
+    Comment   Comment[]
+}
+
+model Session {
+    id        String   @id
+    expiresAt DateTime
+    userId    String
+    user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
 model Ticket {
-    id       String       @id @default(cuid())
-    createAt DateTime     @default(now())
-    updateAt DateTime     @updatedAt
-    title    String
-    content  String       @db.VarChar(1024)
-    status   TicketStatus @default(OPEN)
-    deadline String
-    bounty   Int
+    id        String       @id @default(cuid())
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+    title     String
+    content   String       @db.VarChar(1024)
+    status    TicketStatus @default(OPEN)
+    deadline  String
+    bounty    Int
+    user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+    Comment   Comment[]
+
+    @@index([userId])
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    content   String   @db.VarChar(1024)
+    ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+    ticketId  String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+
+    @@index([ticketId])
+    @@index([userId])
 }
 
 enum TicketStatus {

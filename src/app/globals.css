@@ -10,6 +10,8 @@
   --font-mono: var(--font-geist-mono);
 
   --animate-fade-from-top: fade-from-top 0.5s ease-out;
+  --animate-header-from-top: header-from-top 0.5s ease-out;
+  --animate-sidebar-from-left: sidebar-from-left 0.5s ease-out;
 
   --color-sidebar-ring: var(--sidebar-ring);
 
@@ -78,6 +80,26 @@
     100% {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @keyframes header-from-top {
+    0% {
+      transform: translateY(-100%);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes sidebar-from-left {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(0);
     }
   }
 
@@ -166,4 +188,9 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
 }
