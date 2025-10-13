@@ -12,3 +12,15 @@ export const passwordForgotPath = () => "/password-forgot" as Route;
 
 export const accountProfilePath = () => "/account/profile" as Route;
 export const accountPasswordPath = () => "/account/password" as Route;
+
+export const dashboardPath = () => "/dashboard" as Route;
+export const dashboardUsersPath = () => "/dashboard/users" as Route;
+export const dashboardUserPath = (userId: string) =>
+  `${dashboardUsersPath()}/${userId}` as Route;
+export const dashboardUserEditPath = (userId: string) =>
+  `${dashboardUsersPath()}/${userId}/edit` as Route;
+export const paymentsPath = () => "/dashboard/payments" as Route;
+export const paymentPath = (paymentId: string) =>
+  `${paymentsPath()}/${paymentId}` as Route;
+export const paymentsEditPath = (paymentId: string) =>
+  `${paymentPath(paymentId)}/edit` as Route;
