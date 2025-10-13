@@ -1,4 +1,5 @@
 "use client";
+import { AccountDropdown } from "@/components/account-dropdown";
 import {
   SidebarContent,
   SidebarFooter,
@@ -14,7 +15,6 @@ import { signInPath, signUpPath } from "@/paths";
 import { getActivePath } from "@/utils/get-active-path";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AccountDropdown } from "../../../components/account-dropdown";
 import { navItems } from "./constants";
 
 export const Sidebar = () => {
