@@ -14,11 +14,11 @@ export const accountProfilePath = () => "/account/profile" as Route;
 export const accountPasswordPath = () => "/account/password" as Route;
 
 export const dashboardPath = () => "/dashboard" as Route;
-export const dashboardUsersPath = () => "/dashboard/users" as Route;
-export const dashboardUserPath = (userId: string) =>
-  `${dashboardUsersPath()}/${userId}` as Route;
-export const dashboardUserEditPath = (userId: string) =>
-  `${dashboardUsersPath()}/${userId}/edit` as Route;
+export const ClientsPath = () => "/dashboard/clients" as Route;
+export const ClientPath = (userId: string) =>
+  `${ClientsPath()}/${userId}` as Route;
+export const ClientEditPath = (userId: string) =>
+  `${ClientsPath()}/${userId}/edit` as Route;
 export const paymentsPath = () => "/dashboard/payments" as Route;
 export const paymentPath = (paymentId: string) =>
   `${paymentsPath()}/${paymentId}` as Route;
