@@ -16,6 +16,14 @@ model User {
     phone     String?
     password  String
     sessions  Session[]
+}
+
+model Client {
+    id        String    @id @default(cuid())
+    firstName String
+    lastName  String?
+    email     String?   @unique
+    phone     String?
     Payment   Payment[]
 }
 
@@ -32,11 +40,11 @@ model Payment {
     updatedAt  DateTime         @updatedAt
     amount     Int
     status     PaymentStatus    @default(OPEN)
-    user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId     String
-    membership MembershipStatus @default(DAILY)
+    membership MembershipStatus
+    client     Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+    clientId   String
 
-    @@index([userId])
+    @@index([clientId])
 }
 
 enum PaymentStatus {
