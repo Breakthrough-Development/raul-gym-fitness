@@ -4,7 +4,7 @@ import { TicketSearchInput } from "@/features/ticket/components/ticket-search-in
 import { TicketSortSelect } from "@/features/ticket/components/ticket-sort-select";
 import { ParsedSearchParams } from "@/features/ticket/search-params";
 import { SORT_OPTIONS } from "../constants";
-import { getClients } from "../queries/get-actions";
+import { getClients } from "../queries/get-clients";
 import { ClientItem } from "./client-item";
 
 export type ClientListProps = {
