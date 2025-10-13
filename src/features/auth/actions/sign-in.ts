@@ -8,10 +8,11 @@ import {
 import { verifyPasswordHash } from "@/features/password/util/hash-and-verify";
 import { createSession } from "@/lib/aslo";
 import { prisma } from "@/lib/prisma";
-import { ticketsPath } from "@/paths";
+import { homePath } from "@/paths";
 import { generateRandomToken } from "@/utils/crypto";
 import { redirect } from "next/navigation";
 import z from "zod";
+import { getAuth } from "../queries/get-auth";
 import { setSessionCookie } from "../utils/session-cookie";
 
 const signInSchema = z.object({
@@ -20,6 +21,10 @@ const signInSchema = z.object({
 });
 
 const signIn = async (_actionState: ActionState, formData: FormData) => {
+  const { user } = await getAuth();
+  if (user) {
+    redirect(homePath());
+  }
   try {
     const { email, password } = signInSchema.parse(
       Object.fromEntries(formData)
@@ -48,7 +53,7 @@ const signIn = async (_actionState: ActionState, formData: FormData) => {
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }
-  redirect(ticketsPath());
+  redirect(homePath());
 };
 
 export { signIn };
