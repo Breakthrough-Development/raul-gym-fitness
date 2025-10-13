@@ -1,5 +1,6 @@
 import { hash } from "@node-rs/argon2";
 import { PrismaClient } from "@prisma/client";
+import { clients } from "./data/clients";
 import { payments } from "./data/payments";
 import { users } from "./data/users";
 const prisma = new PrismaClient();
@@ -13,25 +14,18 @@ const seed = async () => {
   await prisma.user.deleteMany();
 
   const passwordHash = await hash(process.env.SEED_PASSWORD || "gemeimnis");
-  
-  // Create only the first 2 users as User records (admin and royeradames)
-  const adminUsers = users.slice(0, 2);
+
+  // Create users (admin and royeradames)
   const dbUsers = await prisma.user.createManyAndReturn({
-    data: adminUsers.map((user) => ({
+    data: users.map((user) => ({
       ...user,
       password: passwordHash,
     })),
   });
 
-  // Create the rest as Client records
-  const clientUsers = users.slice(2);
+  // Create clients from the clients data file
   const dbClients = await prisma.client.createManyAndReturn({
-    data: clientUsers.map((user) => ({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      phone: user.phone,
-    })),
+    data: clients,
   });
 
   // Distribute payments evenly among clients (3 payments per client)
@@ -56,7 +50,9 @@ const seed = async () => {
 
   const t1 = performance.now();
   console.log(`DB seed: Completed in ${t1 - t0}ms`);
-  console.log(`Created ${dbUsers.length} users and ${dbClients.length} clients`);
+  console.log(
+    `Created ${dbUsers.length} users and ${dbClients.length} clients`
+  );
 };
 
 seed();
