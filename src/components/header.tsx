@@ -2,13 +2,12 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { homePath, signInPath, signUpPath } from "@/paths";
-import { LucideKanban } from "lucide-react";
+import { LucideDumbbell } from "lucide-react";
 import Link from "next/link";
 import { AccountDropdown } from "./account-dropdown";
 import { AnimatedThemeToggler } from "./ui/animated-theme-toggler";
 import { ScrollProgress } from "./ui/scroll-progress";
 import { SidebarTrigger } from "./ui/sidebar";
-
 const Header = () => {
   const { isFetched, user } = useAuth();
 
@@ -54,8 +53,8 @@ const Header = () => {
             <li>
               <Button asChild variant="ghost">
                 <Link href={homePath()}>
-                  <LucideKanban />
-                  <h1 className="text-lg font-bold">TicketBounty</h1>
+                  <LucideDumbbell />
+                  <h1 className="text-lg font-bold">Raul Gym Fitness</h1>
                 </Link>
               </Button>
             </li>
