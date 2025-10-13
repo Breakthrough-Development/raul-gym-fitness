@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "scripts": {
+    "devp": "pkill -f 'next dev' && npm run dev",
     "dev": "next dev",
     "prod": "next build && next start",
     "build": "next build",
