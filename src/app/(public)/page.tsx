@@ -2,9 +2,11 @@ import { CardComp } from "@/components/card-comp";
 import Heading from "@/components/heading";
 import Placeholder from "@/components/placeholder";
 import { Spinner } from "@/components/spiner";
-import { ClientUpsertForm } from "@/features/clients/components/ticket-upsert-form";
+import { ClientList } from "@/features/clients/components/client-list";
+import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 import { TotalRevenue } from "@/features/dashboard/components/totalRevenue";
 import { TotalSubscriptions } from "@/features/dashboard/components/totalSubscriptions";
+import { SearchParamsCache } from "@/features/ticket/search-params";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -24,8 +26,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <TotalSubscriptions title="Monthly Subscriptions" type="MONTHLY" />
         <section className="flex-1 flex flex-col gap-y-8">
           <Heading
-            title="Tickets Page"
-            description="All your tickets at one place."
+            title="Clients Page"
+            description="All your Clients at one place."
           />
 
           <CardComp
@@ -36,13 +38,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           ></CardComp>
 
           <ErrorBoundary
-            fallback={<Placeholder label="Error loading tickets" />}
+            fallback={<Placeholder label="Error loading clients" />}
           >
             <Suspense fallback={<Spinner />}>
-              {/* <TicketList
-                userId={user?.id}
+              <ClientList
                 searchParams={SearchParamsCache.parse(await searchParams)}
-              /> */}
+              ></ClientList>
             </Suspense>
           </ErrorBoundary>
         </section>
