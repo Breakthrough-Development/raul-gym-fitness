@@ -26,7 +26,6 @@ export const upsertPayment = async (
 ): Promise<ActionState> => {
   await getAuthOrRedirect();
 
-  console.log(formData);
   try {
     const data = {
       ...upsertPaymentSchema.parse({

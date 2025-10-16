@@ -1,9 +1,9 @@
 "use client";
+import { CurrencyInput } from "@/components/currency-input";
 import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -102,15 +102,11 @@ export const PaymentUpsertForm = ({
           <FieldError actionState={actionState} name="membership" />
         </div>
       </div>
-      <Label htmlFor="amount">Amount</Label>
-      <Input
-        id="amount"
+      <CurrencyInput
+        actionState={actionState}
         name="amount"
-        type="decimal"
-        inputMode="decimal"
-        defaultValue={amountDefaultValue()}
+        defaultValue={payment?.amount}
       />
-      <FieldError actionState={actionState} name="amount" />
 
       <SubmitButton label={payment ? "Edit" : "Create"} />
 
