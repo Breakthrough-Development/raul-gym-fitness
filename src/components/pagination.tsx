@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PAGINATION_SIZE_OPTIONS } from "@/features/ticket/constants";
 import { PaginatedData } from "@/types/pagination";
 
 type PageAndSize = {
@@ -20,12 +19,16 @@ type PaginationProps = {
   pagination: PageAndSize;
   onPageAndSize: (pageAndSize: PageAndSize) => void;
   paginatedMetaData: PaginatedData<unknown>["metadata"];
+  paginationSizeOptions: PaginationSizeOption[];
 };
+
+export type PaginationSizeOption = { value: string; label: string };
 
 export const Pagination = ({
   pagination,
   onPageAndSize,
   paginatedMetaData: { count },
+  paginationSizeOptions,
 }: PaginationProps) => {
   const maxPage = Math.max(0, Math.ceil(count / pagination.size) - 1);
   const isFirstPage = pagination.page <= 0;
@@ -80,7 +83,7 @@ export const Pagination = ({
         <SelectValue placeholder="Size" />
       </SelectTrigger>
       <SelectContent>
-        {PAGINATION_SIZE_OPTIONS.map((option) => (
+        {paginationSizeOptions.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}
           </SelectItem>

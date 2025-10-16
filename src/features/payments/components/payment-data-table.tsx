@@ -105,7 +105,19 @@ const actions: ColumnDef<PaymentType> = {
     );
   },
 };
-const columns: ColumnDef<PaymentType>[] = [amount, name, date, status, actions];
+const pageItemNumber: ColumnDef<PaymentType> = {
+  accessorKey: "pageItemNumber",
+  header: "Item Number",
+  cell: ({ row }) => <div>{row.index + 1}</div>,
+};
+const columns: ColumnDef<PaymentType>[] = [
+  pageItemNumber,
+  amount,
+  name,
+  date,
+  status,
+  actions,
+];
 
 export type PaymentDataTableProps = {
   data: PaymentWithMetadata[];

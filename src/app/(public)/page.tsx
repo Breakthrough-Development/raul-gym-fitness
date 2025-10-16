@@ -8,9 +8,9 @@ import { getClients } from "@/features/clients/queries/get-clients";
 import { TotalRevenue } from "@/features/dashboard/components/totalRevenue";
 import { TotalSubscriptions } from "@/features/dashboard/components/totalSubscriptions";
 import { PaymentDataTable } from "@/features/payments/components/payment-data-table";
+import { PaymentPagination } from "@/features/payments/components/payment-pagination";
 import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert-form";
 import { getPayments } from "@/features/payments/queries/get-payments";
-import { TicketPagination } from "@/features/ticket/components/ticket-pagination";
 import { SearchParamsCache } from "@/features/ticket/search-params";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
@@ -51,7 +51,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <PaymentDataTable
                 className="animate-fade-from-top"
                 data={payments}
-                pagination={<TicketPagination paginatedMetaData={metadata} />}
+                pagination={<PaymentPagination paginatedMetaData={metadata} />}
               />
             </Suspense>
           </ErrorBoundary>
