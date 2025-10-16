@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toDollarAndCent } from "@/utils/currency";
 import { Client, MembershipStatus, Payment } from "@prisma/client";
 import { useActionState } from "react";
 import { upsertPayment } from "../actions/upsert-payment";
@@ -42,16 +41,6 @@ export const PaymentUpsertForm = ({
       return payment?.membership;
     }
     return MembershipStatus.MONTHLY;
-  };
-
-  const amountDefaultValue = () => {
-    if (actionState.payload?.get("amount") as string) {
-      return actionState.payload?.get("amount") as string;
-    }
-    if (payment?.amount) {
-      return toDollarAndCent(payment.amount);
-    }
-    return "";
   };
 
   return (
