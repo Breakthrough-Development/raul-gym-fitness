@@ -2,7 +2,7 @@
 
 import { SortSelect, SortSelectOption } from "@/components/ui/sort-select";
 import { useQueryStates } from "nuqs";
-import { sortOptions, sortParser } from "../search-params";
+import { sortOptions, sortParser } from "../ticket-search-params";
 
 type TicketSortSelectProps = {
   options: SortSelectOption[];

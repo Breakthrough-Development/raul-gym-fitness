@@ -45,11 +45,14 @@ export const SORT_OPTIONS = [
   },
 ];
 
-export const PAGINATION_PAGE_DEFAULT = 0;
-export const PAGINATION_SIZE_DEFAULT = 10;
+export const PAYMENT_PAGINATION_PAGE_DEFAULT = 0;
+export const PAYMENT_PAGINATION_SIZE_DEFAULT = 10;
 
-export const PAGINATION_SIZE_OPTIONS = [
-  { value: `${PAGINATION_SIZE_DEFAULT}`, label: `${PAGINATION_SIZE_DEFAULT}` },
+export const PAYMENT_PAGINATION_SIZE_OPTIONS = [
+  {
+    value: `${PAYMENT_PAGINATION_SIZE_DEFAULT}`,
+    label: `${PAYMENT_PAGINATION_SIZE_DEFAULT}`,
+  },
   { value: "25", label: "25" },
   { value: "50", label: "50" },
   { value: "100", label: "100" },

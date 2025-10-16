@@ -4,8 +4,8 @@ import {
   parseAsString,
 } from "nuqs/server";
 import {
-  PAGINATION_PAGE_DEFAULT,
-  PAGINATION_SIZE_DEFAULT,
+  PAYMENT_PAGINATION_PAGE_DEFAULT,
+  PAYMENT_PAGINATION_SIZE_DEFAULT,
   SORT_VALUES,
   TICKET_KEYS,
 } from "./constants";
@@ -25,9 +25,9 @@ export const sortOptions = {
   clearOnDefault: true,
 };
 
-export const paginationParser = {
-  page: parseAsInteger.withDefault(PAGINATION_PAGE_DEFAULT),
-  size: parseAsInteger.withDefault(PAGINATION_SIZE_DEFAULT),
+export const paymentPaginationParser = {
+  page: parseAsInteger.withDefault(PAYMENT_PAGINATION_PAGE_DEFAULT),
+  size: parseAsInteger.withDefault(PAYMENT_PAGINATION_SIZE_DEFAULT),
 };
 
 export const paginationOptions = {
@@ -35,12 +35,12 @@ export const paginationOptions = {
   clearOnDefault: true,
 };
 
-export const SearchParamsCache = createSearchParamsCache({
+export const PaymentSearchParamsCache = createSearchParamsCache({
   search: searchParser,
   ...sortParser,
-  ...paginationParser,
+  ...paymentPaginationParser,
 });
 
-export type ParsedSearchParams = Awaited<
-  ReturnType<typeof SearchParamsCache.parse>
+export type ParsedPaymentSearchParams = Awaited<
+  ReturnType<typeof PaymentSearchParamsCache.parse>
 >;

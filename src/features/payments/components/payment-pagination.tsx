@@ -3,10 +3,10 @@ import {
   PaginatedMetaData,
   PaginationWrapper,
 } from "@/components/pagination-wrapper";
-import { PAGINATION_SIZE_OPTIONS } from "../constants";
+import { PAYMENT_PAGINATION_SIZE_OPTIONS } from "../constants";
 import {
   paginationOptions,
-  paginationParser,
+  paymentPaginationParser,
   searchParser,
 } from "../search-params";
 
@@ -20,10 +20,10 @@ export const PaymentPagination = ({
   return (
     <PaginationWrapper
       paginatedMetaData={paginatedMetaData}
-      paginationParser={paginationParser}
+      paginationParser={paymentPaginationParser}
       paginationOptions={paginationOptions}
       searchParser={searchParser}
-      paginationSizeOptions={PAGINATION_SIZE_OPTIONS}
+      paginationSizeOptions={PAYMENT_PAGINATION_SIZE_OPTIONS}
     />
   );
 };

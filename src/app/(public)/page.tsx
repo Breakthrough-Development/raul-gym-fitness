@@ -2,6 +2,7 @@ import { CardComp } from "@/components/card-comp";
 import Heading from "@/components/heading";
 import Placeholder from "@/components/placeholder";
 import { Spinner } from "@/components/spiner";
+import { ClientSearchParamsCache } from "@/features/clients/client-search-params";
 import { ClientList } from "@/features/clients/components/client-list";
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 import { getClients } from "@/features/clients/queries/get-clients";
@@ -11,7 +12,7 @@ import { PaymentDataTable } from "@/features/payments/components/payment-data-ta
 import { PaymentPagination } from "@/features/payments/components/payment-pagination";
 import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert-form";
 import { getPayments } from "@/features/payments/queries/get-payments";
-import { SearchParamsCache } from "@/features/ticket/search-params";
+import { PaymentSearchParamsCache } from "@/features/payments/search-params";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -21,10 +22,15 @@ type HomePageProps = {
 };
 
 export default async function HomePage({ searchParams }: HomePageProps) {
-  const cacheSearchParams = SearchParamsCache.parse(await searchParams);
+  const cacheClientSearchParams = ClientSearchParamsCache.parse(
+    await searchParams
+  );
+  const cachePaymentSearchParams = PaymentSearchParamsCache.parse(
+    await searchParams
+  );
   const [{ list: payments, metadata }, clients] = await Promise.all([
-    getPayments(cacheSearchParams),
-    getClients({ ...cacheSearchParams, size: 999 }),
+    getPayments(cachePaymentSearchParams),
+    getClients({ ...cacheClientSearchParams, size: 999 }),
   ]);
 
   return (
@@ -80,7 +86,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           >
             <Suspense fallback={<Spinner />}>
               <ClientList
-                searchParams={SearchParamsCache.parse(await searchParams)}
+                searchParams={ClientSearchParamsCache.parse(await searchParams)}
               ></ClientList>
             </Suspense>
           </ErrorBoundary>

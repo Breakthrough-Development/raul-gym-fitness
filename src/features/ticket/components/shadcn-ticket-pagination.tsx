@@ -9,7 +9,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useQueryStates } from "nuqs";
-import { paginationOptions, paginationParser } from "../search-params";
+import { paginationOptions, paginationParser } from "../ticket-search-params";
 
 export const ShadcnTicketPagination = () => {
   const [page, setPage] = useQueryStates(paginationParser, paginationOptions);

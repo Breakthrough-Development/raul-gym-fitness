@@ -35,12 +35,12 @@ export const paginationOptions = {
   clearOnDefault: true,
 };
 
-export const SearchParamsCache = createSearchParamsCache({
+export const TicketSearchParamsCache = createSearchParamsCache({
   search: searchParser,
   ...sortParser,
   ...paginationParser,
 });
 
-export type ParsedSearchParams = Awaited<
-  ReturnType<typeof SearchParamsCache.parse>
+export type TicketParsedSearchParams = Awaited<
+  ReturnType<typeof TicketSearchParamsCache.parse>
 >;

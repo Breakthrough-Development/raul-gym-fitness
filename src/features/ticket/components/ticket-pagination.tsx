@@ -9,7 +9,7 @@ import {
   paginationOptions,
   paginationParser,
   searchParser,
-} from "../search-params";
+} from "../ticket-search-params";
 import { TicketWithMetadata } from "../types/types";
 
 type TicketPaginationProps = {

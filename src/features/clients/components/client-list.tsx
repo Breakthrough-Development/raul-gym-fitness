@@ -2,13 +2,13 @@ import Placeholder from "@/components/placeholder";
 import { TicketPagination } from "@/features/ticket/components/ticket-pagination";
 import { TicketSearchInput } from "@/features/ticket/components/ticket-search-input";
 import { TicketSortSelect } from "@/features/ticket/components/ticket-sort-select";
-import { ParsedSearchParams } from "@/features/ticket/search-params";
+import { TicketParsedSearchParams } from "@/features/ticket/ticket-search-params";
 import { SORT_OPTIONS } from "../constants";
 import { getClients } from "../queries/get-clients";
 import { ClientItem } from "./client-item";
 
 export type ClientListProps = {
-  searchParams: ParsedSearchParams;
+  searchParams: TicketParsedSearchParams;
 };
 
 export async function ClientList({ searchParams }: ClientListProps) {

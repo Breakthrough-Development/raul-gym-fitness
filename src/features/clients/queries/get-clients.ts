@@ -1,8 +1,8 @@
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
-import { ParsedSearchParams } from "@/features/ticket/search-params";
+import { TicketParsedSearchParams } from "@/features/ticket/ticket-search-params";
 import { prisma } from "@/lib/prisma";
 
-export const getClients = async (searchParams: ParsedSearchParams) => {
+export const getClients = async (searchParams: TicketParsedSearchParams) => {
   await getAuthOrRedirect();
 
   const searchTerms = searchParams.search.trim().split(/\s+/);
