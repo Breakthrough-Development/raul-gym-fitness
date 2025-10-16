@@ -137,7 +137,7 @@ export function PaymentDataTable({
   data,
   pagination,
 }: PaymentDataTableProps) {
-  const tableData: PaymentType[] = data!.map((payment) => ({
+  const tableData: PaymentType[] = data.map((payment) => ({
     id: payment.id,
     amount: payment.amount,
     status: payment.status as "success" | "pending" | "processing" | "failed",
