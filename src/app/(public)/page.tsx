@@ -31,7 +31,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <CardComp
             title="Payment list"
             description="All your payments in one place."
-            content={<ClientUpsertForm />}
+            content={<div />}
             className="w-full max-w-[420px] self-center"
           ></CardComp>
 

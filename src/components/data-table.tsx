@@ -37,44 +37,11 @@ import {
 } from "@/components/ui/table";
 import { PaymentWithMetadata } from "@/features/payments/types";
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-];
-
 export type Payment = {
   id: string;
   amount: number;
   status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  name: string;
 };
 
 export const columns: ColumnDef<Payment>[] = [
@@ -102,7 +69,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "First Name",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
     ),
@@ -115,7 +82,7 @@ export const columns: ColumnDef<Payment>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Last Name
           <ArrowUpDown />
         </Button>
       );
@@ -182,7 +149,12 @@ export function DataTable(props: DataTableProps) {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data,
+    data: props.data!.map((payment) => ({
+      id: payment.id,
+      amount: payment.amount,
+      status: payment.status as "success" | "pending" | "processing" | "failed",
+      email: payment.client.firstName + " " + payment.client.lastName,
+    })),
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
