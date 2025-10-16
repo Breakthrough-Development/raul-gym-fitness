@@ -5,7 +5,6 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { format } from "date-fns";
 import { PaymentWithMetadata } from "../types";
 
 export type PaymentType = {
@@ -24,108 +24,88 @@ export type PaymentType = {
   name: string;
 };
 
-const columns: ColumnDef<PaymentType>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+const date: ColumnDef<PaymentType> = {
+  accessorKey: "date",
+  header: "Date",
+  cell: ({ row }) => <div>{format(row.getValue("date"), "MM/dd/yyyy")}</div>,
+};
+const status: ColumnDef<PaymentType> = {
+  accessorKey: "status",
+  header: "Status",
+  cell: ({ row }) => <div className="capitalize">{row.getValue("status")}</div>,
+};
+const name: ColumnDef<PaymentType> = {
+  accessorKey: "name",
+  header: ({ column }) => {
+    return (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Name
+        <ArrowUpDown />
+      </Button>
+    );
   },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
+  cell: ({ row }) => <div>{row.getValue("name")}</div>,
+};
+const amount: ColumnDef<PaymentType> = {
+  accessorKey: "amount",
+  header: ({ column }) => {
+    return (
+      <div className="flex justify-end  w-full">
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Amount
           <ArrowUpDown />
         </Button>
-      );
-    },
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      </div>
+    );
   },
-  {
-    accessorKey: "amount",
-    header: ({ column }) => {
-      return (
-        <div className="flex justify-end  w-full">
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Amount
-            <ArrowUpDown />
+  cell: ({ row }) => {
+    const amount = parseFloat(row.getValue("amount"));
+
+    // Format the amount as a dollar amount
+    const formatted = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
+
+    return <div className="text-right font-medium pr-8">{formatted}</div>;
+  },
+};
+const actions: ColumnDef<PaymentType> = {
+  id: "actions",
+  enableHiding: false,
+  cell: ({ row }) => {
+    const payment = row.original;
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal />
           </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium pr-8">{formatted}</div>;
-    },
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => navigator.clipboard.writeText(payment.id)}
+          >
+            Copy payment ID
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>View customer</DropdownMenuItem>
+          <DropdownMenuItem>View payment details</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
   },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+};
+const columns: ColumnDef<PaymentType>[] = [amount, name, date, status, actions];
 
 export type PaymentDataTableProps = {
   data: PaymentWithMetadata[];
