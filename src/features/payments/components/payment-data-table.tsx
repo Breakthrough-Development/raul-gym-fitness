@@ -18,6 +18,7 @@ import { PaymentWithMetadata } from "../types";
 
 export type PaymentType = {
   id: string;
+  date: Date;
   amount: number;
   status: "pending" | "processing" | "success" | "failed";
   name: string;
@@ -139,6 +140,7 @@ export function PaymentDataTable({
 }: PaymentDataTableProps) {
   const tableData: PaymentType[] = data.map((payment) => ({
     id: payment.id,
+    date: payment.createdAt,
     amount: payment.amount,
     status: payment.status as "success" | "pending" | "processing" | "failed",
     name: payment.client.firstName + " " + payment.client.lastName,
@@ -149,6 +151,8 @@ export function PaymentDataTable({
       data={tableData}
       pagination={pagination}
       columns={columns}
+      searchPlaceholder="Filter payments by name..."
+      searchColumn="name"
     />
   );
 }

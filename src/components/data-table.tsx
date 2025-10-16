@@ -38,6 +38,8 @@ export type DataTableProps<TData> = {
   pagination: React.ReactElement;
   className?: string;
   columns: ColumnDef<TData>[];
+  searchPlaceholder: string;
+  searchColumn: string & keyof TData;
 };
 
 export const DataTable = <TData,>({
@@ -45,6 +47,8 @@ export const DataTable = <TData,>({
   pagination,
   className,
   columns,
+  searchPlaceholder,
+  searchColumn,
 }: DataTableProps<TData>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -77,39 +81,16 @@ export const DataTable = <TData,>({
     <section className={cn("w-full", className)}>
       <header className="flex items-center py-4 gap-x-2">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder={searchPlaceholder}
+          value={
+            (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn(searchColumn)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+    
       </header>
       <div className="overflow-hidden rounded-md border">
         <Table>
