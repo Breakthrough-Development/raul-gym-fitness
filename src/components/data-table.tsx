@@ -69,25 +69,25 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "status",
-    header: "First Name",
+    header: "Status",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Last Name
+          Name
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
     accessorKey: "amount",
@@ -153,7 +153,7 @@ export function DataTable(props: DataTableProps) {
       id: payment.id,
       amount: payment.amount,
       status: payment.status as "success" | "pending" | "processing" | "failed",
-      email: payment.client.firstName + " " + payment.client.lastName,
+      name: payment.client.firstName + " " + payment.client.lastName,
     })),
     columns,
     onSortingChange: setSorting,
