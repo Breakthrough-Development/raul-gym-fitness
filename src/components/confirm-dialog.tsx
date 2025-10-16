@@ -70,10 +70,15 @@ const useConfirmDialog = ({
     },
   });
 
+  const handleClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setIsOpen((state) => !state);
+  };
+
   const dialogTrigger = cloneElement(
     typeof trigger === "function" ? trigger(isPending) : trigger,
     {
-      onClick: () => setIsOpen((state) => !state),
+      onClick: handleClick,
       className: "cursor-pointer",
     } as React.HTMLAttributes<HTMLElement>
   );
