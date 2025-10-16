@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-import { DataTable, DataTableProps } from "@/components/data-table";
+import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -14,15 +14,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PaymentWithMetadata } from "../types";
 
-export type Payment = {
+export type PaymentType = {
   id: string;
   amount: number;
   status: "pending" | "processing" | "success" | "failed";
   name: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<PaymentType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -125,17 +126,27 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export type PaymentDataTableProps = Omit<DataTableProps, "columns">;
+export type PaymentDataTableProps = {
+  data: PaymentWithMetadata[];
+  pagination: React.ReactElement;
+  className?: string;
+};
 
 export function PaymentDataTable({
   className,
   data,
   pagination,
 }: PaymentDataTableProps) {
+  const tableData: PaymentType[] = data!.map((payment) => ({
+    id: payment.id,
+    amount: payment.amount,
+    status: payment.status as "success" | "pending" | "processing" | "failed",
+    name: payment.client.firstName + " " + payment.client.lastName,
+  }));
   return (
     <DataTable
       className={className}
-      data={data}
+      data={tableData}
       pagination={pagination}
       columns={columns}
     />

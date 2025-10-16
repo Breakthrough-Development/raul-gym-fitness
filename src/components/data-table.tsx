@@ -31,25 +31,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { columns } from "@/features/payments/components/payment-data-table";
-import { PaymentWithMetadata } from "@/features/payments/types";
 import { cn } from "@/lib/utils";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  name: string;
-};
-
-export type DataTableProps = {
-  data: PaymentWithMetadata[];
+export type DataTableProps<TData> = {
+  data: TData[];
   pagination: React.ReactElement;
   className?: string;
-  columns: ColumnDef<Payment>[];
+  columns: ColumnDef<TData>[];
 };
 
-export function DataTable(props: DataTableProps) {
+export const DataTable = <TData,>({
+  data,
+  pagination,
+  className,
+  columns,
+}: DataTableProps<TData>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -59,12 +55,7 @@ export function DataTable(props: DataTableProps) {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: props.data!.map((payment) => ({
-      id: payment.id,
-      amount: payment.amount,
-      status: payment.status as "success" | "pending" | "processing" | "failed",
-      name: payment.client.firstName + " " + payment.client.lastName,
-    })),
+    data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -83,7 +74,7 @@ export function DataTable(props: DataTableProps) {
   });
 
   return (
-    <section className={cn("w-full", props.className)}>
+    <section className={cn("w-full", className)}>
       <header className="flex items-center py-4 gap-x-2">
         <Input
           placeholder="Filter emails..."
@@ -170,7 +161,7 @@ export function DataTable(props: DataTableProps) {
           </TableBody>
         </Table>
       </div>
-      <footer className="py-4">{props.pagination}</footer>
+      <footer className="py-4">{pagination}</footer>
     </section>
   );
-}
+};
