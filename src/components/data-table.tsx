@@ -36,6 +36,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PaymentWithMetadata } from "@/features/payments/types";
+import { cn } from "@/lib/utils";
 
 export type Payment = {
   id: string;
@@ -148,7 +149,9 @@ export const columns: ColumnDef<Payment>[] = [
 ];
 
 export type DataTableProps = {
-  data?: PaymentWithMetadata[];
+  data: PaymentWithMetadata[];
+  pagination: React.ReactElement;
+  className?: string;
 };
 
 export function DataTable(props: DataTableProps) {
@@ -185,8 +188,8 @@ export function DataTable(props: DataTableProps) {
   });
 
   return (
-    <div className="w-full">
-      <div className="flex items-center py-4">
+    <section className={cn("w-full", props.className)}>
+      <header className="flex items-center py-4 gap-x-2">
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
@@ -221,7 +224,7 @@ export function DataTable(props: DataTableProps) {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </header>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -272,30 +275,7 @@ export function DataTable(props: DataTableProps) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
-    </div>
+      <footer className="py-4">{props.pagination}</footer>
+    </section>
   );
 }
