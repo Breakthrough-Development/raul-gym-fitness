@@ -4,6 +4,7 @@ import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
+import { SearchableSelect } from "@/components/search-select";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -48,27 +49,18 @@ export const PaymentUpsertForm = ({
       <div className="flex gap-x-2 mb-1">
         <div className="flex flex-col gap-y-2">
           <Label htmlFor="clientId">Client</Label>
-          <Select
-            name="clientId"
+          <SearchableSelect
             defaultValue={
               (actionState.payload?.get("clientId") as string) ??
               payment?.clientId
             }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a client" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Clients</SelectLabel>
-                {clients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
-                    {client.firstName} {client.lastName}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+            name="membership"
+            options={clients.map((client) => ({
+              value: client.id,
+              label: client.firstName + " " + client.lastName,
+            }))}
+            placeholder="Select a client"
+          />
           <FieldError actionState={actionState} name="clientId" />
         </div>
         <div className="flex flex-col gap-y-2">
