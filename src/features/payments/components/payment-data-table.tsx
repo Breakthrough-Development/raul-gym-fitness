@@ -1,10 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, LucideTrash, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-import { useConfirmDialog } from "@/components/confirm-dialog";
 import { DataTable } from "@/components/data-table";
+import { DeleteOption } from "@/components/delete-payment-option";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -78,23 +78,7 @@ const amount: ColumnDef<PaymentType> = {
     return <div className="text-right font-medium pr-8">{formatted}</div>;
   },
 };
-const DeletePaymentOption = ({ paymentId }: { paymentId: string }) => {
-  const [deleteButton, deleteDialog] = useConfirmDialog({
-    action: deletePayment.bind(null, paymentId),
-    trigger: (
-      <DropdownMenuItem>
-        <LucideTrash className="h-4 w-4" />
-        <span>Delete</span>
-      </DropdownMenuItem>
-    ),
-  });
-  return (
-    <>
-      {deleteDialog}
-      {deleteButton}
-    </>
-  );
-};
+
 const actions: ColumnDef<PaymentType> = {
   id: "actions",
   enableHiding: false,
@@ -111,7 +95,7 @@ const actions: ColumnDef<PaymentType> = {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DeletePaymentOption paymentId={payment.id} />
+          <DeleteOption id={payment.id} action={deletePayment} />
           <DropdownMenuItem
             onClick={() => navigator.clipboard.writeText(payment.id)}
           >
