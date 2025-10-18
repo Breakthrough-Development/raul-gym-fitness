@@ -1,6 +1,5 @@
 import { ZodError, flattenError } from "zod";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionState<T = unknown> = {
   status: "IDLE" | "SUCCESS" | "ERROR";
   message: string;
