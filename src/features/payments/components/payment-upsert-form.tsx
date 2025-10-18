@@ -54,7 +54,7 @@ export const PaymentUpsertForm = ({
               (actionState.payload?.get("clientId") as string) ??
               payment?.clientId
             }
-            name="membership"
+            name="clientId"
             options={clients.map((client) => ({
               value: client.id,
               label: client.firstName + " " + client.lastName,
