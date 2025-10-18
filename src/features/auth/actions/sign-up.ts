@@ -68,8 +68,11 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
       ["frase-secreta"]: secretPhrase,
     } = signUpSchema.parse(Object.fromEntries(formData));
 
-    const serverSecret = process.env.SECRET_FRASE ?? "";
-    if (!serverSecret || secretPhrase !== serverSecret) {
+    const serverSecret = process.env.NEXT_PUBLIC_SECRET_FRASE ?? "";
+    if (!serverSecret) {
+      return toActionState("ERROR", "Frase secreta no configurada", formData);
+    }
+    if (secretPhrase !== serverSecret) {
       return toActionState("ERROR", "Frase secreta inválida", formData);
     }
 
