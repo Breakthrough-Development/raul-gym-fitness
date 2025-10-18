@@ -1,10 +1,23 @@
 "use client";
+import { DeleteOption } from "@/components/delete-payment-option";
+import { EditClientOption } from "@/components/edit-client-option";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ticketEditPath, ticketPath } from "@/paths";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { deleteClient } from "@/features/clients/actions/delete-client";
+import { ClientEditPath, ClientPath } from "@/paths";
 import { Payment } from "@prisma/client";
 import clsx from "clsx";
-import { LucidePencil, LucideSquareArrowOutUpRight } from "lucide-react";
+import {
+  LucideMoreHorizontal,
+  LucidePencil,
+  LucideSquareArrowOutUpRight,
+} from "lucide-react";
 import Link from "next/link";
 import { ClientWithMetadata } from "../types";
 
@@ -16,18 +29,18 @@ export type ClientItemProps = {
 export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
   const detailButton = (
     <Button asChild variant="outline" size="icon">
-      <Link prefetch href={ticketPath(client.id)}>
+      <Link prefetch href={ClientPath(client.id)}>
         <LucideSquareArrowOutUpRight className="h-4 w-4" />
-        <span className="sr-only">View ticket {client.id}</span>
+        <span className="sr-only">View client {client.id}</span>
       </Link>
     </Button>
   );
 
   const editButton = (
     <Button asChild variant="outline" size="icon">
-      <Link prefetch href={ticketEditPath(client.id)}>
+      <Link prefetch href={ClientEditPath(client.id)}>
         <LucidePencil className="h-4 w-4" />
-        <span className="sr-only">Edit ticket {client.id}</span>
+        <span className="sr-only">Edit client {client.id}</span>
       </Link>
     </Button>
   );
@@ -51,32 +64,36 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
             <ul className={clsx("whitespace-break-spaces")}>
               <li>{client.email}</li>
               <li>{client.phone}</li>
-              <div
-                className={clsx({
-                  "line-clamp-3": !isDetail,
-                })}
-              >
-                {client.Payment.map((APayment: Payment) => (
-                  <div key={APayment.id}>
-                    <li>{APayment.amount}</li>
-                    <li>{APayment.status}</li>
-                    <li>{APayment.membership}</li>
-                  </div>
-                ))}
-              </div>
+              {isDetail && (
+                <div>
+                  {client.Payment.map((APayment: Payment) => (
+                    <div key={APayment.id}>
+                      <li>{APayment.amount}</li>
+                      <li>{APayment.status}</li>
+                      <li>{APayment.membership}</li>
+                    </div>
+                  ))}
+                </div>
+              )}
             </ul>
           </CardContent>
         </Card>
 
-        <div className="flex flex-col gap-y-1">
-          {isDetail ? (
-            <>{editButton}</>
-          ) : (
-            <>
-              {detailButton}
-              {editButton}
-            </>
-          )}
+        <div className="flex flex-col gap-y-1 items-end">
+          {!isDetail && detailButton}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <LucideMoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <EditClientOption client={client} />
+              <DeleteOption id={client.id} action={deleteClient} />
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
