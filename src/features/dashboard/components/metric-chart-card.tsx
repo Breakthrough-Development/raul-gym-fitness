@@ -22,7 +22,6 @@ import {
   CartesianGrid,
   Line,
   LineChart,
-  ResponsiveContainer,
   XAxis,
   YAxis,
 } from "recharts";
@@ -209,71 +208,69 @@ export const MetricChartCard = ({
       </CardHeader>
       <CardContent className="pb-0">
         <ChartContainer config={chartConfig} className="h-[220px] w-full">
-          <ResponsiveContainer>
-            {chart === "line" ? (
-              <LineChart
-                data={(data?.series || []).map((p) => ({ x: p.x, value: p.y }))}
-                margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="x"
-                  tickFormatter={xTickFormatter}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  tickFormatter={(v) => yFormatter(Number(v))}
-                  width={60}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <ChartTooltip
-                  content={<ChartTooltipContent nameKey="value" />}
-                  formatter={(value) => [yFormatter(Number(value)), unitLabel]}
-                />
-                <Line
-                  type="monotone"
-                  strokeWidth={2}
-                  dataKey="value"
-                  stroke="var(--color-value)"
-                  activeDot={{ r: 6 }}
-                  dot={false}
-                />
-              </LineChart>
-            ) : (
-              <AreaChart
-                data={(data?.series || []).map((p) => ({ x: p.x, value: p.y }))}
-                margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="x"
-                  tickFormatter={xTickFormatter}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  width={60}
-                  tickLine={false}
-                  axisLine={false}
-                  allowDecimals={false}
-                />
-                <ChartTooltip
-                  content={<ChartTooltipContent nameKey="value" />}
-                  formatter={(value) => [yFormatter(Number(value)), unitLabel]}
-                />
-                <Area
-                  dataKey="value"
-                  fill="var(--color-value)"
-                  fillOpacity={0.05}
-                  stroke="var(--color-value)"
-                  strokeWidth={2}
-                  type="monotone"
-                />
-              </AreaChart>
-            )}
-          </ResponsiveContainer>
+          {chart === "line" ? (
+            <LineChart
+              data={(data?.series || []).map((p) => ({ x: p.x, value: p.y }))}
+              margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="x"
+                tickFormatter={xTickFormatter}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                tickFormatter={(v) => yFormatter(Number(v))}
+                width={60}
+                tickLine={false}
+                axisLine={false}
+              />
+              <ChartTooltip
+                content={<ChartTooltipContent nameKey="value" />}
+                formatter={(value) => [yFormatter(Number(value)), unitLabel]}
+              />
+              <Line
+                type="monotone"
+                strokeWidth={2}
+                dataKey="value"
+                stroke="var(--color-value)"
+                activeDot={{ r: 6 }}
+                dot={false}
+              />
+            </LineChart>
+          ) : (
+            <AreaChart
+              data={(data?.series || []).map((p) => ({ x: p.x, value: p.y }))}
+              margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="x"
+                tickFormatter={xTickFormatter}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                width={60}
+                tickLine={false}
+                axisLine={false}
+                allowDecimals={false}
+              />
+              <ChartTooltip
+                content={<ChartTooltipContent nameKey="value" />}
+                formatter={(value) => [yFormatter(Number(value)), unitLabel]}
+              />
+              <Area
+                dataKey="value"
+                fill="var(--color-value)"
+                fillOpacity={0.05}
+                stroke="var(--color-value)"
+                strokeWidth={2}
+                type="monotone"
+              />
+            </AreaChart>
+          )}
         </ChartContainer>
       </CardContent>
     </Card>

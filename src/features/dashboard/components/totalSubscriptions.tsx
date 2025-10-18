@@ -17,7 +17,7 @@ export const TotalSubscriptions = ({
       unitLabel="Subscriptions"
       yFormatter={(v) => String(v)}
       chart="area"
-      className="pb-0 lg:hidden xl:flex"
+      className="pb-0"
       extraParams={{ membership: type }}
     />
   );
