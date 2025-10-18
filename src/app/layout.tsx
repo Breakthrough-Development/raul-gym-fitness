@@ -45,13 +45,13 @@ export default function RootLayout({
                     {children}
                   </main>
                 </div>
-                <Toaster expand />
-                <footer>
+                <footer className="flex justify-center">
                   <p>
-                    &copy; {new Date().getFullYear()} The Road to Next. All
-                    rights reserved.
+                    &copy; {new Date().getFullYear()} Breakthrough Development
+                    Group, LLC. All rights reserved.
                   </p>
                 </footer>
+                <Toaster expand />
               </SidebarProvider>
             </ThemeProvider>
           </NuqsAdapter>
