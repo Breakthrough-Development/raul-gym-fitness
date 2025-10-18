@@ -24,14 +24,14 @@ const signUpSchema = z
     if (confirmPassword !== newPassword) {
       ctx.addIssue({
         code: "custom",
-        message: "New passwords do not match",
+        message: "Las nuevas contraseñas no coinciden",
         path: ["confirmPassword"],
       });
     }
     if (currentPassword === newPassword) {
       ctx.addIssue({
         code: "custom",
-        message: "New password cannot be the same as the current password",
+        message: "La nueva contraseña no puede ser igual a la actual",
         path: ["newPassword"],
       });
     }
@@ -55,11 +55,11 @@ export const resetPassword = async (
     });
 
     if (!dbUser) {
-      return toActionState("ERROR", "User not found", formData);
+      return toActionState("ERROR", "Usuario no encontrado", formData);
     }
 
     if (!isOwner(authUser, { userId: dbUser.id })) {
-      return toActionState("ERROR", "Not Authorized", formData);
+      return toActionState("ERROR", "No autorizado", formData);
     }
 
     const validPassword = await verifyPasswordHash(
@@ -68,7 +68,7 @@ export const resetPassword = async (
     );
 
     if (!validPassword) {
-      return toActionState("ERROR", "Incorrect current password", formData);
+      return toActionState("ERROR", "Contraseña actual incorrecta", formData);
     }
 
     const passwordHash = await hashPassword(newPassword);
@@ -86,10 +86,14 @@ export const resetPassword = async (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      return toActionState("ERROR", "Couldn't update password", formData);
+      return toActionState(
+        "ERROR",
+        "No se pudo actualizar la contraseña",
+        formData
+      );
     }
     return fromErrorToActionState(error, formData);
   }
 
-  return toActionState("SUCCESS", "Password updated");
+  return toActionState("SUCCESS", "Contraseña actualizada");
 };

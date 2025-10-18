@@ -27,14 +27,14 @@ export default async function ClientDetailPage({
   );
 
   if (!client) {
-    return <Placeholder label="Client not found" />;
+    return <Placeholder label="Cliente no encontrado" />;
   }
 
   return (
     <section className="flex-1 flex flex-col gap-y-8 max-w-7xl mx-auto">
       <Heading
-        title="Client"
-        description="Client details and payment history"
+        title="Cliente"
+        description="Detalles del cliente e historial de pagos"
       />
       <ClientItem client={client} isDetail />
       <PaymentDataTable

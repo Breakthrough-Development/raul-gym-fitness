@@ -18,7 +18,7 @@ export const deleteClient = async (id: string) => {
     });
 
     if (!client) {
-      return toActionState("ERROR", "Client not found");
+      return toActionState("ERROR", "Cliente no encontrado");
     }
 
     await prisma.client.delete({
@@ -26,9 +26,9 @@ export const deleteClient = async (id: string) => {
     });
 
     revalidatePath(homePath());
-    await setCookieByKey("toast", "Client deleted");
+    await setCookieByKey("toast", "Cliente eliminado");
 
-    return toActionState("SUCCESS", "Client deleted successfully");
+    return toActionState("SUCCESS", "Cliente eliminado exitosamente");
   } catch (error) {
     return fromErrorToActionState(error);
   }

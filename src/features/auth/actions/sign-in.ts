@@ -16,7 +16,7 @@ import { getAuth } from "../queries/get-auth";
 import { setSessionCookie } from "../utils/session-cookie";
 
 const signInSchema = z.object({
-  email: z.email().min(1, { message: "Is required" }).max(191),
+  email: z.email().min(1, { message: "Es requerido" }).max(191),
   password: z.string().min(6).max(191),
 });
 
@@ -37,13 +37,21 @@ const signIn = async (_actionState: ActionState, formData: FormData) => {
     });
 
     if (!user) {
-      return toActionState("ERROR", "Incorrect email or password", formData);
+      return toActionState(
+        "ERROR",
+        "Correo o contraseña incorrectos",
+        formData
+      );
     }
 
     const validPassword = await verifyPasswordHash(user.password, password);
 
     if (!validPassword) {
-      return toActionState("ERROR", "Incorrect email or password", formData);
+      return toActionState(
+        "ERROR",
+        "Correo o contraseña incorrectos",
+        formData
+      );
     }
 
     const sessionToken = generateRandomToken();

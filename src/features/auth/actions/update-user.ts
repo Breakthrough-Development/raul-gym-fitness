@@ -15,20 +15,26 @@ const signUpSchema = z.object({
     .string()
     .min(1)
     .max(191)
-    .refine((value) => !value.includes(" "), "Username cannot contain spaces"),
+    .refine(
+      (value) => !value.includes(" "),
+      "El nombre de usuario no puede contener espacios"
+    ),
   firstName: z
     .string()
     .min(1)
     .max(191)
     .refine(
       (value) => !value.includes(" "),
-      "First Name cannot contain spaces"
+      "El nombre no puede contener espacios"
     ),
   lastName: z
     .string()
     .min(1)
     .max(191)
-    .refine((value) => !value.includes(" "), "Last Name cannot contain spaces"),
+    .refine(
+      (value) => !value.includes(" "),
+      "El apellido no puede contener espacios"
+    ),
 });
 
 export const updateUser = async (
@@ -49,17 +55,17 @@ export const updateUser = async (
     });
 
     if (!dbUser) {
-      return toActionState("ERROR", "User not found", formData);
+      return toActionState("ERROR", "Usuario no encontrado", formData);
     }
     if (!isOwner(authUser, { userId: dbUser.id })) {
-      return toActionState("ERROR", "Not Authorized", formData);
+      return toActionState("ERROR", "No autorizado", formData);
     }
     if (
       dbUser.username === username ||
       dbUser.firstName === firstName ||
       dbUser.lastName === lastName
     ) {
-      return toActionState("ERROR", "No changes made", formData);
+      return toActionState("ERROR", "No se realizaron cambios", formData);
     }
 
     await prisma.user.update({
@@ -71,10 +77,14 @@ export const updateUser = async (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      return toActionState("ERROR", "Couldn't update user", formData);
+      return toActionState(
+        "ERROR",
+        "No se pudo actualizar el usuario",
+        formData
+      );
     }
     return fromErrorToActionState(error, formData);
   }
 
-  return toActionState("SUCCESS", "User updated", formData);
+  return toActionState("SUCCESS", "Usuario actualizado", formData);
 };

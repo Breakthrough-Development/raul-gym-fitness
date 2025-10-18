@@ -17,7 +17,7 @@ export const deletePayment = async (id: string) => {
     });
 
     if (!payment) {
-      return toActionState("ERROR", "Payment not found");
+      return toActionState("ERROR", "Pago no encontrado");
     }
 
     await prisma.payment.delete({
@@ -27,9 +27,9 @@ export const deletePayment = async (id: string) => {
     });
 
     revalidatePath(homePath());
-    await setCookieByKey("toast", "Payment deleted");
+    await setCookieByKey("toast", "Pago eliminado");
 
-    return toActionState("SUCCESS", "Payment deleted successfully");
+    return toActionState("SUCCESS", "Pago eliminado exitosamente");
   } catch (error) {
     return fromErrorToActionState(error);
   }

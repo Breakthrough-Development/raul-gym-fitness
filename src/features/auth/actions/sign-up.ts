@@ -22,7 +22,7 @@ const signUpSchema = z
       .max(191)
       .refine(
         (value) => !value.includes(" "),
-        "Username cannot contain spaces"
+        "El nombre de usuario no puede contener espacios"
       ),
     firstName: z
       .string()
@@ -30,7 +30,7 @@ const signUpSchema = z
       .max(191)
       .refine(
         (value) => !value.includes(" "),
-        "First Name cannot contain spaces"
+        "El nombre no puede contener espacios"
       ),
     lastName: z
       .string()
@@ -38,17 +38,19 @@ const signUpSchema = z
       .max(191)
       .refine(
         (value) => !value.includes(" "),
-        "Last Name cannot contain spaces"
+        "El apellido no puede contener espacios"
       ),
-    email: z.email().min(1, { message: "Is required" }).max(191),
+    email: z.email().min(1, { message: "Es requerido" }).max(191),
+    phone: z.string().min(1).max(20),
     password: z.string().min(6).max(191),
     confirmPassword: z.string().min(6).max(191),
+    "frase-secreta": z.string().min(1, { message: "Es requerido" }),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
       ctx.addIssue({
         code: "custom",
-        message: "Passwords do not match",
+        message: "Las contraseñas no coinciden",
         path: ["confirmPassword"],
       });
     }
@@ -56,8 +58,20 @@ const signUpSchema = z
 
 export const signUp = async (_actionState: ActionState, formData: FormData) => {
   try {
-    const { username, email, password, firstName, lastName } =
-      signUpSchema.parse(Object.fromEntries(formData));
+    const {
+      username,
+      email,
+      password,
+      firstName,
+      lastName,
+      phone,
+      ["frase-secreta"]: secretPhrase,
+    } = signUpSchema.parse(Object.fromEntries(formData));
+
+    const serverSecret = process.env.SECRET_FRASE ?? "";
+    if (!serverSecret || secretPhrase !== serverSecret) {
+      return toActionState("ERROR", "Frase secreta inválida", formData);
+    }
 
     const passwordHash = await hashPassword(password);
 
@@ -68,6 +82,7 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
         password: passwordHash,
         firstName,
         lastName,
+        phone,
       },
     });
 
@@ -82,7 +97,7 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
     ) {
       return toActionState(
         "ERROR",
-        "Either email or username is already in use",
+        "El correo electrónico o el nombre de usuario ya está en uso",
         formData
       );
     }

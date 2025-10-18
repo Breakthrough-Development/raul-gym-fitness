@@ -48,8 +48,8 @@ export const upsertPayment = async (
   revalidatePath(dashboardPath());
 
   if (id) {
-    await setCookieByKey("toast", "Payment updated");
+    await setCookieByKey("toast", "Pago actualizado");
     // redirect(ClientPath(id));
   }
-  return toActionState("SUCCESS", "Payment Created");
+  return toActionState("SUCCESS", "Pago creado");
 };

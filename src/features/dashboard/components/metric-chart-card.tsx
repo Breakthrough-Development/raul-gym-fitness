@@ -106,7 +106,7 @@ export const MetricChartCard = ({
         for (const [k, v] of Object.entries(extraParams)) params.set(k, v);
       }
       const res = await fetch(`${endpoint}?${params.toString()}`);
-      if (!res.ok) throw new Error("Failed to fetch metric");
+      if (!res.ok) throw new Error("Error al obtener la métrica");
       return (await res.json()) as ApiResponse;
     },
   });
@@ -123,7 +123,7 @@ export const MetricChartCard = ({
     if (data.mode === "year") {
       return `${title} · ${data.year}`;
     }
-    return `${title} · All Time`;
+    return `${title} · Todo el tiempo`;
   }, [data, title]);
 
   const deltaPct = useMemo(() => {
@@ -131,7 +131,7 @@ export const MetricChartCard = ({
     const prev = data.prevTotal || 0;
     if (!prev) return null;
     const pct = ((data.total - prev) / prev) * 100;
-    return `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}% vs prev`;
+    return `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}% vs anterior`;
   }, [data]);
 
   const xTickFormatter = (x: number) => {
