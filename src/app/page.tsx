@@ -36,6 +36,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <div className="flex-1 flex flex-col gap-y-8">
       <Heading title="Home" description="Your home place to start" />
+
+      <Suspense fallback={<Spinner />}>
+        <TotalRevenue />
+        <TotalSubscriptions title="Daily Subscriptions" type="DAILY" />
+        <TotalSubscriptions title="Monthly Subscriptions" type="MONTHLY" />
+      </Suspense>
+
       <Suspense fallback={<Spinner />}>
         <section className="flex-1 flex flex-col gap-y-8">
           <Heading
@@ -63,11 +70,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </ErrorBoundary>
         </section>
       </Suspense>
-      <Suspense fallback={<Spinner />}>
-        <TotalRevenue />
-        <TotalSubscriptions title="Daily Subscriptions" type="DAILY" />
-        <TotalSubscriptions title="Monthly Subscriptions" type="MONTHLY" />
 
+      <Suspense fallback={<Spinner />}>
         <section className="flex-1 flex flex-col gap-y-8">
           <Heading
             title="Clients Page"
