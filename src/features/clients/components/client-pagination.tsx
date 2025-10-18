@@ -1,12 +1,13 @@
 "use client";
 
-import { Pagination } from "@/components/pagination";
+import { PaginationWrapper } from "@/components/pagination-wrapper";
 import { PaginatedData } from "@/types/pagination";
-import { useQueryState, useQueryStates } from "nuqs";
-import { useEffect, useRef } from "react";
 import {
+  clientPageKey,
   clientPaginationOptions,
   clientPaginationParser,
+  clientSearchKey,
+  clientSizeKey,
   searchParser,
 } from "../client-search-params";
 import { CLIENT_PAGINATION_SIZE_OPTIONS } from "../constants";
@@ -19,29 +20,15 @@ type ClientPaginationProps = {
 export const ClientPagination = ({
   paginatedMetaData,
 }: ClientPaginationProps) => {
-  const [pagination, setPagination] = useQueryStates(
-    clientPaginationParser,
-    clientPaginationOptions
-  );
-  const [search] = useQueryState("search", searchParser);
-  const prevSearch = useRef(search);
-
-  useEffect(() => {
-    if (search === prevSearch.current) {
-      return;
-    }
-    prevSearch.current = search;
-    setPagination({
-      ...pagination,
-      page: 0,
-    });
-  }, [pagination, search, setPagination]);
-
   return (
-    <Pagination
-      pagination={pagination}
-      onPageAndSize={setPagination}
+    <PaginationWrapper
       paginatedMetaData={paginatedMetaData}
+      paginationParser={clientPaginationParser}
+      paginationOptions={clientPaginationOptions}
+      searchParser={searchParser}
+      searchKey={clientSearchKey}
+      pageKey={clientPageKey}
+      sizeKey={clientSizeKey}
       paginationSizeOptions={CLIENT_PAGINATION_SIZE_OPTIONS}
     />
   );

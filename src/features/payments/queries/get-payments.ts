@@ -1,11 +1,18 @@
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
-import { ClientParsedSearchParams } from "@/features/clients/client-search-params";
+import {
+  ParsedPaymentSearchParams,
+  paymentPageKey,
+  paymentSearchKey,
+  paymentSizeKey,
+} from "@/features/payments/search-params";
 import { prisma } from "@/lib/prisma";
 
-export const getPayments = async (searchParams: ClientParsedSearchParams) => {
+export const getPayments = async (searchParams: ParsedPaymentSearchParams) => {
   await getAuthOrRedirect();
 
-  const searchTerms = searchParams.search.trim().split(/\s+/);
+  const searchTerms = (searchParams[paymentSearchKey] ?? "")
+    .trim()
+    .split(/\s+/);
   const where =
     searchTerms.length === 1
       ? {
@@ -48,8 +55,10 @@ export const getPayments = async (searchParams: ClientParsedSearchParams) => {
             },
           ],
         };
-  const skip = searchParams.size * searchParams.page;
-  const take = searchParams.size;
+  const page = searchParams[paymentPageKey] ?? 0;
+  const size = searchParams[paymentSizeKey] ?? 10;
+  const skip = size * page;
+  const take = size;
 
   const [payments, count] = await prisma.$transaction([
     prisma.payment.findMany({

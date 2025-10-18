@@ -30,7 +30,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   );
   const [{ list: payments, metadata }, clients] = await Promise.all([
     getPayments(cachePaymentSearchParams),
-    getClients({ ...cacheClientSearchParams, size: 999 }),
+    getClients({ ...cacheClientSearchParams, clientSize: 999 }),
   ]);
 
   return (

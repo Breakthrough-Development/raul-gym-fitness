@@ -1,11 +1,16 @@
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
-import { ClientParsedSearchParams } from "@/features/clients/client-search-params";
+import {
+  ClientParsedSearchParams,
+  clientPageKey,
+  clientSearchKey,
+  clientSizeKey,
+} from "@/features/clients/client-search-params";
 import { prisma } from "@/lib/prisma";
 
 export const getClients = async (searchParams: ClientParsedSearchParams) => {
   await getAuthOrRedirect();
 
-  const searchTerms = searchParams.search.trim().split(/\s+/);
+  const searchTerms = (searchParams[clientSearchKey] ?? "").trim().split(/\s+/);
   const where =
     searchTerms.length === 1
       ? {
@@ -40,8 +45,10 @@ export const getClients = async (searchParams: ClientParsedSearchParams) => {
             },
           ],
         };
-  const skip = searchParams.size * searchParams.page;
-  const take = searchParams.size;
+  const page = searchParams[clientPageKey] ?? 0;
+  const size = searchParams[clientSizeKey] ?? 10;
+  const skip = size * page;
+  const take = size;
 
   const [clients, count] = await prisma.$transaction([
     prisma.client.findMany({

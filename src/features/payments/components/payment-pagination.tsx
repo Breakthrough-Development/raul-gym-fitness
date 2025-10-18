@@ -6,7 +6,10 @@ import {
 import { PAYMENT_PAGINATION_SIZE_OPTIONS } from "../constants";
 import {
   paginationOptions,
+  paymentPageKey,
   paymentPaginationParser,
+  paymentSearchKey,
+  paymentSizeKey,
   searchParser,
 } from "../search-params";
 
@@ -23,6 +26,9 @@ export const PaymentPagination = ({
       paginationParser={paymentPaginationParser}
       paginationOptions={paginationOptions}
       searchParser={searchParser}
+      searchKey={paymentSearchKey}
+      pageKey={paymentPageKey}
+      sizeKey={paymentSizeKey}
       paginationSizeOptions={PAYMENT_PAGINATION_SIZE_OPTIONS}
     />
   );

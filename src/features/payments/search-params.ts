@@ -10,6 +10,10 @@ import {
   TICKET_KEYS,
 } from "./constants";
 
+export const paymentSearchKey = "paymentSearch" as const;
+export const paymentPageKey = "ticketPage" as const;
+export const paymentSizeKey = "ticketSize" as const;
+
 export const searchParser = parseAsString.withDefault("").withOptions({
   shallow: false,
   clearOnDefault: true,
@@ -26,8 +30,8 @@ export const sortOptions = {
 };
 
 export const paymentPaginationParser = {
-  page: parseAsInteger.withDefault(PAYMENT_PAGINATION_PAGE_DEFAULT),
-  size: parseAsInteger.withDefault(PAYMENT_PAGINATION_SIZE_DEFAULT),
+  [paymentPageKey]: parseAsInteger.withDefault(PAYMENT_PAGINATION_PAGE_DEFAULT),
+  [paymentSizeKey]: parseAsInteger.withDefault(PAYMENT_PAGINATION_SIZE_DEFAULT),
 };
 
 export const paginationOptions = {
@@ -36,7 +40,7 @@ export const paginationOptions = {
 };
 
 export const PaymentSearchParamsCache = createSearchParamsCache({
-  search: searchParser,
+  [paymentSearchKey]: searchParser,
   ...sortParser,
   ...paymentPaginationParser,
 });

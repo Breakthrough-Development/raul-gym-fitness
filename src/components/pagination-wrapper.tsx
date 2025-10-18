@@ -2,21 +2,18 @@
 
 import { Pagination, PaginationSizeOption } from "@/components/pagination";
 import { SingleParserBuilder, useQueryState, useQueryStates } from "nuqs";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 type PaginationWrapperProps = {
   paginationSizeOptions: PaginationSizeOption[];
   paginatedMetaData: PaginatedMetaData;
-  paginationParser: {
-    page: Omit<SingleParserBuilder<number>, "parseServerSide"> & {
+  paginationParser: Record<
+    string,
+    Omit<SingleParserBuilder<number>, "parseServerSide"> & {
       readonly defaultValue: number;
       parseServerSide(value: string | string[] | undefined): number;
-    };
-    size: Omit<SingleParserBuilder<number>, "parseServerSide"> & {
-      readonly defaultValue: number;
-      parseServerSide(value: string | string[] | undefined): number;
-    };
-  };
+    }
+  >;
   paginationOptions: {
     shallow: boolean;
     clearOnDefault: boolean;
@@ -25,6 +22,9 @@ type PaginationWrapperProps = {
     readonly defaultValue: string;
     parseServerSide(value: string | string[] | undefined): string;
   };
+  searchKey?: string;
+  pageKey?: string;
+  sizeKey?: string;
 };
 
 export type PaginatedMetaData = {
@@ -41,13 +41,51 @@ export const PaginationWrapper = ({
   paginationParser,
   paginationOptions,
   searchParser,
+  searchKey = "search",
+  pageKey = "page",
+  sizeKey = "size",
   paginationSizeOptions,
 }: PaginationWrapperProps) => {
-  const [pagination, setPagination] = useQueryStates(
-    paginationParser,
+  const derivedPaginationParsers = {
+    [pageKey]:
+      (
+        paginationParser as Record<
+          string,
+          PaginationWrapperProps["paginationParser"]["page"]
+        >
+      )[pageKey] ?? paginationParser.page,
+    [sizeKey]:
+      (
+        paginationParser as Record<
+          string,
+          PaginationWrapperProps["paginationParser"]["size"]
+        >
+      )[sizeKey] ?? paginationParser.size,
+  } as Record<
+    string,
+    | PaginationWrapperProps["paginationParser"]["page"]
+    | PaginationWrapperProps["paginationParser"]["size"]
+  >;
+  const [rawPagination, setRawPagination] = useQueryStates(
+    derivedPaginationParsers as Record<string, SingleParserBuilder<number>>,
     paginationOptions
   );
-  const [search] = useQueryState("search", searchParser);
+  const pagination = useMemo(
+    () => ({
+      page: (rawPagination as Record<string, number>)[pageKey] ?? 0,
+      size: (rawPagination as Record<string, number>)[sizeKey] ?? 0,
+    }),
+    [rawPagination, pageKey, sizeKey]
+  );
+  const setPagination = useCallback(
+    ({ page, size }: { page: number; size: number }) =>
+      setRawPagination({ [pageKey]: page, [sizeKey]: size } as Record<
+        string,
+        number
+      >),
+    [setRawPagination, pageKey, sizeKey]
+  );
+  const [search] = useQueryState(searchKey, searchParser);
   const prevSearch = useRef(search);
 
   useEffect(() => {

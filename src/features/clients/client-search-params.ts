@@ -10,6 +10,10 @@ import {
   SORT_VALUES,
 } from "./constants";
 
+export const clientSearchKey = "clientSearch" as const;
+export const clientPageKey = "clientPage" as const;
+export const clientSizeKey = "clientSize" as const;
+
 export const searchParser = parseAsString.withDefault("").withOptions({
   shallow: false,
   clearOnDefault: true,
@@ -26,8 +30,8 @@ export const sortOptions = {
 };
 
 export const clientPaginationParser = {
-  page: parseAsInteger.withDefault(CLIENT_PAGINATION_PAGE_DEFAULT),
-  size: parseAsInteger.withDefault(CLIENT_PAGINATION_SIZE_DEFAULT),
+  [clientPageKey]: parseAsInteger.withDefault(CLIENT_PAGINATION_PAGE_DEFAULT),
+  [clientSizeKey]: parseAsInteger.withDefault(CLIENT_PAGINATION_SIZE_DEFAULT),
 };
 
 export const clientPaginationOptions = {
@@ -36,7 +40,7 @@ export const clientPaginationOptions = {
 };
 
 export const ClientSearchParamsCache = createSearchParamsCache({
-  search: searchParser,
+  [clientSearchKey]: searchParser,
   ...sortParser,
   ...clientPaginationParser,
 });

@@ -75,10 +75,7 @@ export const Pagination = ({
   };
 
   const sizeButton = (
-    <Select
-      defaultValue={pagination.size.toString()}
-      onValueChange={handleChangeSize}
-    >
+    <Select value={pagination.size.toString()} onValueChange={handleChangeSize}>
       <SelectTrigger className="h-[36px]">
         <SelectValue placeholder="Size" />
       </SelectTrigger>
