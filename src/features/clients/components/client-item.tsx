@@ -10,12 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteClient } from "@/features/clients/actions/delete-client";
-import { ClientEditPath, ClientPath } from "@/paths";
-import { Payment } from "@prisma/client";
+import { ClientPath } from "@/paths";
 import clsx from "clsx";
 import {
+  LucideMail,
   LucideMoreHorizontal,
-  LucidePencil,
+  LucidePhone,
   LucideSquareArrowOutUpRight,
 } from "lucide-react";
 import Link from "next/link";
@@ -27,20 +27,24 @@ export type ClientItemProps = {
 };
 
 export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
+  const formatPhoneNumber = (raw: string | null | undefined) => {
+    if (!raw) return "";
+    const digits = raw.replace(/\D/g, "");
+    if (digits.length === 10) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    }
+    if (digits.length === 11 && digits.startsWith("1")) {
+      return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(
+        7
+      )}`;
+    }
+    return raw;
+  };
   const detailButton = (
     <Button asChild variant="outline" size="icon">
       <Link prefetch href={ClientPath(client.id)}>
         <LucideSquareArrowOutUpRight className="h-4 w-4" />
         <span className="sr-only">View client {client.id}</span>
-      </Link>
-    </Button>
-  );
-
-  const editButton = (
-    <Button asChild variant="outline" size="icon">
-      <Link prefetch href={ClientEditPath(client.id)}>
-        <LucidePencil className="h-4 w-4" />
-        <span className="sr-only">Edit client {client.id}</span>
       </Link>
     </Button>
   );
@@ -61,20 +65,17 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
           </CardHeader>
 
           <CardContent>
-            <ul className={clsx("whitespace-break-spaces")}>
-              <li>{client.email}</li>
-              <li>{client.phone}</li>
-              {isDetail && (
-                <div>
-                  {client.Payment.map((APayment: Payment) => (
-                    <div key={APayment.id}>
-                      <li>{APayment.amount}</li>
-                      <li>{APayment.status}</li>
-                      <li>{APayment.membership}</li>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <ul
+              className={clsx("whitespace-break-spaces flex flex-col gap-y-2")}
+            >
+              <li className="flex items-center gap-x-2">
+                <LucideMail className="h-4 w-4 text-muted-foreground" />
+                <span>{client.email}</span>
+              </li>
+              <li className="flex items-center gap-x-2">
+                <LucidePhone className="h-4 w-4 text-muted-foreground" />
+                <span>{formatPhoneNumber(client.phone)}</span>
+              </li>
             </ul>
           </CardContent>
         </Card>
