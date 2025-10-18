@@ -14,7 +14,6 @@ import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert
 import { getPayments } from "@/features/payments/queries/get-payments";
 import { PaymentSearchParamsCache } from "@/features/payments/search-params";
 import { SearchParams } from "nuqs/server";
-import { title } from "process";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -40,7 +39,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       <Suspense fallback={<Spinner />}>
         <section className="flex flex-wrap gap-6 justify-center">
-          <h2 className="sr-only text-3xl font-bold tracking-tight">Automatic Calculations</h2>
+          <h2 className="sr-only text-3xl font-bold tracking-tight">
+            Automatic Calculations
+          </h2>
           <div className="flex-1 min-w-md max-w-2xl">
             <TotalRevenueChart />
           </div>
