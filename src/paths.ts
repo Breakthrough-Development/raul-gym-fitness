@@ -24,3 +24,4 @@ export const paymentPath = (paymentId: string) =>
   `${paymentsPath()}/${paymentId}` as Route;
 export const paymentsEditPath = (paymentId: string) =>
   `${paymentPath(paymentId)}/edit` as Route;
+export const usersPath = () => "/dashboard/users" as Route;

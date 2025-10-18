@@ -41,7 +41,7 @@ export const ResetPasswordForm = () => {
       <FieldError actionState={actionState} name="confirmPassword" />
 
       <div className="flex flex-row flex-wrap justify-between w-full">
-        <SubmitButton label="Restablecer contraseña" />
+        <SubmitButton label="Actualizar contraseña" />
       </div>
     </Form>
   );

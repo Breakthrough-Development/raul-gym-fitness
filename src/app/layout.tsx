@@ -45,7 +45,7 @@ export default function RootLayout({
                     {children}
                   </main>
                 </div>
-                <footer className="flex justify-center">
+                <footer className="flex justify-center p-4">
                   <p>
                     &copy; {new Date().getFullYear()} Breakthrough Development
                     Group, LLC. All rights reserved.
