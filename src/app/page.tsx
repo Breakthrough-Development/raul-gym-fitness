@@ -34,7 +34,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   ]);
 
   return (
-    <div className="flex-1 flex flex-col gap-y-8">
+    <div className="flex-1 flex flex-col gap-y-8 max-w-7xl mx-auto">
       <Heading title="Home" description="Your home place to start" />
 
       <Suspense fallback={<Spinner />}>
@@ -58,7 +58,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </Suspense>
 
       <Suspense fallback={<Spinner />}>
-        <section className="flex-1 flex flex-col gap-y-8">
+        <section className="flex-1 flex flex-col gap-y-8 ">
           <Heading
             title="Clients Page"
             description="All your Clients at one place."
