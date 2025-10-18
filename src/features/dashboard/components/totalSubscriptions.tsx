@@ -8,9 +8,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { MembershipStatus } from "@prisma/client";
-import { Area, AreaChart } from "recharts";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 export type TotalSubscriptionsProps = {
   title: string;
@@ -20,81 +34,196 @@ export const TotalSubscriptions = ({
   title,
   type,
 }: TotalSubscriptionsProps) => {
-  const data = [
-    {
-      revenue: 10400,
-      subscription: 40,
-    },
-    {
-      revenue: 14405,
-      subscription: 90,
-    },
-    {
-      revenue: 9400,
-      subscription: 200,
-    },
-    {
-      revenue: 8200,
-      subscription: 278,
-    },
-    {
-      revenue: 7000,
-      subscription: 89,
-    },
-    {
-      revenue: 9600,
-      subscription: 239,
-    },
-    {
-      revenue: 11244,
-      subscription: 78,
-    },
-    {
-      revenue: 26475,
-      subscription: 89,
-    },
+  const now = new Date();
+  const [mode, setMode] = useState<"month" | "year" | "all">("month");
+  const [year, setYear] = useState<number>(now.getFullYear());
+  const [month, setMonth] = useState<number>(now.getMonth() + 1);
+
+  type ApiResponse =
+    | {
+        mode: "month";
+        year: number;
+        month: number;
+        membership: MembershipStatus;
+        series: { x: number; y: number }[];
+        total: number;
+        prevTotal: number;
+      }
+    | {
+        mode: "year";
+        year: number;
+        membership: MembershipStatus;
+        series: { x: number; y: number }[];
+        total: number;
+        prevTotal: number;
+      }
+    | {
+        mode: "all";
+        membership: MembershipStatus;
+        series: { x: number; y: number }[];
+        total: number;
+        prevTotal: number;
+      };
+
+  const monthNamesShort = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
 
+  const queryKey = useMemo(
+    () => ["subscriptions", { membership: type, mode, year, month }],
+    [type, mode, year, month]
+  );
+  const { data } = useQuery<ApiResponse>({
+    queryKey,
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.set("membership", type);
+      params.set("mode", mode);
+      if (mode !== "all") params.set("year", String(year));
+      if (mode === "month") params.set("month", String(month));
+      const res = await fetch(`/api/subscriptions?${params.toString()}`);
+      if (!res.ok) throw new Error("Failed to fetch subscriptions");
+      return (await res.json()) as ApiResponse;
+    },
+  });
+
   const chartConfig = {
-    revenue: {
-      label: "Revenue",
-      color: "var(--primary)",
-    },
-    subscription: {
-      label: "Subscriptions",
-      color: "var(--primary)",
-    },
+    subscription: { label: `${type} Subscriptions`, color: "var(--primary)" },
   } satisfies ChartConfig;
+
+  const titleText = useMemo(() => {
+    if (!data) return title;
+    if (data.mode === "month")
+      return `${title} · ${monthNamesShort[data.month - 1]} ${data.year}`;
+    if (data.mode === "year") return `${title} · ${data.year}`;
+    return `${title} · All Time`;
+  }, [data, title]);
+
+  const deltaPct = useMemo(() => {
+    if (!data) return null;
+    const prev = data.prevTotal || 0;
+    if (!prev) return null;
+    const pct = ((data.total - prev) / prev) * 100;
+    return `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}% vs prev`;
+  }, [data]);
+
+  const xTickFormatter = (x: number) => {
+    if (!data) return String(x);
+    if (data.mode === "month") return String(x);
+    if (data.mode === "year") return monthNamesShort[x - 1];
+    return String(x);
+  };
+
+  const onPrev = () => {
+    if (mode === "month") {
+      const d = new Date(year, month - 2, 1);
+      setYear(d.getFullYear());
+      setMonth(d.getMonth() + 1);
+    } else if (mode === "year") {
+      setYear((y) => y - 1);
+    }
+  };
+  const onNext = () => {
+    if (mode === "month") {
+      const d = new Date(year, month, 1);
+      setYear(d.getFullYear());
+      setMonth(d.getMonth() + 1);
+    } else if (mode === "year") {
+      setYear((y) => y + 1);
+    }
+  };
+
   return (
     <Card className="pb-0 lg:hidden xl:flex">
       <CardHeader>
-        <CardDescription>{title}</CardDescription>
-        <CardTitle className="text-3xl">+2,350</CardTitle>
-        <CardDescription>+180.1% from last month</CardDescription>
-        <CardAction>
-          <Button variant="ghost" size="sm">
-            View More
-          </Button>
+        <CardDescription>{titleText}</CardDescription>
+        <CardTitle className="text-3xl">{data?.total ?? 0}</CardTitle>
+        <CardDescription>
+          {deltaPct ?? (mode === "all" ? "" : "")}
+        </CardDescription>
+        <CardAction className="flex items-center gap-2">
+          <div className="flex rounded-md border overflow-hidden">
+            <Button
+              variant={mode === "month" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setMode("month")}
+            >
+              Month
+            </Button>
+            <Button
+              variant={mode === "year" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setMode("year")}
+            >
+              Year
+            </Button>
+            <Button
+              variant={mode === "all" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setMode("all")}
+            >
+              All
+            </Button>
+          </div>
+          {mode !== "all" && (
+            <div className="flex gap-2">
+              <Button variant="ghost" size="sm" onClick={onPrev}>
+                Prev
+              </Button>
+              <Button variant="ghost" size="sm" onClick={onNext}>
+                Next
+              </Button>
+            </div>
+          )}
         </CardAction>
       </CardHeader>
-      <CardContent className="mt-auto max-h-[124px] flex-1 p-0">
+      <CardContent className="mt-auto max-h-[180px] flex-1 p-0">
         <ChartContainer config={chartConfig} className="size-full">
-          <AreaChart
-            data={data}
-            margin={{
-              left: 0,
-              right: 0,
-            }}
-          >
-            <Area
-              dataKey="subscription"
-              fill="var(--color-subscription)"
-              fillOpacity={0.05}
-              stroke="var(--color-subscription)"
-              strokeWidth={2}
-              type="monotone"
-            />
-          </AreaChart>
+          <ResponsiveContainer>
+            <AreaChart
+              data={(data?.series || []).map((p) => ({
+                x: p.x,
+                subscription: p.y,
+              }))}
+              margin={{ left: 10, right: 10, top: 10, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="x"
+                tickFormatter={xTickFormatter}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                width={40}
+                tickLine={false}
+                axisLine={false}
+                allowDecimals={false}
+              />
+              <ChartTooltip
+                content={<ChartTooltipContent nameKey="subscription" />}
+              />
+              <Area
+                dataKey="subscription"
+                fill="var(--color-subscription)"
+                fillOpacity={0.05}
+                stroke="var(--color-subscription)"
+                strokeWidth={2}
+                type="monotone"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
     </Card>
