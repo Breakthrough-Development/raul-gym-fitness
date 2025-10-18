@@ -28,11 +28,14 @@ export const upsertClient = async (
   await getAuthOrRedirect();
 
   try {
+    const rawPhone = String(formData.get("phone") || "");
+    const normalizedPhone = rawPhone.replace(/\D/g, "");
+
     const data = upsertClientSchema.parse({
       firstName: formData.get("firstName"),
       lastName: formData.get("lastName"),
       email: formData.get("email"),
-      phone: formData.get("phone"),
+      phone: normalizedPhone,
     });
 
     await prisma.client.upsert({
@@ -47,8 +50,8 @@ export const upsertClient = async (
   revalidatePath(dashboardPath());
 
   if (id) {
-    await setCookieByKey("toast", "Client updated");
+    await setCookieByKey("toast", "Cliente actualizado");
     redirect(ClientPath(id));
   }
-  return toActionState("SUCCESS", "Client Created");
+  return toActionState("SUCCESS", "Cliente creado");
 };

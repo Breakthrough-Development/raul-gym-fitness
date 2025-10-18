@@ -3,6 +3,7 @@ import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
+import { PhoneInput } from "@/components/phone-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Client } from "@prisma/client";
@@ -42,15 +43,11 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       />
       <FieldError actionState={actionState} name="lastName" />
 
-      <Label htmlFor="phone">Teléfono</Label>
-      <Input
-        id="phone"
+      <PhoneInput
+        actionState={actionState}
         name="phone"
-        defaultValue={
-          (actionState.payload?.get("phone") as string) ?? client?.phone
-        }
+        defaultValue={client?.phone ?? undefined}
       />
-      <FieldError actionState={actionState} name="phone" />
 
       <Label htmlFor="email">Correo electrónico</Label>
       <Input

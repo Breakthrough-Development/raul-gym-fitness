@@ -1,4 +1,5 @@
 import { useActionFeedback } from "@/components/form/hooks/use-action-feedback";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { ActionState } from "./util/to-action-state";
 type FormProps<T = unknown> = {
@@ -7,6 +8,7 @@ type FormProps<T = unknown> = {
   children: React.ReactNode;
   onSuccess?: (actionState: ActionState<T>) => void;
   onError?: (actionState: ActionState) => void;
+  className?: string;
 };
 
 const Form = <T,>({
@@ -15,6 +17,7 @@ const Form = <T,>({
   action,
   onSuccess,
   onError,
+  className,
 }: FormProps<T>) => {
   useActionFeedback(actionState, {
     onSuccess: () => {
@@ -31,7 +34,7 @@ const Form = <T,>({
     },
   });
   return (
-    <form action={action} className="flex flex-col gap-y-2">
+    <form action={action} className={cn("flex flex-col gap-y-2", className)}>
       {children}
     </form>
   );
