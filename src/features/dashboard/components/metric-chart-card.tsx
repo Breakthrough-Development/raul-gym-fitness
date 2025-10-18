@@ -118,11 +118,12 @@ export const MetricChartCard = ({
 
   const titleText = useMemo(() => {
     if (!data) return title;
-    if (data.mode === "month")
-      return `${title} · ${monthNamesShort[(data as any).month - 1]} ${
-        (data as any).year
-      }`;
-    if (data.mode === "year") return `${title} · ${(data as any).year}`;
+    if (data.mode === "month") {
+      return `${title} · ${monthNamesShort[data.month - 1]} ${data.year}`;
+    }
+    if (data.mode === "year") {
+      return `${title} · ${data.year}`;
+    }
     return `${title} · All Time`;
   }, [data, title]);
 
