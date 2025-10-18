@@ -6,8 +6,8 @@ import { ClientSearchParamsCache } from "@/features/clients/client-search-params
 import { ClientList } from "@/features/clients/components/client-list";
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 import { getClients } from "@/features/clients/queries/get-clients";
-import { TotalRevenue } from "@/features/dashboard/components/totalRevenue";
-import { TotalSubscriptions } from "@/features/dashboard/components/totalSubscriptions";
+import { TotalRevenueChart } from "@/features/dashboard/components/totalRevenueChart";
+import { TotalSubscriptionsChart } from "@/features/dashboard/components/totalSubscriptionsChart";
 import { PaymentDataTable } from "@/features/payments/components/payment-data-table";
 import { PaymentPagination } from "@/features/payments/components/payment-pagination";
 import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert-form";
@@ -38,9 +38,20 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <Heading title="Home" description="Your home place to start" />
 
       <Suspense fallback={<Spinner />}>
-        <TotalRevenue />
-        <TotalSubscriptions title="Daily Subscriptions" type="DAILY" />
-        <TotalSubscriptions title="Monthly Subscriptions" type="MONTHLY" />
+        <section className="flex flex-wrap gap-6 justify-center">
+          <div className="flex-1 min-w-md max-w-2xl">
+            <TotalRevenueChart />
+          </div>
+          <div className="flex-1 min-w-md max-w-2xl">
+            <TotalSubscriptionsChart title="Daily Subscriptions" type="DAILY" />
+          </div>
+          <div className="flex-1 min-w-md max-w-2xl">
+            <TotalSubscriptionsChart
+              title="Monthly Subscriptions"
+              type="MONTHLY"
+            />
+          </div>
+        </section>
       </Suspense>
 
       <Suspense fallback={<Spinner />}>

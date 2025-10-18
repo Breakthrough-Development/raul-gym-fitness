@@ -2,7 +2,7 @@
 import { toDisplayCurrency } from "@/utils/currency";
 import { MetricChartCard } from "./metric-chart-card";
 
-export const TotalRevenue = () => {
+export const TotalRevenueChart = () => {
   return (
     <MetricChartCard
       title="Total Revenue"

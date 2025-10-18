@@ -6,7 +6,7 @@ export type TotalSubscriptionsProps = {
   title: string;
   type: MembershipStatus;
 };
-export const TotalSubscriptions = ({
+export const TotalSubscriptionsChart = ({
   title,
   type,
 }: TotalSubscriptionsProps) => {
