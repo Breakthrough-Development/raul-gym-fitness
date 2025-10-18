@@ -15,7 +15,7 @@ const profilePage = async () => {
       />
       <div className="w-full max-w-[420px] self-center">
         <UserUpdateForm
-          lastName={authUser.lastName}
+          lastName={authUser.lastName || ""}
           firstName={authUser.firstName}
           username={authUser.username}
         />
