@@ -1,12 +1,12 @@
 "use client";
 import { SearchInput } from "@/components/search-input";
 import { useQueryState } from "nuqs";
-import { searchParser } from "../ticket-search-params";
+import { searchParser } from "../client-search-params";
 
-type TicketSearchInputProps = {
+type ClientSearchInputProps = {
   placeholder: string;
 };
-export const TicketSearchInput = ({ placeholder }: TicketSearchInputProps) => {
+export const ClientSearchInput = ({ placeholder }: ClientSearchInputProps) => {
   const [search, setSearch] = useQueryState("search", searchParser);
   return (
     <SearchInput

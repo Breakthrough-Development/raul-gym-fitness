@@ -1,14 +1,14 @@
 import Placeholder from "@/components/placeholder";
-import { TicketPagination } from "@/features/ticket/components/ticket-pagination";
-import { TicketSearchInput } from "@/features/ticket/components/ticket-search-input";
-import { TicketSortSelect } from "@/features/ticket/components/ticket-sort-select";
-import { TicketParsedSearchParams } from "@/features/ticket/ticket-search-params";
+import { ClientParsedSearchParams } from "@/features/clients/client-search-params";
+import { ClientPagination } from "@/features/clients/components/client-pagination";
+import { ClientSearchInput } from "@/features/clients/components/client-search-input";
+import { ClientSortSelect } from "@/features/clients/components/client-sort-select";
 import { SORT_OPTIONS } from "../constants";
 import { getClients } from "../queries/get-clients";
 import { ClientItem } from "./client-item";
 
 export type ClientListProps = {
-  searchParams: TicketParsedSearchParams;
+  searchParams: ClientParsedSearchParams;
 };
 
 export async function ClientList({ searchParams }: ClientListProps) {
@@ -17,8 +17,8 @@ export async function ClientList({ searchParams }: ClientListProps) {
     <section className="flex flex-col gap-y-4 animate-fade-from-top">
       <header className="self-center max-w-[420px] w-full flex gap-x-2">
         <h2 className="sr-only">Clients</h2>
-        <TicketSearchInput placeholder="Search clients by name" />
-        <TicketSortSelect options={SORT_OPTIONS} />
+        <ClientSearchInput placeholder="Search clients by name" />
+        <ClientSortSelect options={SORT_OPTIONS} />
       </header>
       <ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
         {clients.length ? (
@@ -30,7 +30,7 @@ export async function ClientList({ searchParams }: ClientListProps) {
         )}
       </ul>
       <footer className="w-full max-w-[420px] self-center">
-        <TicketPagination paginatedMetaData={metadata} />
+        <ClientPagination paginatedMetaData={metadata} />
       </footer>
     </section>
   );

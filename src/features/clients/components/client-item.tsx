@@ -1,15 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TicketMoreMenu } from "@/features/ticket/components/ticket-more-menu";
 import { ticketEditPath, ticketPath } from "@/paths";
 import { Payment } from "@prisma/client";
 import clsx from "clsx";
-import {
-  LucideMoreVertical,
-  LucidePencil,
-  LucideSquareArrowOutUpRight,
-} from "lucide-react";
+import { LucidePencil, LucideSquareArrowOutUpRight } from "lucide-react";
 import Link from "next/link";
 import { ClientWithMetadata } from "../types";
 
@@ -36,17 +31,7 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
       </Link>
     </Button>
   );
-  const moreMenu = (
-    <TicketMoreMenu
-      ticket={client}
-      trigger={
-        <Button variant="outline" size="icon">
-          <LucideMoreVertical className="h-4 w-4" />
-          <span className="sr-only">More</span>
-        </Button>
-      }
-    />
-  );
+
   return (
     <div
       className={clsx("w-full flex flex-col gap-y-4", {
@@ -85,10 +70,7 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
 
         <div className="flex flex-col gap-y-1">
           {isDetail ? (
-            <>
-              {editButton}
-              {moreMenu}
-            </>
+            <>{editButton}</>
           ) : (
             <>
               {detailButton}

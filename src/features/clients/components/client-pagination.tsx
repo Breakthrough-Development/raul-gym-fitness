@@ -4,24 +4,24 @@ import { Pagination } from "@/components/pagination";
 import { PaginatedData } from "@/types/pagination";
 import { useQueryState, useQueryStates } from "nuqs";
 import { useEffect, useRef } from "react";
-import { PAGINATION_SIZE_OPTIONS } from "../constants";
 import {
-  paginationOptions,
-  paginationParser,
+  clientPaginationOptions,
+  clientPaginationParser,
   searchParser,
-} from "../ticket-search-params";
-import { TicketWithMetadata } from "../types/types";
+} from "../client-search-params";
+import { CLIENT_PAGINATION_SIZE_OPTIONS } from "../constants";
+import { ClientWithMetadata } from "../types";
 
-type TicketPaginationProps = {
-  paginatedMetaData: PaginatedData<TicketWithMetadata>["metadata"];
+type ClientPaginationProps = {
+  paginatedMetaData: PaginatedData<ClientWithMetadata>["metadata"];
 };
 
-export const TicketPagination = ({
+export const ClientPagination = ({
   paginatedMetaData,
-}: TicketPaginationProps) => {
+}: ClientPaginationProps) => {
   const [pagination, setPagination] = useQueryStates(
-    paginationParser,
-    paginationOptions
+    clientPaginationParser,
+    clientPaginationOptions
   );
   const [search] = useQueryState("search", searchParser);
   const prevSearch = useRef(search);
@@ -42,7 +42,7 @@ export const TicketPagination = ({
       pagination={pagination}
       onPageAndSize={setPagination}
       paginatedMetaData={paginatedMetaData}
-      paginationSizeOptions={PAGINATION_SIZE_OPTIONS}
+      paginationSizeOptions={CLIENT_PAGINATION_SIZE_OPTIONS}
     />
   );
 };
