@@ -42,13 +42,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <h2 className="sr-only text-3xl font-bold tracking-tight">
             Automatic Calculations
           </h2>
-          <div className="flex-1 min-w-md max-w-2xl">
+          <div className="flex-1 min-w-lg max-w-2xl">
             <TotalRevenueChart />
           </div>
-          <div className="flex-1 min-w-md max-w-2xl">
+          <div className="flex-1 min-w-lg max-w-2xl">
             <TotalSubscriptionsChart title="Daily Subscriptions" type="DAILY" />
           </div>
-          <div className="flex-1 min-w-md max-w-2xl">
+          <div className="flex-1 min-w-lg max-w-2xl">
             <TotalSubscriptionsChart
               title="Monthly Subscriptions"
               type="MONTHLY"
