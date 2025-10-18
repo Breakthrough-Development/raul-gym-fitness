@@ -16,28 +16,28 @@ const SignUpForm = () => {
     <Form action={action} actionState={actionState}>
       <Input
         name="username"
-        placeholder="Username"
+        placeholder="Nombre de usuario"
         defaultValue={actionState.payload?.get("username") as string}
       />
       <FieldError actionState={actionState} name="username" />
 
       <Input
         name="firstName"
-        placeholder="First Name"
+        placeholder="Nombre"
         defaultValue={actionState.payload?.get("firstName") as string}
       />
       <FieldError actionState={actionState} name="firstName" />
 
       <Input
         name="lastName"
-        placeholder="Last Name"
+        placeholder="Apellido"
         defaultValue={actionState.payload?.get("lastName") as string}
       />
       <FieldError actionState={actionState} name="lastName" />
 
       <Input
         name="email"
-        placeholder="Email"
+        placeholder="Correo electrónico"
         defaultValue={actionState.payload?.get("email") as string}
       />
       <FieldError actionState={actionState} name="email" />
@@ -45,7 +45,7 @@ const SignUpForm = () => {
       <PasswordField
         type="password"
         name="password"
-        placeholder="Password"
+        placeholder="Contraseña"
         defaultValue={actionState.payload?.get("password") as string}
       />
       <FieldError actionState={actionState} name="password" />
@@ -53,12 +53,12 @@ const SignUpForm = () => {
       <PasswordField
         type="password"
         name="confirmPassword"
-        placeholder="Confirm Password"
+        placeholder="Confirmar contraseña"
         defaultValue={actionState.payload?.get("confirmPassword") as string}
       />
       <FieldError actionState={actionState} name="confirmPassword" />
 
-      <SubmitButton label="Sign Up" />
+      <SubmitButton label="Registrarse" />
     </Form>
   );
 };

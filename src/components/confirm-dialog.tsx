@@ -29,8 +29,8 @@ type ConfirmDialogArgs = {
 };
 
 const useConfirmDialog = ({
-  title = "Are you absolutely sure?",
-  description = "This action cannot be undone. Make sure you undestand the consequences.",
+  title = "¿Estás completamente seguro?",
+  description = "Esta acción no se puede deshacer. Asegúrate de entender las consecuencias.",
   action,
   trigger,
   onSuccess,
@@ -45,7 +45,7 @@ const useConfirmDialog = ({
 
   useEffect(() => {
     if (isPending) {
-      toastRef.current = toast.loading("Deleting...");
+      toastRef.current = toast.loading("Eliminando...");
     } else if (toastRef.current) {
       toast.dismiss(toastRef.current);
     }
@@ -92,11 +92,11 @@ const useConfirmDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="cursor-pointer">
-            Cancel
+            Cancelar
           </AlertDialogCancel>
           <AlertDialogAction asChild>
             <form action={formAction}>
-              <Button type="submit">Confirm</Button>
+              <Button type="submit">Confirmar</Button>
             </form>
           </AlertDialogAction>
         </AlertDialogFooter>

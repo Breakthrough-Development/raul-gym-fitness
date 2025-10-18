@@ -19,7 +19,7 @@ export const ResetPasswordForm = () => {
       <PasswordField
         type="password"
         name="currentPassword"
-        placeholder="Current Password"
+        placeholder="Contraseña actual"
         defaultValue={actionState.payload?.get("currentPassword") as string}
       />
       <FieldError actionState={actionState} name="currentPassword" />
@@ -27,7 +27,7 @@ export const ResetPasswordForm = () => {
       <PasswordField
         type="password"
         name="newPassword"
-        placeholder="Confirm Password"
+        placeholder="Nueva contraseña"
         defaultValue={actionState.payload?.get("newPassword") as string}
       />
       <FieldError actionState={actionState} name="newPassword" />
@@ -35,13 +35,13 @@ export const ResetPasswordForm = () => {
       <PasswordField
         type="password"
         name="confirmPassword"
-        placeholder="Confirm Password"
+        placeholder="Confirmar contraseña"
         defaultValue={actionState.payload?.get("confirmPassword") as string}
       />
       <FieldError actionState={actionState} name="confirmPassword" />
 
       <div className="flex flex-row flex-wrap justify-between w-full">
-        <SubmitButton label="Reset Password" />
+        <SubmitButton label="Restablecer contraseña" />
       </div>
     </Form>
   );

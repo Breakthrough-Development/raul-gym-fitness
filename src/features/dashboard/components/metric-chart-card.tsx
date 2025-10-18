@@ -177,30 +177,30 @@ export const MetricChartCard = ({
               size="sm"
               onClick={() => setMode("month")}
             >
-              Month
+              Mes
             </Button>
             <Button
               variant={mode === "year" ? "default" : "ghost"}
               size="sm"
               onClick={() => setMode("year")}
             >
-              Year
+              Año
             </Button>
             <Button
               variant={mode === "all" ? "default" : "ghost"}
               size="sm"
               onClick={() => setMode("all")}
             >
-              All
+              Todo
             </Button>
           </div>
           {mode !== "all" && (
             <div className="flex gap-2">
               <Button variant="ghost" size="sm" onClick={onPrev}>
-                Prev
+                Anterior
               </Button>
               <Button variant="ghost" size="sm" onClick={onNext}>
-                Next
+                Siguiente
               </Button>
             </div>
           )}

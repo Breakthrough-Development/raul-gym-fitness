@@ -21,7 +21,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
 
   return (
     <Form action={formAction} actionState={actionState}>
-      <Label htmlFor="firstName">First Name</Label>
+      <Label htmlFor="firstName">Nombre</Label>
       <Input
         id="firstName"
         name="firstName"
@@ -32,7 +32,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       />
       <FieldError actionState={actionState} name="firstName" />
 
-      <Label htmlFor="lastName">Last Name</Label>
+      <Label htmlFor="lastName">Apellido</Label>
       <Input
         id="lastName"
         name="lastName"
@@ -42,7 +42,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       />
       <FieldError actionState={actionState} name="lastName" />
 
-      <Label htmlFor="phone">Phone</Label>
+      <Label htmlFor="phone">Teléfono</Label>
       <Input
         id="phone"
         name="phone"
@@ -52,7 +52,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       />
       <FieldError actionState={actionState} name="phone" />
 
-      <Label htmlFor="email">Email</Label>
+      <Label htmlFor="email">Correo electrónico</Label>
       <Input
         id="email"
         name="email"
@@ -62,7 +62,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       />
       <FieldError actionState={actionState} name="email" />
 
-      <SubmitButton label={client ? "Edit" : "Create"} />
+      <SubmitButton label={client ? "Editar" : "Crear"} />
 
       {actionState.message}
     </Form>

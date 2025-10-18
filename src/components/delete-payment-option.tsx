@@ -13,7 +13,7 @@ export const DeleteOption = ({ id, action }: DeleteOptionProps) => {
     trigger: (
       <DropdownMenuItem>
         <LucideTrash className="h-4 w-4" />
-        <span>Delete</span>
+        <span>Eliminar</span>
       </DropdownMenuItem>
     ),
   });

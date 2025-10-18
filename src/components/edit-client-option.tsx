@@ -12,11 +12,11 @@ export type EditClientOptionProps = {
 
 export const EditClientOption = ({ client }: EditClientOptionProps) => {
   const [trigger, dialog] = useFormDialog({
-    title: "Edit client",
+    title: "Editar cliente",
     trigger: (
       <DropdownMenuItem>
         <LucidePencil className="h-4 w-4" />
-        <span>Edit</span>
+        <span>Editar</span>
       </DropdownMenuItem>
     ),
     form: <ClientUpsertForm client={client} />,

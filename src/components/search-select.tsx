@@ -71,11 +71,11 @@ const CustomSelectContent = ({
 
 export const SearchableSelect = ({
   name,
-  placeholder = "Select an option",
+  placeholder = "Selecciona una opción",
   defaultValue,
   options,
-  searchPlaceholder = "Search...",
-  emptyMessage = "No options found",
+  searchPlaceholder = "Buscar...",
+  emptyMessage = "No se encontraron opciones",
   className,
   disabled = false,
 }: SearchableSelectProps) => {
@@ -139,8 +139,8 @@ export const SearchableSelect = ({
         <SelectGroup>
           <SelectLabel>
             {search
-              ? `Results (${filteredOptions.length})`
-              : `All (${options.length})`}
+              ? `Resultados (${filteredOptions.length})`
+              : `Todos (${options.length})`}
           </SelectLabel>
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option) => (

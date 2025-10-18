@@ -35,22 +35,25 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <div className="flex-1 flex flex-col gap-y-8 max-w-7xl mx-auto">
-      <Heading title="Home" description="Your home place to start" />
+      <Heading title="Inicio" description="Tu lugar de inicio" />
 
       <Suspense fallback={<Spinner />}>
         <section className="flex flex-wrap gap-6 justify-center">
           <h2 className="sr-only text-3xl font-bold tracking-tight">
-            Automatic Calculations
+            Cálculos automáticos
           </h2>
           <div className="flex-1 min-w-lg max-w-2xl">
             <TotalRevenueChart />
           </div>
           <div className="flex-1 min-w-lg max-w-2xl">
-            <TotalSubscriptionsChart title="Daily Subscriptions" type="DAILY" />
+            <TotalSubscriptionsChart
+              title="Suscripciones diarias"
+              type="DAILY"
+            />
           </div>
           <div className="flex-1 min-w-lg max-w-2xl">
             <TotalSubscriptionsChart
-              title="Monthly Subscriptions"
+              title="Suscripciones mensuales"
               type="MONTHLY"
             />
           </div>
@@ -60,19 +63,19 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <Suspense fallback={<Spinner />}>
         <section className="flex-1 flex flex-col gap-y-8 ">
           <Heading
-            title="Clients Page"
-            description="All your Clients at one place."
+            title="Página de clientes"
+            description="Todos tus clientes en un solo lugar."
           />
 
           <CardComp
-            title="Payment list"
-            description="All your payments in one place."
+            title="Lista de pagos"
+            description="Todos tus pagos en un solo lugar."
             content={<PaymentUpsertForm clients={clients.list} />}
             className="w-full max-w-[420px] self-center"
           ></CardComp>
 
           <ErrorBoundary
-            fallback={<Placeholder label="Error loading payments" />}
+            fallback={<Placeholder label="Error al cargar los pagos" />}
           >
             <Suspense fallback={<Spinner />}>
               <PaymentDataTable
@@ -89,19 +92,19 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <Suspense fallback={<Spinner />}>
         <section className="flex-1 flex flex-col gap-y-8">
           <Heading
-            title="Clients Page"
-            description="All your Clients at one place."
+            title="Página de clientes"
+            description="Todos tus clientes en un solo lugar."
           />
 
           <CardComp
-            title="Client list"
-            description="All your clients in one place."
+            title="Lista de clientes"
+            description="Todos tus clientes en un solo lugar."
             content={<ClientUpsertForm />}
             className="w-full max-w-[420px] self-center"
           ></CardComp>
 
           <ErrorBoundary
-            fallback={<Placeholder label="Error loading clients" />}
+            fallback={<Placeholder label="Error al cargar los clientes" />}
           >
             <Suspense fallback={<Spinner />}>
               <ClientList

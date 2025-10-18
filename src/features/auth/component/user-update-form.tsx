@@ -38,7 +38,7 @@ export const UserUpdateForm = ({
     <Form action={handleAction} actionState={actionState}>
       <Input
         name="username"
-        placeholder="Username"
+        placeholder="Nombre de usuario"
         defaultValue={
           (actionState.payload?.get("username") as string) || username
         }
@@ -48,7 +48,7 @@ export const UserUpdateForm = ({
 
       <Input
         name="firstName"
-        placeholder="First Name"
+        placeholder="Nombre"
         defaultValue={
           (actionState.payload?.get("firstName") as string) || firstName
         }
@@ -58,7 +58,7 @@ export const UserUpdateForm = ({
 
       <Input
         name="lastName"
-        placeholder="Last Name"
+        placeholder="Apellido"
         defaultValue={
           (actionState.payload?.get("lastName") as string) || lastName
         }
@@ -68,7 +68,7 @@ export const UserUpdateForm = ({
 
       <div className="flex flex-row gap-2">
         <SubmitButton
-          label="Update User"
+          label="Actualizar usuario"
           variant="outline"
           disabled={!isEditing}
         />
@@ -77,7 +77,7 @@ export const UserUpdateForm = ({
           variant="default"
           onClick={() => setIsEditing((state) => !state)}
         >
-          {isEditing ? "Disable Edit" : "Edit"}
+          {isEditing ? "Desactivar edición" : "Editar"}
         </Button>
       </div>
     </Form>

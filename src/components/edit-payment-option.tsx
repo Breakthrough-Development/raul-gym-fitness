@@ -17,11 +17,11 @@ export const EditPaymentOption = ({
   clients,
 }: EditPaymentOptionProps) => {
   const [trigger, dialog] = useFormDialog({
-    title: "Edit payment",
+    title: "Editar pago",
     trigger: (
       <DropdownMenuItem>
         <LucidePencil className="h-4 w-4" />
-        <span>Edit</span>
+        <span>Editar</span>
       </DropdownMenuItem>
     ),
     form: <PaymentUpsertForm payment={payment} clients={clients} />,

@@ -26,7 +26,7 @@ const Header = () => {
           href={signUpPath()}
           className={buttonVariants({ variant: "outline" })}
         >
-          Sign Up
+          Registrarse
         </Link>
       </li>
       <li>
@@ -34,7 +34,7 @@ const Header = () => {
           href={signInPath()}
           className={buttonVariants({ variant: "outline" })}
         >
-          Sign In
+          Iniciar sesión
         </Link>
       </li>
     </>

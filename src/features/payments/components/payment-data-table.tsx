@@ -22,12 +22,12 @@ export type PaymentType = PaymentWithMetadata & { name: string };
 
 const date: ColumnDef<PaymentType> = {
   id: "date",
-  header: "Date",
+  header: "Fecha",
   cell: ({ row }) => <div>{format(row.original.createdAt, "MM/dd/yyyy")}</div>,
 };
 const status: ColumnDef<PaymentType> = {
   accessorKey: "status",
-  header: "Status",
+  header: "Estado",
   cell: ({ row }) => <div className="capitalize">{row.original.status}</div>,
 };
 const name: ColumnDef<PaymentType> = {
@@ -38,7 +38,7 @@ const name: ColumnDef<PaymentType> = {
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Name
+        Nombre
         <ArrowUpDown />
       </Button>
     );
@@ -54,7 +54,7 @@ const amount: ColumnDef<PaymentType> = {
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Amount
+          Monto
           <ArrowUpDown />
         </Button>
       </div>
@@ -83,12 +83,12 @@ const actionsColumn = (clients: Client[]): ColumnDef<PaymentType> => ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">Abrir menú</span>
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
           <EditPaymentOption payment={payment} clients={clients} />
           <DeleteOption id={payment.id} action={deletePayment} />
         </DropdownMenuContent>
@@ -98,7 +98,7 @@ const actionsColumn = (clients: Client[]): ColumnDef<PaymentType> => ({
 });
 const pageItemNumber: ColumnDef<PaymentType> = {
   accessorKey: "pageItemNumber",
-  header: "Item Number",
+  header: "N.º",
   cell: ({ row }) => <div>{row.index + 1}</div>,
 };
 // columns are composed inside the component to capture props when needed
@@ -134,7 +134,7 @@ export function PaymentDataTable({
       data={tableData}
       pagination={pagination}
       columns={columns}
-      searchPlaceholder="Filter payments by name..."
+      searchPlaceholder="Filtrar pagos por nombre..."
       searchColumn="name"
     />
   );

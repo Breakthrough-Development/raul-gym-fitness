@@ -7,20 +7,20 @@ const SignInPage = () => {
   return (
     <div className="flex-1 flex flex-col justify-center items-center">
       <CardComp
-        title="Sign In"
-        description="Get access to your account"
+        title="Iniciar sesión"
+        description="Accede a tu cuenta"
         className="w-full max-w-[420px] animate-fade-from-top"
         content={<SignInForm />}
         footer={
           <div className="flex flex-row flex-wrap justify-between w-full">
             <Link className="text-sm text-muted-foreground" href={signUpPath()}>
-              No account yet?
+              ¿Aún no tienes cuenta?
             </Link>
             <Link
               className="text-sm text-muted-foreground"
               href={passwordForgotPath()}
             >
-              Forgot password?
+              ¿Olvidaste tu contraseña?
             </Link>
           </div>
         }

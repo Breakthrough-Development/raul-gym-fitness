@@ -9,8 +9,8 @@ const profilePage = async () => {
   return (
     <section className="flex-1 flex flex-col gap-y-8">
       <Heading
-        title="Profile"
-        description="All your profile information"
+        title="Perfil"
+        description="Toda tu información de perfil"
         tabs={<AccountTabs />}
       />
       <div className="w-full max-w-[420px] self-center">

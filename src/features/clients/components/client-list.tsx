@@ -16,8 +16,8 @@ export async function ClientList({ searchParams }: ClientListProps) {
   return (
     <section className="flex flex-col gap-y-4 animate-fade-from-top">
       <header className="self-center max-w-[420px] w-full flex gap-x-2">
-        <h2 className="sr-only">Clients</h2>
-        <ClientSearchInput placeholder="Search clients by name" />
+        <h2 className="sr-only">Clientes</h2>
+        <ClientSearchInput placeholder="Buscar clientes por nombre" />
         <ClientSortSelect options={SORT_OPTIONS} />
       </header>
       <ul className="flex-1 flex gap-x-4 flex-wrap items-center gap-y-4 animate-fade-from-top justify-center">
@@ -26,7 +26,7 @@ export async function ClientList({ searchParams }: ClientListProps) {
             <ClientItem key={client.id} client={client} />
           ))
         ) : (
-          <Placeholder label="No clients found" />
+          <Placeholder label="No se encontraron clientes" />
         )}
       </ul>
       <footer className="w-full max-w-[420px] self-center">
