@@ -2,25 +2,24 @@
 import { FieldError } from "@/components/form/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toDollarAndCent } from "@/utils/currency";
 import { ActionState } from "./form/util/to-action-state";
 export type CurrencyInputProps = {
   actionState: ActionState;
   defaultValue?: number;
-  name: string
+  name: string;
 };
 
 export const CurrencyInput = ({
   actionState,
   defaultValue,
-  name
+  name,
 }: CurrencyInputProps) => {
   const amountDefaultValue = () => {
     if (actionState.payload?.get(name) as string) {
       return actionState.payload?.get(name) as string;
     }
     if (defaultValue !== undefined) {
-      return toDollarAndCent(defaultValue);
+      return defaultValue;
     }
     return "";
   };

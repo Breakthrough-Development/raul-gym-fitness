@@ -5,36 +5,30 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 import { DataTable } from "@/components/data-table";
 import { DeleteOption } from "@/components/delete-payment-option";
+import { EditPaymentOption } from "@/components/edit-payment-option";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Client } from "@prisma/client";
 import { format } from "date-fns";
 import { deletePayment } from "../actions/delete-payment";
 import { PaymentWithMetadata } from "../types";
 
-export type PaymentType = {
-  id: string;
-  date: Date;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  name: string;
-};
+export type PaymentType = PaymentWithMetadata & { name: string };
 
 const date: ColumnDef<PaymentType> = {
-  accessorKey: "date",
+  id: "date",
   header: "Date",
-  cell: ({ row }) => <div>{format(row.getValue("date"), "MM/dd/yyyy")}</div>,
+  cell: ({ row }) => <div>{format(row.original.createdAt, "MM/dd/yyyy")}</div>,
 };
 const status: ColumnDef<PaymentType> = {
   accessorKey: "status",
   header: "Status",
-  cell: ({ row }) => <div className="capitalize">{row.getValue("status")}</div>,
+  cell: ({ row }) => <div className="capitalize">{row.original.status}</div>,
 };
 const name: ColumnDef<PaymentType> = {
   accessorKey: "name",
@@ -49,7 +43,7 @@ const name: ColumnDef<PaymentType> = {
       </Button>
     );
   },
-  cell: ({ row }) => <div>{row.getValue("name")}</div>,
+  cell: ({ row }) => <div>{row.getValue("name") as string}</div>,
 };
 const amount: ColumnDef<PaymentType> = {
   accessorKey: "amount",
@@ -67,7 +61,7 @@ const amount: ColumnDef<PaymentType> = {
     );
   },
   cell: ({ row }) => {
-    const amount = parseFloat(row.getValue("amount"));
+    const amount = row.original.amount;
 
     // Format the amount as a dollar amount
     const formatted = new Intl.NumberFormat("en-US", {
@@ -79,7 +73,7 @@ const amount: ColumnDef<PaymentType> = {
   },
 };
 
-const actions: ColumnDef<PaymentType> = {
+const actionsColumn = (clients: Client[]): ColumnDef<PaymentType> => ({
   id: "actions",
   enableHiding: false,
   cell: ({ row }) => {
@@ -95,52 +89,45 @@ const actions: ColumnDef<PaymentType> = {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <EditPaymentOption payment={payment} clients={clients} />
           <DeleteOption id={payment.id} action={deletePayment} />
-          <DropdownMenuItem
-            onClick={() => navigator.clipboard.writeText(payment.id)}
-          >
-            Copy payment ID
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>View customer</DropdownMenuItem>
-          <DropdownMenuItem>View payment details</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
   },
-};
+});
 const pageItemNumber: ColumnDef<PaymentType> = {
   accessorKey: "pageItemNumber",
   header: "Item Number",
   cell: ({ row }) => <div>{row.index + 1}</div>,
 };
-const columns: ColumnDef<PaymentType>[] = [
-  pageItemNumber,
-  amount,
-  name,
-  date,
-  status,
-  actions,
-];
+// columns are composed inside the component to capture props when needed
 
 export type PaymentDataTableProps = {
   data: PaymentWithMetadata[];
   pagination: React.ReactElement;
   className?: string;
+  clients: Client[];
 };
 
 export function PaymentDataTable({
   className,
   data,
   pagination,
+  clients,
 }: PaymentDataTableProps) {
   const tableData: PaymentType[] = data.map((payment) => ({
-    id: payment.id,
-    date: payment.createdAt,
-    amount: payment.amount,
-    status: payment.status as "success" | "pending" | "processing" | "failed",
+    ...payment,
     name: payment.client.firstName + " " + payment.client.lastName,
   }));
+  const columns: ColumnDef<PaymentType>[] = [
+    pageItemNumber,
+    amount,
+    name,
+    date,
+    status,
+    actionsColumn(clients),
+  ];
   return (
     <DataTable
       className={className}

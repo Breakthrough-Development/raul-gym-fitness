@@ -19,13 +19,15 @@ import { Client, MembershipStatus, Payment } from "@prisma/client";
 import { useActionState } from "react";
 import { upsertPayment } from "../actions/upsert-payment";
 export type PaymentUpsertFormProps = {
-  payment?: Payment;
+  payment?: Pick<Payment, "id" | "amount" | "membership" | "clientId">;
   clients: Client[];
+  onSuccess?: (actionState: unknown) => void;
 };
 
 export const PaymentUpsertForm = ({
   payment,
   clients,
+  onSuccess,
 }: PaymentUpsertFormProps) => {
   const [actionState, formAction] = useActionState(
     upsertPayment.bind(null, payment?.id),
@@ -45,7 +47,7 @@ export const PaymentUpsertForm = ({
   };
 
   return (
-    <Form action={formAction} actionState={actionState}>
+    <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
       <div className="flex gap-x-2 mb-1">
         <div className="flex flex-col gap-y-2">
           <Label htmlFor="clientId">Client</Label>

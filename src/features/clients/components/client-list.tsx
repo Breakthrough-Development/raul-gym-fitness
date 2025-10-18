@@ -20,7 +20,7 @@ export async function ClientList({ searchParams }: ClientListProps) {
         <ClientSearchInput placeholder="Search clients by name" />
         <ClientSortSelect options={SORT_OPTIONS} />
       </header>
-      <ul className="flex-1 flex flex-col items-center gap-y-4 animate-fade-from-top">
+      <ul className="flex-1 flex gap-x-4 flex-wrap items-center gap-y-4 animate-fade-from-top">
         {clients.length ? (
           clients.map((client) => (
             <ClientItem key={client.id} client={client} />

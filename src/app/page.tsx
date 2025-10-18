@@ -79,6 +79,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 className="animate-fade-from-top"
                 data={payments}
                 pagination={<PaymentPagination paginatedMetaData={metadata} />}
+                clients={clients.list}
               />
             </Suspense>
           </ErrorBoundary>
