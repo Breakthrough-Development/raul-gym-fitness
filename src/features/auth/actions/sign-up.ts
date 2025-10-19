@@ -7,7 +7,7 @@ import {
 import { hashPassword } from "@/features/password/util/hash-and-verify";
 import { createSession } from "@/lib/aslo";
 import { prisma } from "@/lib/prisma";
-import { ticketsPath } from "@/paths";
+import { homePath } from "@/paths";
 import { generateRandomToken } from "@/utils/crypto";
 import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
@@ -107,5 +107,5 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
     return fromErrorToActionState(error, formData);
   }
 
-  redirect(ticketsPath());
+  redirect(homePath());
 };
