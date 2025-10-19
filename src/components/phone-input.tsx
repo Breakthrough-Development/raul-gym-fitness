@@ -62,8 +62,8 @@ export const PhoneInput = ({
         inputMode="tel"
         autoComplete="tel"
         placeholder={placeholder}
-        value={value.slice(0, 14)} // Limit to 10 digits by truncating formatted string
-        maxLength={14} // Max length of formatted string "(XXX) XXX-XXXX"
+        value={value.slice(0, 15)} // Limit to 10 digits by truncating formatted string
+        maxLength={15} // Max length of formatted string "(XXX) XXX-XXXX"
         onChange={onChange}
       />
       <FieldError actionState={actionState} name={name} />
