@@ -1,16 +1,16 @@
 export const users = [
   {
-    username: "admin",
+    usuario: "admin",
     email: "admin@admin.com",
-    firstName: "Admin",
-    lastName: "Admin",
-    phone: process.env.SEED_PHONE || "4444444444",
+    nombre: "Admin",
+    apellido: "Admin",
+    telefono: process.env.SEED_PHONE || "4444444444",
   },
   {
-    username: "royeradames",
+    usuario: "royeradames",
     email: "royeraadames@gmail.com",
-    firstName: "Royer",
-    lastName: "Adames",
-    phone: process.env.SEED_PHONE || "5555555555",
+    nombre: "Royer",
+    apellido: "Adames",
+    telefono: process.env.SEED_PHONE || "5555555555",
   },
 ];

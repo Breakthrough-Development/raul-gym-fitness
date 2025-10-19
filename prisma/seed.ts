@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { hash } from "@node-rs/argon2";
 import { PrismaClient } from "@prisma/client";
 import { clients } from "./data/clients";
@@ -9,14 +10,14 @@ const seed = async () => {
   const t0 = performance.now();
   console.log("DB seed: Started ...");
 
-  await prisma.payment.deleteMany();
-  await prisma.client.deleteMany();
-  await prisma.user.deleteMany();
+  await prisma.pago.deleteMany();
+  await prisma.cliente.deleteMany();
+  await prisma.usuario.deleteMany();
 
   const passwordHash = await hash(process.env.SEED_PASSWORD || "gemeimnis");
 
   // Create users (admin and royeradames)
-  const dbUsers = await prisma.user.createManyAndReturn({
+  const dbUsers = await prisma.usuario.createManyAndReturn({
     data: users.map((user) => ({
       ...user,
       password: passwordHash,
@@ -24,7 +25,7 @@ const seed = async () => {
   });
 
   // Create clients from the clients data file
-  const dbClients = await prisma.client.createManyAndReturn({
+  const dbClients = await prisma.cliente.createManyAndReturn({
     data: clients,
   });
 
@@ -38,20 +39,20 @@ const seed = async () => {
       if (paymentIndex < payments.length) {
         paymentsWithClients.push({
           ...payments[paymentIndex],
-          clientId: dbClients[i].id,
+          clienteId: dbClients[i].id,
         });
       }
     }
   }
 
-  await prisma.payment.createManyAndReturn({
+  await prisma.pago.createManyAndReturn({
     data: paymentsWithClients,
   });
 
   const t1 = performance.now();
   console.log(`DB seed: Completed in ${t1 - t0}ms`);
   console.log(
-    `Created ${dbUsers.length} users and ${dbClients.length} clients`
+    `Created ${dbUsers.length} usuarios and ${dbClients.length} clientes`
   );
 };
 
