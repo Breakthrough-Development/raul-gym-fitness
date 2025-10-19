@@ -4,6 +4,7 @@ export const users = [
     email: "admin@admin.com",
     firstName: "Admin",
     lastName: "Admin",
+    phone: process.env.SEED_PHONE || "4444444444",
   },
   {
     username: "royeradames",
