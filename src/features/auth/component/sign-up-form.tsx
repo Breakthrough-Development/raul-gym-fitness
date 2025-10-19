@@ -14,12 +14,13 @@ import { signUp } from "../actions/sign-up";
 const SignUpForm = () => {
   const [actionState, action] = useActionState(signUp, EMPTY_ACTION_STATE);
   const [secretPhrase, setSecretPhrase] = useState("");
-  const requiredSecret = process.env.NEXT_PUBLIC_SECRET_FRASE ?? "";
   return (
     <div>
       <Form action={action} actionState={actionState} className=" gap-y-8">
         <div className="flex flex-col gap-y-2">
-          <Label htmlFor={"frase-secreta"}>Por favor ingrese la frase secreta</Label>
+          <Label htmlFor={"frase-secreta"}>
+            Por favor ingrese la frase secreta
+          </Label>
           <Input
             id={"frase-secreta"}
             name={"frase-secreta"}
@@ -30,9 +31,9 @@ const SignUpForm = () => {
           <FieldError actionState={actionState} name="frase-secreta" />
         </div>
         <fieldset
-          disabled={secretPhrase !== requiredSecret}
+          disabled={secretPhrase.length === 0}
           className="flex flex-col gap-y-2"
-        > 
+        >
           <Input
             name="username"
             placeholder="Nombre de usuario"
