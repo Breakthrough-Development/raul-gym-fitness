@@ -44,9 +44,12 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       <FieldError actionState={actionState} name="lastName" />
 
       <PhoneInput
+        label="Teléfono"
         actionState={actionState}
         name="phone"
-        defaultValue={client?.phone ?? undefined}
+        defaultValue={
+          (actionState.payload?.get("phone") as string) ?? client?.phone
+        }
       />
 
       <Label htmlFor="email">Correo electrónico</Label>
