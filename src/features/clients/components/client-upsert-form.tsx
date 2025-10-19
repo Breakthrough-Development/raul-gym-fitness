@@ -33,7 +33,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       />
       <FieldError actionState={actionState} name="firstName" />
 
-      <Label htmlFor="lastName">Apellido</Label>
+      <Label htmlFor="lastName">*Apellido</Label>
       <Input
         id="lastName"
         name="lastName"
@@ -44,7 +44,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       <FieldError actionState={actionState} name="lastName" />
 
       <PhoneInput
-        label="Teléfono"
+        label="*Teléfono"
         actionState={actionState}
         name="phone"
         defaultValue={
@@ -52,7 +52,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
         }
       />
 
-      <Label htmlFor="email">Correo electrónico</Label>
+      <Label htmlFor="email">*Correo electrónico</Label>
       <Input
         id="email"
         name="email"
