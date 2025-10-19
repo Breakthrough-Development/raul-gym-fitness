@@ -56,7 +56,7 @@ export const Pagination = ({
       variant="outline"
       onClick={handlePreviousPage}
     >
-      Previous
+      Anterior
     </Button>
   );
   const NextButton = () => (
@@ -66,7 +66,7 @@ export const Pagination = ({
       variant="outline"
       onClick={handleNextPage}
     >
-      Next
+      Siguiente
     </Button>
   );
 

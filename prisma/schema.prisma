@@ -7,55 +7,55 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id        String    @id @default(cuid())
-    firstName String
-    lastName  String
-    username  String    @unique
-    email     String    @unique
-    phone     String    @unique @default("5555555555")
-    password  String
-    sessions  Session[]
+model Usuario {
+    id       String   @id @default(cuid())
+    nombre   String
+    apellido String
+    usuario  String   @unique
+    email    String   @unique
+    telefono String   @unique @default("5555555555")
+    password String
+    sesiones Sesion[]
 }
 
-model Client {
-    id        String    @id @default(cuid())
-    firstName String
-    lastName  String?
-    email     String?   @unique
-    phone     String?
-    Payment   Payment[]
-    createdAt DateTime  @default(now())
+model Cliente {
+    id       String   @id @default(cuid())
+    nombre   String
+    apellido String?
+    email    String?  @unique
+    telefono String?
+    Pago     Pago[]
+    creado   DateTime @default(now())
 }
 
-model Session {
+model Sesion {
     id        String   @id
-    expiresAt DateTime
-    userId    String
-    user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+    expira    DateTime
+    usuarioId String
+    usuario   Usuario  @relation(references: [id], fields: [usuarioId], onDelete: Cascade)
 }
 
-model Payment {
-    id         String           @id @default(cuid())
-    createdAt  DateTime         @default(now())
-    updatedAt  DateTime         @updatedAt
-    amount     Int
-    status     PaymentStatus    @default(OPEN)
-    membership MembershipStatus
-    client     Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
-    clientId   String
+model Pago {
+    id          String          @id @default(cuid())
+    creado      DateTime        @default(now())
+    actualizado DateTime        @updatedAt
+    monto       Int
+    estado      EstadoPago      @default(ABIERTO)
+    membresia   EstadoMembresia
+    cliente     Cliente         @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+    clienteId   String
 
-    @@index([clientId])
+    @@index([clienteId])
 }
 
-enum PaymentStatus {
-    OPEN
-    PAID
-    PENDING
-    FAILED
+enum EstadoPago {
+    ABIERTO
+    PAGADO
+    PENDIENTE
+    FALLIDO
 }
 
-enum MembershipStatus {
-    DAILY
-    MONTHLY
+enum EstadoMembresia {
+    DIARIO
+    MENSUAL
 }
