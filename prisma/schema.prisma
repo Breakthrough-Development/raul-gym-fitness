@@ -19,13 +19,14 @@ model Usuario {
 }
 
 model Cliente {
-    id       String   @id @default(cuid())
-    nombre   String
-    apellido String?
-    email    String?  @unique
-    telefono String?
-    Pago     Pago[]
-    creado   DateTime @default(now())
+    id                   String                 @id @default(cuid())
+    nombre               String
+    apellido             String?
+    email                String?                @unique
+    telefono             String?
+    Pago                 Pago[]
+    WhatsappNotification WhatsappNotification[]
+    creado               DateTime               @default(now())
 }
 
 model Sesion {
@@ -58,4 +59,32 @@ enum EstadoPago {
 enum EstadoMembresia {
     DIARIO
     MENSUAL
+}
+
+// Notifications sent to clients via WhatsApp to avoid duplicates per cohort/month
+model WhatsappNotification {
+    id                String             @id @default(cuid())
+    cliente           Cliente            @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+    clienteId         String
+    cohort            NotificationCohort
+    year              Int
+    month             Int
+    status            NotificationStatus
+    providerMessageId String?
+    error             String?
+    createdAt         DateTime           @default(now())
+
+    @@unique([clienteId, cohort, year, month])
+    @@index([cohort, year, month])
+}
+
+enum NotificationCohort {
+    PRE_EOM
+    POST_EOM
+}
+
+enum NotificationStatus {
+    SENT
+    SKIPPED
+    FAILED
 }

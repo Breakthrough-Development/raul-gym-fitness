@@ -30,6 +30,16 @@ const upsertClientSchema = z.object({
     .optional(),
 });
 
+function normalizeToE164(raw: string | undefined | null): string | undefined {
+  if (!raw) return undefined;
+  const digits = String(raw).replace(/\D/g, "");
+  if (digits.length === 0) return undefined;
+  if (digits.startsWith("1") && digits.length === 11) return `+${digits}`;
+  if (digits.length === 10) return `+1${digits}`;
+  if (raw.trim().startsWith("+")) return raw.trim();
+  return undefined;
+}
+
 export const upsertClient = async (
   id: string | undefined,
   _actionState: ActionState,
@@ -38,14 +48,16 @@ export const upsertClient = async (
   await getAuthOrRedirect();
 
   try {
-    const rawPhone = String(formData.get("phone") || "");
-    const normalizedPhone = rawPhone.replace(/\D/g, "");
+    const nombre = formData.get("nombre") as string | null;
+    const apellido = formData.get("apellido") as string | null;
+    const email = formData.get("email") as string | null;
+    const telefono = normalizeToE164(formData.get("telefono") as string | null);
 
     const data = upsertClientSchema.parse({
-      nombre: formData.get("firstName"),
-      apellido: formData.get("lastName"),
-      email: formData.get("email"),
-      telefono: normalizedPhone,
+      nombre,
+      apellido,
+      email,
+      telefono,
     });
 
     await prisma.cliente.upsert({

@@ -96,3 +96,31 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## WhatsApp Membership Reminders
+
+1. Environment variables (set in Vercel project):
+
+   - `WHATSAPP_PHONE_NUMBER_ID`
+   - `WHATSAPP_ACCESS_TOKEN`
+   - `WHATSAPP_TEMPLATE_PRE` (variables: [firstName, monthName])
+   - `WHATSAPP_TEMPLATE_POST` (variables: [firstName, prevMonthName])
+   - `CRON_SECRET`
+   - `TIMEZONE` (e.g., `America/New_York`)
+   - `WHATSAPP_MAX_PER_RUN` (optional, default 500)
+
+2. Vercel Cron:
+
+   - Create a daily job to GET `/api/cron/whatsapp` and add header `x-cron-secret: <CRON_SECRET>`
+   - The route only acts on EOM-3 (pre) and day 3 (post), else returns no-op
+
+3. Templates:
+
+   - Create/approve two templates in WhatsApp Cloud:
+     - PRE: name in `WHATSAPP_TEMPLATE_PRE`; body variables: first name, month name
+     - POST: name in `WHATSAPP_TEMPLATE_POST`; body variables: first name, previous month name
+
+4. Testing locally:
+
+   - `GET /api/cron/whatsapp?dryRun=1` with header `x-cron-secret`
+   - Remove `dryRun` only on the valid cohort dates
