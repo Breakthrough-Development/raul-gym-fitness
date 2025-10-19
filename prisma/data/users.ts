@@ -4,13 +4,13 @@ export const users = [
     email: "admin@admin.com",
     nombre: "Admin",
     apellido: "Admin",
-    telefono: process.env.SEED_PHONE || "4444444444",
+    telefono: "4444444444",
   },
   {
     usuario: "royeradames",
     email: "royeraadames@gmail.com",
     nombre: "Royer",
     apellido: "Adames",
-    telefono: process.env.SEED_PHONE || "5555555555",
+    telefono: process.env.SEED_PHONE_USER || "5555555556",
   },
 ];

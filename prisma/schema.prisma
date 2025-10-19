@@ -13,7 +13,7 @@ model Usuario {
     apellido String
     usuario  String   @unique
     email    String   @unique
-    telefono String   @unique @default("5555555555")
+    telefono String   @unique
     password String
     sesiones Sesion[]
 }
