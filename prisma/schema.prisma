@@ -10,10 +10,10 @@ datasource db {
 model User {
     id        String    @id @default(cuid())
     firstName String
-    lastName  String?
+    lastName  String
     username  String    @unique
-    email     String?   @unique
-    phone     String?
+    email     String    @unique
+    phone     String    @unique @default("5555555555")
     password  String
     sessions  Session[]
 }
