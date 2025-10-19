@@ -21,7 +21,7 @@
     "prisma-seed": "dotenv -e .env.development -- tsx prisma/seed.ts",
     "prisma-studio": "dotenv -e .env.development -- npx prisma studio",
     "branch": "git branch --show-current",
-    "prisma-schemaprod": "dotenv -e .env.production -- npx prisma db push",
+    "prisma-schema:prod": "dotenv -e .env.production -- npx prisma db push",
     "prisma-types:prod": "dotenv -e .env.production -- npx prisma generate",
     "prisma-seed:prod": "dotenv -e .env.production -- tsx prisma/seed.ts",
     "prisma:prod": "npm run prisma-schema:prod && npm run prisma-types:prod && npm run prisma-seed:prod",
