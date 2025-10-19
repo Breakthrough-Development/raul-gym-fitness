@@ -26,7 +26,7 @@ export const CurrencyInput = ({
 
   return (
     <>
-      <Label htmlFor={name}>Amount</Label>
+      <Label htmlFor={name}>Monto</Label>
       <Input
         id={name}
         name={name}

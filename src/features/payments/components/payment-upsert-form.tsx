@@ -87,7 +87,7 @@ export const PaymentUpsertForm = ({
       </div>
       <CurrencyInput
         actionState={actionState}
-        name="amount"
+        name="monto"
         defaultValue={payment?.monto}
       />
 
