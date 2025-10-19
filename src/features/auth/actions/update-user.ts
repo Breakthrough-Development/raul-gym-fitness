@@ -35,6 +35,17 @@ const signUpSchema = z.object({
       (value) => !value.includes(" "),
       "El apellido no puede contener espacios"
     ),
+  email: z
+    .string()
+    .email({ message: "Correo inválido" })
+    .max(191)
+    .optional()
+    .or(z.literal("") as unknown as z.ZodType<string | undefined>),
+  phone: z
+    .string()
+    .max(20)
+    .optional()
+    .or(z.literal("") as unknown as z.ZodType<string | undefined>),
 });
 
 export const updateUser = async (
@@ -42,7 +53,7 @@ export const updateUser = async (
   formData: FormData
 ) => {
   try {
-    const { username, firstName, lastName } = signUpSchema.parse(
+    const { username, firstName, lastName, email, phone } = signUpSchema.parse(
       Object.fromEntries(formData)
     );
 
@@ -60,17 +71,27 @@ export const updateUser = async (
     if (!isOwner(authUser, { userId: dbUser.id })) {
       return toActionState("ERROR", "No autorizado", formData);
     }
+    const normalizedEmail = (email ?? "").toLowerCase();
+
     if (
-      dbUser.username === username ||
-      dbUser.firstName === firstName ||
-      dbUser.lastName === lastName
+      dbUser.username === username &&
+      dbUser.firstName === firstName &&
+      (dbUser.lastName ?? "") === lastName &&
+      (dbUser.email ?? "") === normalizedEmail &&
+      (dbUser.phone ?? "") === (phone ?? "")
     ) {
       return toActionState("ERROR", "No se realizaron cambios", formData);
     }
 
     await prisma.user.update({
       where: { id: authUser.id },
-      data: { username, firstName, lastName },
+      data: {
+        username,
+        firstName,
+        lastName,
+        email: normalizedEmail.length > 0 ? normalizedEmail : null,
+        phone: phone && phone.length > 0 ? phone : null,
+      },
     });
   } catch (error) {
     if (

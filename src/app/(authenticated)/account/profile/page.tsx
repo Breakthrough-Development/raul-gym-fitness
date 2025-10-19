@@ -18,6 +18,8 @@ const profilePage = async () => {
           lastName={authUser.lastName || ""}
           firstName={authUser.firstName}
           username={authUser.username}
+          email={authUser.email || ""}
+          phone={authUser.phone || ""}
         />
       </div>
     </section>
