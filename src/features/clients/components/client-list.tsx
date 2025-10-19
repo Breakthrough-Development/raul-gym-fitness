@@ -2,8 +2,6 @@ import Placeholder from "@/components/placeholder";
 import { ClientParsedSearchParams } from "@/features/clients/client-search-params";
 import { ClientPagination } from "@/features/clients/components/client-pagination";
 import { ClientSearchInput } from "@/features/clients/components/client-search-input";
-import { ClientSortSelect } from "@/features/clients/components/client-sort-select";
-import { SORT_OPTIONS } from "../constants";
 import { getClients } from "../queries/get-clients";
 import { ClientItem } from "./client-item";
 
@@ -18,7 +16,7 @@ export async function ClientList({ searchParams }: ClientListProps) {
       <header className="self-center max-w-[420px] w-full flex gap-x-2">
         <h2 className="sr-only">Clientes</h2>
         <ClientSearchInput placeholder="Buscar clientes por nombre" />
-        <ClientSortSelect options={SORT_OPTIONS} />
+        {/* <ClientSortSelect options={SORT_OPTIONS} /> */}
       </header>
       <ul className="flex-1 flex gap-x-4 flex-wrap items-center gap-y-4 animate-fade-from-top justify-center">
         {clients.length ? (
