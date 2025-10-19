@@ -14,17 +14,17 @@ import { redirect } from "next/navigation";
 import z from "zod";
 
 const upsertClientSchema = z.object({
-  firstName: z
+  nombre: z
     .string()
     .min(1, { message: "El nombre es requerido" })
     .max(191, { message: "El nombre es muy largo" }),
-  lastName: z.string().max(191).optional(),
+  apellido: z.string().max(191).optional(),
   email: z.preprocess((v) => {
     if (typeof v !== "string") return v;
     const s = v.trim().toLowerCase();
     return s === "" ? undefined : s;
   }, z.email({ message: "El correo electrónico no es válido" }).max(191, { message: "El correo electrónico es muy largo" }).optional()),
-  phone: z
+  telefono: z
     .string()
     .max(191, { message: "El teléfono es muy largo" })
     .optional(),
@@ -42,13 +42,13 @@ export const upsertClient = async (
     const normalizedPhone = rawPhone.replace(/\D/g, "");
 
     const data = upsertClientSchema.parse({
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
+      nombre: formData.get("firstName"),
+      apellido: formData.get("lastName"),
       email: formData.get("email"),
-      phone: normalizedPhone,
+      telefono: normalizedPhone,
     });
 
-    await prisma.client.upsert({
+    await prisma.cliente.upsert({
       where: { id: id || "" },
       create: data,
       update: data,

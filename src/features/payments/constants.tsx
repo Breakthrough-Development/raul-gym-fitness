@@ -6,8 +6,8 @@ export const TICKET_ICONS = {
 };
 
 export const TICKET_KEYS = {
-  CREATED_AT: "createdAt",
-  FIRSTNAME: "firstName",
+  CREATED_AT: "creado",
+  FIRSTNAME: "nombre",
 } as const;
 
 export const SORT_VALUES = {

@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/features/auth/actions/sign-out";
 import { accountPasswordPath, accountProfilePath } from "@/paths";
-import { User } from "@prisma/client";
+import { Usuario } from "@prisma/client";
 import { LucideLock, LucideLogOut, LucideUser } from "lucide-react";
 import Link from "next/link";
 
 type AccountDropdownProps = {
-  user: User;
+  user: Usuario;
   showName?: boolean;
 };
 
@@ -25,13 +25,13 @@ const AccountDropdown = ({ user, showName = false }: AccountDropdownProps) => {
         <div className="flex items-center gap-2">
           <Avatar>
             <AvatarFallback>
-              {user.username.charAt(0).toUpperCase()}
+              {user.usuario.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           {showName && (
             <>
-              <span>{user.firstName}</span>
-              <span>{user.lastName}</span>
+              <span>{user.nombre}</span>
+              <span>{user.apellido}</span>
             </>
           )}
         </div>

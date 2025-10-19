@@ -48,7 +48,7 @@ export const resetPassword = async (
 
     const { user: authUser } = await getAuthOrRedirect();
 
-    const dbUser = await prisma.user.findUnique({
+    const dbUser = await prisma.usuario.findUnique({
       where: {
         id: authUser.id,
       },
@@ -73,7 +73,7 @@ export const resetPassword = async (
 
     const passwordHash = await hashPassword(newPassword);
 
-    await prisma.user.update({
+    await prisma.usuario.update({
       where: {
         id: authUser.id,
       },

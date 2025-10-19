@@ -1,10 +1,10 @@
 "use client";
-import { MembershipStatus } from "@prisma/client";
+import { EstadoMembresia } from "@prisma/client";
 import { MetricChartCard } from "./metric-chart-card";
 
 export type TotalSubscriptionsProps = {
   title: string;
-  type: MembershipStatus;
+  type: EstadoMembresia;
 };
 export const TotalSubscriptionsChart = ({
   title,

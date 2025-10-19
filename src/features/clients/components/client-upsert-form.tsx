@@ -6,12 +6,12 @@ import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { PhoneInput } from "@/components/phone-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Client } from "@prisma/client";
+import { Cliente } from "@prisma/client";
 import { useActionState } from "react";
 import { upsertClient } from "../actions/upsert-client";
 
 export type ClientUpsertFormProps = {
-  client?: Client;
+  client?: Cliente;
 };
 
 export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
@@ -25,33 +25,33 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       <Label htmlFor="firstName">Nombre</Label>
       <Input
         id="firstName"
-        name="firstName"
+        name="nombre"
         placeholder="Royer"
         type="text"
         defaultValue={
-          (actionState.payload?.get("firstName") as string) ?? client?.firstName
+          (actionState.payload?.get("nombre") as string) ?? client?.nombre
         }
       />
-      <FieldError actionState={actionState} name="firstName" />
+      <FieldError actionState={actionState} name="nombre" />
 
       <Label htmlFor="lastName">Apellido (opcional)</Label>
       <Input
         id="lastName"
-        name="lastName"
+        name="apellido"
         placeholder="Adames"
         defaultValue={
-          (actionState.payload?.get("lastName") as string) ?? client?.lastName
+          (actionState.payload?.get("apellido") as string) ?? client?.apellido
         }
       />
-      <FieldError actionState={actionState} name="lastName" />
+      <FieldError actionState={actionState} name="apellido" />
 
       <PhoneInput
         label="Teléfono (opcional)"
         actionState={actionState}
-        name="phone"
+        name="telefono"
         placeholder="(123) 456-7890"
         defaultValue={
-          (actionState.payload?.get("phone") as string) ?? client?.phone
+          (actionState.payload?.get("telefono") as string) ?? client?.telefono
         }
       />
 
@@ -59,7 +59,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       <Input
         id="email"
         name="email"
-        placeholder="RoyerAAdames@gmail.com"
+        placeholder="royeraadames@gmail.com"
         defaultValue={
           (actionState.payload?.get("email") as string) ?? client?.email
         }

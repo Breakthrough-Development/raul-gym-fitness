@@ -78,21 +78,21 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
 
     const passwordHash = await hashPassword(password);
 
-    const user = await prisma.user.create({
+    const user = await prisma.usuario.create({
       data: {
-        username,
+        usuario: username,
         email,
         password: passwordHash,
-        firstName,
-        lastName,
-        phone,
+        nombre: firstName,
+        apellido: lastName,
+        telefono: phone,
       },
     });
 
     const sessionToken = generateRandomToken();
     const sessionCookie = await createSession(sessionToken, user.id);
 
-    await setSessionCookie(sessionToken, sessionCookie.expiresAt);
+    await setSessionCookie(sessionToken, sessionCookie.expira);
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

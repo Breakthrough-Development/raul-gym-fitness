@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Client } from "@prisma/client";
+import { Cliente } from "@prisma/client";
 import { format } from "date-fns";
 import { deletePayment } from "../actions/delete-payment";
 import { PaymentWithMetadata } from "../types";
@@ -23,12 +23,12 @@ export type PaymentType = PaymentWithMetadata & { name: string };
 const date: ColumnDef<PaymentType> = {
   id: "date",
   header: "Fecha",
-  cell: ({ row }) => <div>{format(row.original.createdAt, "MM/dd/yyyy")}</div>,
+  cell: ({ row }) => <div>{format(row.original.creado, "MM/dd/yyyy")}</div>,
 };
 const status: ColumnDef<PaymentType> = {
-  accessorKey: "status",
+  accessorKey: "estado",
   header: "Estado",
-  cell: ({ row }) => <div className="capitalize">{row.original.status}</div>,
+  cell: ({ row }) => <div className="capitalize">{row.original.estado}</div>,
 };
 const name: ColumnDef<PaymentType> = {
   accessorKey: "name",
@@ -46,7 +46,7 @@ const name: ColumnDef<PaymentType> = {
   cell: ({ row }) => <div>{row.getValue("name") as string}</div>,
 };
 const amount: ColumnDef<PaymentType> = {
-  accessorKey: "amount",
+  accessorKey: "monto",
   header: ({ column }) => {
     return (
       <div className="flex justify-end  w-full">
@@ -61,7 +61,7 @@ const amount: ColumnDef<PaymentType> = {
     );
   },
   cell: ({ row }) => {
-    const amount = row.original.amount;
+    const amount = row.original.monto;
 
     // Format the amount as a dollar amount
     const formatted = new Intl.NumberFormat("en-US", {
@@ -73,7 +73,7 @@ const amount: ColumnDef<PaymentType> = {
   },
 };
 
-const actionsColumn = (clients: Client[]): ColumnDef<PaymentType> => ({
+const actionsColumn = (clients: Cliente[]): ColumnDef<PaymentType> => ({
   id: "actions",
   enableHiding: false,
   cell: ({ row }) => {
@@ -107,7 +107,7 @@ export type PaymentDataTableProps = {
   data: PaymentWithMetadata[];
   pagination: React.ReactElement;
   className?: string;
-  clients: Client[];
+  clients: Cliente[];
 };
 
 export function PaymentDataTable({
@@ -118,7 +118,7 @@ export function PaymentDataTable({
 }: PaymentDataTableProps) {
   const tableData: PaymentType[] = data.map((payment) => ({
     ...payment,
-    name: payment.client.firstName + " " + payment.client.lastName,
+    name: payment.cliente.nombre + " " + payment.cliente.apellido,
   }));
   const columns: ColumnDef<PaymentType>[] = [
     pageItemNumber,

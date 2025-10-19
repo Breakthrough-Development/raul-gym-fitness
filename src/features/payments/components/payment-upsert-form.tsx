@@ -15,12 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Client, MembershipStatus, Payment } from "@prisma/client";
+import { Cliente, EstadoMembresia, Pago } from "@prisma/client";
 import { useActionState } from "react";
 import { upsertPayment } from "../actions/upsert-payment";
 export type PaymentUpsertFormProps = {
-  payment?: Pick<Payment, "id" | "amount" | "membership" | "clientId">;
-  clients: Client[];
+  payment?: Pick<Pago, "id" | "monto" | "membresia" | "clienteId">;
+  clients: Cliente[];
   onSuccess?: (actionState: unknown) => void;
 };
 
@@ -34,46 +34,46 @@ export const PaymentUpsertForm = ({
     EMPTY_ACTION_STATE
   );
 
-  const membershipStatus = Object.values(MembershipStatus);
+  const membershipStatus = Object.values(EstadoMembresia);
 
   const membershipDefaultValue = () => {
     if (actionState.payload?.get("membership") as string) {
       return actionState.payload?.get("membership") as string;
     }
-    if (payment?.membership) {
-      return payment?.membership;
+    if (payment?.membresia) {
+      return payment?.membresia;
     }
-    return MembershipStatus.MONTHLY;
+    return EstadoMembresia.MENSUAL;
   };
 
   return (
     <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
       <div className="flex gap-x-2 mb-1">
         <div className="flex flex-col gap-y-2">
-          <Label htmlFor="clientId">Client</Label>
+          <Label htmlFor="clientId">Cliente</Label>
           <SearchableSelect
             defaultValue={
               (actionState.payload?.get("clientId") as string) ??
-              payment?.clientId
+              payment?.clienteId
             }
             name="clientId"
             options={clients.map((client) => ({
               value: client.id,
-              label: client.firstName + " " + client.lastName,
+              label: client.nombre + " " + client.apellido,
             }))}
-            placeholder="Select a client"
+            placeholder="Selecciona un cliente"
           />
           <FieldError actionState={actionState} name="clientId" />
         </div>
         <div className="flex flex-col gap-y-2">
-          <Label htmlFor="membership">Membership</Label>
+          <Label htmlFor="membership">Membresía</Label>
           <Select name="membership" defaultValue={membershipDefaultValue()}>
             <SelectTrigger>
-              <SelectValue placeholder="Select a membership" />
+              <SelectValue placeholder="Selecciona una membresía" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Membership</SelectLabel>
+                <SelectLabel>Membresía</SelectLabel>
                 {membershipStatus.map((client) => (
                   <SelectItem key={client} value={client}>
                     {client}
@@ -88,10 +88,10 @@ export const PaymentUpsertForm = ({
       <CurrencyInput
         actionState={actionState}
         name="amount"
-        defaultValue={payment?.amount}
+        defaultValue={payment?.monto}
       />
 
-      <SubmitButton label={payment ? "Edit" : "Create"} />
+      <SubmitButton label={payment ? "Editar" : "Crear"} />
 
       {actionState.message}
     </Form>

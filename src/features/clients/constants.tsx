@@ -6,8 +6,8 @@ export const TICKET_ICONS = {
 };
 
 export const CLIENT_KEYS = {
-  CREATED_AT: "createdAt",
-  FIRSTNAME: "firstName",
+  CREATED_AT: "creado",
+  FIRSTNAME: "nombre",
 } as const;
 
 export const SORT_VALUES = {
@@ -49,7 +49,10 @@ export const CLIENT_PAGINATION_PAGE_DEFAULT = 0;
 export const CLIENT_PAGINATION_SIZE_DEFAULT = 10;
 
 export const CLIENT_PAGINATION_SIZE_OPTIONS = [
-  { value: `${CLIENT_PAGINATION_SIZE_DEFAULT}`, label: `${CLIENT_PAGINATION_SIZE_DEFAULT}` },
+  {
+    value: `${CLIENT_PAGINATION_SIZE_DEFAULT}`,
+    label: `${CLIENT_PAGINATION_SIZE_DEFAULT}`,
+  },
   { value: "25", label: "25" },
   { value: "50", label: "50" },
   { value: "100", label: "100" },

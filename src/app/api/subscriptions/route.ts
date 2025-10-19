@@ -1,6 +1,6 @@
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { prisma } from "@/lib/prisma";
-import { MembershipStatus } from "@prisma/client";
+import { EstadoMembresia } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 type Mode = "month" | "year" | "all";
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const membership =
-    (searchParams.get("membership") as MembershipStatus) || "DAILY";
+    (searchParams.get("membership") as EstadoMembresia) || "DIARIO";
   const mode = (searchParams.get("mode") as Mode) || "month";
   const now = new Date();
   const year = toInt(searchParams.get("year"), now.getFullYear());
@@ -27,10 +27,14 @@ export async function GET(req: NextRequest) {
     const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
     const end = new Date(year, month, 1, 0, 0, 0, 0);
 
-    const payments = await prisma.payment.findMany({
-      where: { createdAt: { gte: start, lt: end }, status: "PAID", membership },
-      select: { createdAt: true },
-      orderBy: { createdAt: "asc" },
+    const payments = await prisma.pago.findMany({
+      where: {
+        creado: { gte: start, lt: end },
+        estado: "PAGADO",
+        membresia: membership,
+      },
+      select: { creado: true },
+      orderBy: { creado: "asc" },
     });
 
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -40,18 +44,18 @@ export async function GET(req: NextRequest) {
     }));
     let total = 0;
     for (const p of payments) {
-      const day = p.createdAt.getDate();
+      const day = p.creado.getDate();
       series[day - 1].y += 1;
       total += 1;
     }
 
     const prevStart = new Date(year, month - 2, 1, 0, 0, 0, 0);
     const prevEnd = new Date(year, month - 1, 1, 0, 0, 0, 0);
-    const prev = await prisma.payment.count({
+    const prev = await prisma.pago.count({
       where: {
-        createdAt: { gte: prevStart, lt: prevEnd },
-        status: "PAID",
-        membership,
+        creado: { gte: prevStart, lt: prevEnd },
+        estado: "PAGADO",
+        membresia: membership,
       },
     });
 
@@ -69,23 +73,27 @@ export async function GET(req: NextRequest) {
   if (mode === "year") {
     const start = new Date(year, 0, 1, 0, 0, 0, 0);
     const end = new Date(year + 1, 0, 1, 0, 0, 0, 0);
-    const payments = await prisma.payment.findMany({
-      where: { createdAt: { gte: start, lt: end }, status: "PAID", membership },
-      select: { createdAt: true },
-      orderBy: { createdAt: "asc" },
+    const payments = await prisma.pago.findMany({
+      where: {
+        creado: { gte: start, lt: end },
+        estado: "PAGADO",
+        membresia: membership,
+      },
+      select: { creado: true },
+      orderBy: { creado: "asc" },
     });
     const series = Array.from({ length: 12 }, (_, i) => ({ x: i + 1, y: 0 }));
     let total = 0;
     for (const p of payments) {
-      const m = p.createdAt.getMonth() + 1;
+      const m = p.creado.getMonth() + 1;
       series[m - 1].y += 1;
       total += 1;
     }
-    const prev = await prisma.payment.count({
+    const prev = await prisma.pago.count({
       where: {
-        createdAt: { gte: new Date(year - 1, 0, 1), lt: new Date(year, 0, 1) },
-        status: "PAID",
-        membership,
+        creado: { gte: new Date(year - 1, 0, 1), lt: new Date(year, 0, 1) },
+        estado: "PAGADO",
+        membresia: membership,
       },
     });
     return NextResponse.json({
@@ -98,15 +106,15 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  const allPayments = await prisma.payment.findMany({
-    where: { status: "PAID", membership },
-    select: { createdAt: true },
-    orderBy: { createdAt: "asc" },
+  const allPayments = await prisma.pago.findMany({
+    where: { estado: "PAGADO", membresia: membership },
+    select: { creado: true },
+    orderBy: { creado: "asc" },
   });
   const map = new Map<number, number>();
   let total = 0;
   for (const p of allPayments) {
-    const y = p.createdAt.getFullYear();
+    const y = p.creado.getFullYear();
     map.set(y, (map.get(y) ?? 0) + 1);
     total += 1;
   }
