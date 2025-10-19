@@ -26,6 +26,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       <Input
         id="firstName"
         name="firstName"
+        placeholder="Royer"
         type="text"
         defaultValue={
           (actionState.payload?.get("firstName") as string) ?? client?.firstName
@@ -33,10 +34,11 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       />
       <FieldError actionState={actionState} name="firstName" />
 
-      <Label htmlFor="lastName">*Apellido</Label>
+      <Label htmlFor="lastName">Apellido (opcional)</Label>
       <Input
         id="lastName"
         name="lastName"
+        placeholder="Adames"
         defaultValue={
           (actionState.payload?.get("lastName") as string) ?? client?.lastName
         }
@@ -44,18 +46,20 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
       <FieldError actionState={actionState} name="lastName" />
 
       <PhoneInput
-        label="*Teléfono"
+        label="Teléfono (opcional)"
         actionState={actionState}
         name="phone"
+        placeholder="(123) 456-7890"
         defaultValue={
           (actionState.payload?.get("phone") as string) ?? client?.phone
         }
       />
 
-      <Label htmlFor="email">*Correo electrónico</Label>
+      <Label htmlFor="email">Correo electrónico (opcional)</Label>
       <Input
         id="email"
         name="email"
+        placeholder="RoyerAAdames@gmail.com"
         defaultValue={
           (actionState.payload?.get("email") as string) ?? client?.email
         }
