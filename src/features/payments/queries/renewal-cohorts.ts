@@ -41,7 +41,6 @@ export async function getPreEomCandidates(
           },
         },
         {
-          // @ts-expect-error relation filter on WhatsappNotification exists in schema at runtime
           WhatsappNotification: {
             none: {
               // Use string literal enums to avoid import coupling
@@ -91,7 +90,6 @@ export async function getPostEomCandidates(
           },
         },
         {
-          // @ts-expect-error relation filter on WhatsappNotification exists in schema at runtime
           WhatsappNotification: {
             none: {
               cohort: "POST_EOM",
