@@ -36,9 +36,12 @@ export const useFormDialog = ({
     className: "cursor-pointer",
   } as React.HTMLAttributes<HTMLElement>);
 
-  const formElement = cloneElement(form as React.ReactElement, {
-    onSuccess: handleSuccess,
-  });
+  const formElement = cloneElement(
+    form as React.ReactElement<{ onSuccess?: () => void }>,
+    {
+      onSuccess: handleSuccess,
+    }
+  );
 
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>

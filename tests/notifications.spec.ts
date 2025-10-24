@@ -24,16 +24,21 @@ test.describe("WhatsApp Notifications", () => {
     // Click the create notification button
     await page.click('button:has-text("Create Notification")');
 
-    // Check that the modal opens
-    await expect(page.locator("text=Create Notification")).toBeVisible();
+    // Wait for modal to appear
+    await page.waitForSelector('[role="alertdialog"]', { timeout: 10000 });
+
+    // Check that the modal opens - use more specific selector
+    await expect(
+      page.locator('h2:has-text("Create Notification")')
+    ).toBeVisible();
     await expect(
       page.locator("text=Set up a new WhatsApp notification")
     ).toBeVisible();
 
     // Check that the form fields are present
     await expect(page.locator('input[name="message"]')).toBeVisible();
-    await expect(page.locator('select[name="templateName"]')).toBeVisible();
-    await expect(page.locator('select[name="recipientType"]')).toBeVisible();
+    await expect(page.locator('input[name="templateName"]')).toBeVisible();
+    await expect(page.locator('[data-slot="select-trigger"]')).toBeVisible(); // Recipient type select
     await expect(page.locator('input[name="sendDate"]')).toBeVisible();
     await expect(page.locator('select[name="recurrence"]')).toBeVisible();
   });
@@ -42,15 +47,18 @@ test.describe("WhatsApp Notifications", () => {
     // Click the create notification button
     await page.click('button:has-text("Create Notification")');
 
+    // Wait for modal to appear
+    await page.waitForSelector('[role="alertdialog"]', { timeout: 10000 });
+
     // Fill in the form
     await page.fill('input[name="message"]', "Test notification");
 
-    // Select a template (if available)
-    const templateSelect = page.locator('select[name="templateName"]');
-    await templateSelect.selectOption({ index: 0 });
+    // Fill template name (now an input field)
+    await page.fill('input[name="templateName"]', "test_template");
 
-    // Select recipient type
-    await page.selectOption('select[name="recipientType"]', "ALL");
+    // Select recipient type (click the select trigger and select option)
+    await page.click('[data-slot="select-trigger"]');
+    await page.click("text=All Clients");
 
     // Set send date to tomorrow
     const tomorrow = new Date();
