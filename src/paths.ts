@@ -20,3 +20,4 @@ export const paymentPath = (paymentId: string) =>
 export const paymentsEditPath = (paymentId: string) =>
   `${paymentPath(paymentId)}/edit` as Route;
 export const usersPath = () => "/dashboard/users" as Route;
+export const notificationsPath = () => "/dashboard/notifications" as Route;

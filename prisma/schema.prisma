@@ -88,3 +88,49 @@ enum NotificationStatus {
     SKIPPED
     FAILED
 }
+
+// Scheduled notifications for WhatsApp messages
+model ScheduledNotification {
+    id                String                      @id @default(cuid())
+    message           String // Description of the notification
+    recipientType     RecipientType               @default(ALL)
+    selectedClientIds String[] // Array of client IDs when recipientType is SELECTED
+    membershipFilter  MembershipFilter? // Filter by membership type
+    sendDate          DateTime // When to send the notification
+    recurrence        RecurrenceType              @default(ONE_TIME)
+    templateName      String // WhatsApp template name
+    status            ScheduledNotificationStatus @default(PENDING)
+    sentAt            DateTime? // When it was actually sent
+    error             String? // Error message if failed
+    createdAt         DateTime                    @default(now())
+    updatedAt         DateTime                    @updatedAt
+
+    // Relations - Note: selectedClientIds is stored as String[] for simplicity
+
+    @@index([status, sendDate])
+    @@index([recipientType])
+}
+
+enum RecipientType {
+    ALL
+    SELECTED
+}
+
+enum MembershipFilter {
+    DIARIO
+    MENSUAL
+    BOTH
+}
+
+enum RecurrenceType {
+    ONE_TIME
+    WEEKLY
+    MONTHLY
+}
+
+enum ScheduledNotificationStatus {
+    PENDING
+    SENT
+    FAILED
+    CANCELLED
+}

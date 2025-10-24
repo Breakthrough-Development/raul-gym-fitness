@@ -1,7 +1,14 @@
-import { accountProfilePath, homePath, paymentsPath, usersPath } from "@/paths";
+import {
+  accountProfilePath,
+  homePath,
+  notificationsPath,
+  paymentsPath,
+  usersPath,
+} from "@/paths";
 import {
   LucideCircleUser,
   LucideHome,
+  LucideMessageSquare,
   LucideReceipt,
   LucideUsers,
 } from "lucide-react";
@@ -22,6 +29,11 @@ export const navItems: NavItem[] = [
     title: "Usuarios",
     icon: <LucideUsers />,
     href: usersPath(),
+  },
+  {
+    title: "WhatsApp Notifications",
+    icon: <LucideMessageSquare />,
+    href: notificationsPath(),
   },
   {
     separator: true,

@@ -71,3 +71,54 @@ export async function sendWhatsAppTemplate(
   const errorText = await response.text().catch(() => "");
   return { ok: false, status: response.status, error: errorText };
 }
+
+export type WhatsAppTemplate = {
+  name: string;
+  language: string;
+  status: "APPROVED" | "PENDING" | "REJECTED" | "DISABLED";
+  category: string;
+  components: Array<{
+    type: "HEADER" | "BODY" | "FOOTER" | "BUTTONS";
+    text?: string;
+    format?: string;
+    example?: {
+      header_text?: string[];
+      body_text?: string[];
+    };
+  }>;
+};
+
+type FetchTemplatesResult =
+  | {
+      ok: true;
+      templates: WhatsAppTemplate[];
+    }
+  | {
+      ok: false;
+      status: number;
+      error: string;
+    };
+
+export async function fetchWhatsAppTemplates(): Promise<FetchTemplatesResult> {
+  const phoneNumberId = env.WHATSAPP_PHONE_NUMBER_ID;
+  const token = env.WHATSAPP_ACCESS_TOKEN;
+  const url = `https://graph.facebook.com/v19.0/${phoneNumberId}/message_templates`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.ok) {
+    const data = await response
+      .json()
+      .catch(() => ({} as { data: WhatsAppTemplate[] }));
+    return { ok: true, templates: data?.data || [] };
+  }
+
+  const errorText = await response.text().catch(() => "");
+  return { ok: false, status: response.status, error: errorText };
+}
