@@ -1,4 +1,6 @@
-const DEFAULT_TZ = process.env.TIMEZONE || "America/New_York";
+import { env } from "@/env";
+
+const DEFAULT_TZ = env.TIMEZONE;
 
 export type YearMonth = { year: number; month: number }; // month: 1-12
 

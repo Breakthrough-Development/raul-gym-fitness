@@ -73,6 +73,60 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Environment Variables
+
+This project uses a typed, validated environment variable system with security boundaries between server and client code.
+
+### Setup
+
+1. Copy `template.env` to `.env.development` and `.env.production`
+2. Fill in all required variables (see `template.env` for documentation)
+3. Environment validation runs automatically on `dev` and `build` commands
+
+### Security Guidelines
+
+**⚠️ CRITICAL**: Environment variable security is based on **usage**, not just file separation.
+
+#### Server-Only Environment Variables (`src/env.ts`)
+
+- **Contains**: All sensitive variables (DATABASE_URL, SECRET_FRASE, WHATSAPP_ACCESS_TOKEN, etc.)
+- **Safe to import in**: API routes, server actions, server components, middleware, build scripts
+- **NEVER import in**: Client components (files with `"use client"`)
+
+#### Client-Safe Environment Variables (`src/env.client.ts`)
+
+- **Contains**: Only `NEXT_PUBLIC_VERCEL_URL` (client-safe variables)
+- **Safe to import in**: Client components, server components, anywhere
+
+### Usage Examples
+
+```tsx
+// ✅ Safe - Server action
+"use server";
+import { env } from "@/env";
+export async function serverAction() {
+  const secret = env.SECRET_FRASE; // Safe
+}
+
+// ✅ Safe - Client component using client-safe vars
+("use client");
+import { clientEnv } from "@/env.client";
+export function ClientComponent() {
+  const url = clientEnv.NEXT_PUBLIC_VERCEL_URL; // Safe
+}
+
+// 🚨 DANGEROUS - Client component using server secrets
+("use client");
+import { env } from "@/env";
+export function ClientComponent() {
+  const secret = env.SECRET_FRASE; // DANGER! Exposed to browser
+}
+```
+
+### Key Principle
+
+Only code imported by client components gets bundled and sent to the browser. Server-only code (API routes, server actions, server components) never gets bundled for the client.
+
 ## Conventions
 
 - Centralize routes: see `documentation/path-constants.md`

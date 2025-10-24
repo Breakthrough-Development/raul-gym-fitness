@@ -1,3 +1,5 @@
+import { env } from "@/env";
+
 type SendResult =
   | {
       ok: true;
@@ -9,12 +11,6 @@ type SendResult =
       error: string;
     };
 
-function getEnv(name: string): string {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing env ${name}`);
-  return v;
-}
-
 export async function sendWhatsAppTemplate(
   toE164: string,
   templateName: string,
@@ -22,8 +18,8 @@ export async function sendWhatsAppTemplate(
   languageCode = "en_US",
   attempt = 0
 ): Promise<SendResult> {
-  const phoneNumberId = getEnv("WHATSAPP_PHONE_NUMBER_ID");
-  const token = getEnv("WHATSAPP_ACCESS_TOKEN");
+  const phoneNumberId = env.WHATSAPP_PHONE_NUMBER_ID;
+  const token = env.WHATSAPP_ACCESS_TOKEN;
   const url = `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`;
 
   const body = {

@@ -4,6 +4,7 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
+import { env } from "@/env";
 import { hashPassword } from "@/features/password/util/hash-and-verify";
 import { createSession } from "@/lib/aslo";
 import { prisma } from "@/lib/prisma";
@@ -68,10 +69,7 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
       ["frase-secreta"]: secretPhrase,
     } = signUpSchema.parse(Object.fromEntries(formData));
 
-    const serverSecret = process.env.SECRET_FRASE ?? "";
-    if (!serverSecret) {
-      return toActionState("ERROR", "Frase secreta no configurada", formData);
-    }
+    const serverSecret = env.SECRET_FRASE;
     if (secretPhrase !== serverSecret) {
       return toActionState("ERROR", "Frase secreta inválida", formData);
     }

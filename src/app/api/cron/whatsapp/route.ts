@@ -13,13 +13,14 @@ import {
   monthLongName,
 } from "@/utils/date";
 // Use string literals for enums to avoid client version desync
+import { env } from "@/env";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 function requireSecret(req: NextRequest) {
   const provided = req.headers.get("x-cron-secret");
-  const expected = process.env.CRON_SECRET;
+  const expected = env.CRON_SECRET;
   return provided && expected && provided === expected;
 }
 
@@ -30,7 +31,7 @@ export async function GET(req: NextRequest) {
 
   const url = new URL(req.url);
   const dryRun = url.searchParams.get("dryRun") === "1";
-  const timeZone = process.env.TIMEZONE || "America/New_York";
+  const timeZone = env.TIMEZONE;
   const today = getTodayInTimeZone(timeZone);
   const current = getCurrentYearMonth(timeZone);
   const prev = getPrevYearMonth(current);
@@ -59,9 +60,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, message: "No cohort today", today });
   }
 
-  const preTemplate = process.env.WHATSAPP_TEMPLATE_PRE || "";
-  const postTemplate = process.env.WHATSAPP_TEMPLATE_POST || "";
-  const maxSends = Number(process.env.WHATSAPP_MAX_PER_RUN || "500");
+  const preTemplate = env.WHATSAPP_TEMPLATE_PRE;
+  const postTemplate = env.WHATSAPP_TEMPLATE_POST;
+  const maxSends = env.WHATSAPP_MAX_PER_RUN;
 
   const results: Array<{ id: string; sent?: boolean; skipped?: boolean }> = [];
 
