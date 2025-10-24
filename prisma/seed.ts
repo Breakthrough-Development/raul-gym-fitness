@@ -15,12 +15,13 @@ const seed = async () => {
   await prisma.usuario.deleteMany();
 
   const passwordHash = await hash(process.env.SEED_PASSWORD || "gemeimnis");
+  const adminPasswordHash = await hash("gemeimnis"); // Hardcoded for admin user
 
   // Create users (admin and royeradames)
   const dbUsers = await prisma.usuario.createManyAndReturn({
     data: users.map((user) => ({
       ...user,
-      password: passwordHash,
+      password: user.usuario === "admin" ? adminPasswordHash : passwordHash,
     })),
   });
 

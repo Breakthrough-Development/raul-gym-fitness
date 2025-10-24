@@ -1,4 +1,8 @@
-import { MembershipFilter, RecipientType, RecurrenceType } from "./temp-types";
+import {
+  MembershipFilter,
+  RecipientType,
+  RecurrenceType,
+} from "@prisma/client";
 
 export const RECIPIENT_TYPE_OPTIONS = [
   { value: RecipientType.ALL, label: "All Clients" },

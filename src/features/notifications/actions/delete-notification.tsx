@@ -4,9 +4,9 @@ import {
   ActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
+import { prisma } from "@/lib/prisma";
 import { notificationsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
-import { mockPrisma as prisma } from "../mock-prisma";
 
 export async function deleteNotification(id: string): Promise<ActionState> {
   try {

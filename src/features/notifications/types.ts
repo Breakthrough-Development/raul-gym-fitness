@@ -3,7 +3,7 @@ import {
   RecipientType,
   RecurrenceType,
   ScheduledNotificationStatus,
-} from "./temp-types";
+} from "@prisma/client";
 
 export type ScheduledNotification = {
   id: string;

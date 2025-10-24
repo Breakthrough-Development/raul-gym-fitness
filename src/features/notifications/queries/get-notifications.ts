@@ -1,6 +1,6 @@
 "use server";
 
-import { mockPrisma as prisma } from "../mock-prisma";
+import { prisma } from "@/lib/prisma";
 import { NotificationSearchParams } from "../search-params";
 import { NotificationWithClients } from "../types";
 

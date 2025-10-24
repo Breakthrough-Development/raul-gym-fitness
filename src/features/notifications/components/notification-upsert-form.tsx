@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { WhatsAppTemplate } from "@/lib/whatsapp";
+import { MembershipFilter, RecipientType } from "@prisma/client";
 import { useActionState, useEffect, useState } from "react";
 import { upsertNotification } from "../actions/upsert-notification";
 import {
@@ -27,7 +28,6 @@ import {
 } from "../constants";
 import { getAllClients } from "../queries/get-all-clients";
 import { getWhatsAppTemplates } from "../queries/get-whatsapp-templates";
-import { MembershipFilter, RecipientType } from "../temp-types";
 import { NotificationWithClients } from "../types";
 
 export type NotificationUpsertFormProps = {

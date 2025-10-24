@@ -4,10 +4,10 @@ import {
   ActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
+import { prisma } from "@/lib/prisma";
 import { notificationsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { mockPrisma as prisma } from "../mock-prisma";
 
 const upsertNotificationSchema = z.object({
   message: z.string().min(1, "Message is required"),

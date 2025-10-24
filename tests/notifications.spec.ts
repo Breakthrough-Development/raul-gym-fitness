@@ -1,8 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-test.use({ storageState: "playwright/.auth/user.json" });
-
 test.describe("WhatsApp Notifications", () => {
+  test.use({ storageState: "playwright/.auth/user.json" });
   test.beforeEach(async ({ page }) => {
     // Navigate to the notifications page before each test
     await page.goto("/dashboard/notifications");

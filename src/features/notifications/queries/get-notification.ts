@@ -1,6 +1,6 @@
 "use server";
 
-import { mockPrisma as prisma } from "../mock-prisma";
+import { prisma } from "@/lib/prisma";
 import { NotificationWithClients } from "../types";
 
 export async function getNotification(
