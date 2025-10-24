@@ -13,9 +13,7 @@ export type NotificationSearchParams = z.infer<
 >;
 
 export function parseNotificationSearchParams(
-  searchParams: URLSearchParams
+  searchParams: Record<string, string | string[] | undefined>
 ): NotificationSearchParams {
-  return notificationSearchParamsSchema.parse(
-    Object.fromEntries(searchParams.entries())
-  );
+  return notificationSearchParamsSchema.parse(searchParams);
 }

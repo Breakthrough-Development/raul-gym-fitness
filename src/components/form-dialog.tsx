@@ -36,12 +36,9 @@ export const useFormDialog = ({
     className: "cursor-pointer",
   } as React.HTMLAttributes<HTMLElement>);
 
-  const formElement = cloneElement(
-    form as React.ReactElement,
-    {
-      onSuccess: handleSuccess,
-    } as React.HTMLAttributes<HTMLElement>
-  );
+  const formElement = cloneElement(form as React.ReactElement, {
+    onSuccess: handleSuccess,
+  });
 
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -99,7 +96,7 @@ export const FormDialog = ({
   const [dialogTrigger, dialog] = useFormDialog({
     trigger,
     title,
-    form: <div>{children}</div>,
+    form: children as React.ReactElement,
     description,
   });
 

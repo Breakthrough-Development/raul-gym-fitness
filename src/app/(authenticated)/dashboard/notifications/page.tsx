@@ -6,7 +6,7 @@ import { parseNotificationSearchParams } from "@/features/notifications/search-p
 import { LucidePlus } from "lucide-react";
 
 export type NotificationsPageProps = {
-  searchParams: Promise<URLSearchParams>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function NotificationsPage({

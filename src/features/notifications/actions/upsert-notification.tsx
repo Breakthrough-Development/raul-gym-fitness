@@ -31,7 +31,10 @@ export async function upsertNotification(
       selectedClientIds: JSON.parse(
         (formData.get("selectedClientIds") as string) || "[]"
       ),
-      membershipFilter: formData.get("membershipFilter") || undefined,
+      membershipFilter: (() => {
+        const value = formData.get("membershipFilter");
+        return value === "all" ? undefined : value || undefined;
+      })(),
       sendDate: formData.get("sendDate"),
       recurrence: formData.get("recurrence"),
       templateName: formData.get("templateName"),

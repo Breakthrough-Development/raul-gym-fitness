@@ -103,21 +103,36 @@ export const NotificationUpsertForm = ({
           <FieldError actionState={actionState} name="message" />
 
           <Label htmlFor="templateName">WhatsApp Template</Label>
-          <Select
-            name="templateName"
-            defaultValue={notification?.templateName || ""}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a template" />
-            </SelectTrigger>
-            <SelectContent>
-              {templates.map((template) => (
-                <SelectItem key={template.name} value={template.name}>
-                  {template.name} ({template.language})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {templates.length === 0 ? (
+            <div className="space-y-2">
+              <Input
+                id="templateName"
+                name="templateName"
+                placeholder="Enter template name (e.g., membership_reminder)"
+                defaultValue={notification?.templateName || ""}
+              />
+              <p className="text-sm text-muted-foreground">
+                No templates available from WhatsApp API. Enter template name
+                manually.
+              </p>
+            </div>
+          ) : (
+            <Select
+              name="templateName"
+              defaultValue={notification?.templateName || undefined}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a template" />
+              </SelectTrigger>
+              <SelectContent>
+                {templates.map((template) => (
+                  <SelectItem key={template.name} value={template.name}>
+                    {template.name} ({template.language})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
           <FieldError actionState={actionState} name="templateName" />
         </div>
 
@@ -159,7 +174,7 @@ export const NotificationUpsertForm = ({
                   {MEMBERSHIP_FILTER_OPTIONS.map((option) => (
                     <SelectItem
                       key={option.value || "all"}
-                      value={option.value || ""}
+                      value={option.value || "all"}
                     >
                       {option.label}
                     </SelectItem>
@@ -218,7 +233,7 @@ export const NotificationUpsertForm = ({
           <input
             type="hidden"
             name="membershipFilter"
-            value={membershipFilter || ""}
+            value={membershipFilter || "all"}
           />
         </div>
 
