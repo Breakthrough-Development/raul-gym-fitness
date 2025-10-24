@@ -81,3 +81,30 @@ export const useFormDialog = ({
 
   return [dialogTrigger, dialog];
 };
+
+// Simple FormDialog component for easier usage
+export const FormDialog = ({
+  trigger,
+  title,
+  children,
+  description,
+}: {
+  trigger: React.ReactElement;
+  title: string;
+  children: React.ReactNode;
+  description?: string;
+}) => {
+  const [dialogTrigger, dialog] = useFormDialog({
+    trigger,
+    title,
+    form: <div>{children}</div>,
+    description,
+  });
+
+  return (
+    <>
+      {dialogTrigger}
+      {dialog}
+    </>
+  );
+};

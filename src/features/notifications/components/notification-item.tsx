@@ -46,7 +46,10 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
     (option) => option.value === notification.recurrence
   )?.label;
 
-  const statusLabel = NOTIFICATION_STATUS_LABELS[notification.status];
+  const statusLabel =
+    NOTIFICATION_STATUS_LABELS[
+      notification.status as keyof typeof NOTIFICATION_STATUS_LABELS
+    ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -154,11 +157,7 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
               {notification.status === "PENDING" && (
                 <SendNotificationOption notification={notification} />
               )}
-              <DeleteOption
-                id={notification.id}
-                action={deleteNotification}
-                itemName="notification"
-              />
+              <DeleteOption id={notification.id} action={deleteNotification} />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

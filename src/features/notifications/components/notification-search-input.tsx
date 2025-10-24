@@ -31,8 +31,8 @@ export const NotificationSearchInput = ({
   return (
     <SearchInput
       placeholder={placeholder}
-      onSearch={handleSearch}
-      defaultValue={searchParams.get("search") ?? ""}
+      value={searchParams.get("search") ?? ""}
+      onChange={handleSearch}
     />
   );
 };

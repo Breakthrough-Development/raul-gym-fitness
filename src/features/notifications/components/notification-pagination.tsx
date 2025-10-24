@@ -1,6 +1,13 @@
 "use client";
 
-import { Pagination } from "@/components/ui/pagination";
+import {
+  Pagination,
+  PaginationButton,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
@@ -30,10 +37,35 @@ export const NotificationPagination = ({
   }
 
   return (
-    <Pagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      onPageChange={handlePageChange}
-    />
+    <Pagination>
+      <PaginationContent>
+        {currentPage > 1 && (
+          <PaginationItem>
+            <PaginationButton onClick={() => handlePageChange(currentPage - 1)}>
+              <PaginationPrevious />
+            </PaginationButton>
+          </PaginationItem>
+        )}
+
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <PaginationItem key={page}>
+            <PaginationButton
+              isActive={page === currentPage}
+              onClick={() => handlePageChange(page)}
+            >
+              {page}
+            </PaginationButton>
+          </PaginationItem>
+        ))}
+
+        {currentPage < totalPages && (
+          <PaginationItem>
+            <PaginationButton onClick={() => handlePageChange(currentPage + 1)}>
+              <PaginationNext />
+            </PaginationButton>
+          </PaginationItem>
+        )}
+      </PaginationContent>
+    </Pagination>
   );
 };

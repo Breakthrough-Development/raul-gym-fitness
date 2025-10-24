@@ -1,22 +1,26 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import {
+  ActionState,
+  toActionState,
+} from "@/components/form/util/to-action-state";
 import { sendWhatsAppTemplate } from "@/lib/whatsapp";
 import { notificationsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
+import { mockPrisma as prisma } from "../mock-prisma";
 
-export async function sendNotification(id: string) {
+export async function sendNotification(id: string): Promise<ActionState> {
   try {
     const notification = await prisma.scheduledNotification.findUnique({
       where: { id },
     });
 
     if (!notification) {
-      return { success: false, error: "Notification not found" };
+      return toActionState("ERROR", "Notification not found");
     }
 
     if (notification.status !== "PENDING") {
-      return { success: false, error: "Notification is not in pending status" };
+      return toActionState("ERROR", "Notification is not in pending status");
     }
 
     // Get clients to send to
@@ -105,12 +109,12 @@ export async function sendNotification(id: string) {
     });
 
     revalidatePath(notificationsPath());
-    return {
-      success: true,
-      sentCount,
-      failedCount,
-      totalClients: clients.length,
-    };
+    return toActionState(
+      "SUCCESS",
+      `Sent to ${sentCount} clients${
+        failedCount > 0 ? `, ${failedCount} failed` : ""
+      }`
+    );
   } catch (error) {
     console.error("Error sending notification:", error);
 
@@ -124,9 +128,9 @@ export async function sendNotification(id: string) {
     });
 
     revalidatePath(notificationsPath());
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return toActionState(
+      "ERROR",
+      error instanceof Error ? error.message : "Unknown error"
+    );
   }
 }

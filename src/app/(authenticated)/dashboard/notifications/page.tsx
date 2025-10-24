@@ -6,13 +6,15 @@ import { parseNotificationSearchParams } from "@/features/notifications/search-p
 import { LucidePlus } from "lucide-react";
 
 export type NotificationsPageProps = {
-  searchParams: URLSearchParams;
+  searchParams: Promise<URLSearchParams>;
 };
 
-export default function NotificationsPage({
+export default async function NotificationsPage({
   searchParams,
 }: NotificationsPageProps) {
-  const parsedSearchParams = parseNotificationSearchParams(searchParams);
+  const resolvedSearchParams = await searchParams;
+  const parsedSearchParams =
+    parseNotificationSearchParams(resolvedSearchParams);
 
   return (
     <div className="flex flex-col gap-y-6">

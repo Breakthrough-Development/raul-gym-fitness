@@ -1,45 +1,65 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import {
+  ActionState,
+  toActionState,
+} from "@/components/form/util/to-action-state";
 import { notificationsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
-import { CreateNotificationData, UpdateNotificationData } from "../types";
+import { z } from "zod";
+import { mockPrisma as prisma } from "../mock-prisma";
+
+const upsertNotificationSchema = z.object({
+  message: z.string().min(1, "Message is required"),
+  recipientType: z.enum(["ALL", "SELECTED"]),
+  selectedClientIds: z.array(z.string()).default([]),
+  membershipFilter: z.enum(["DIARIO", "MENSUAL", "BOTH"]).optional(),
+  sendDate: z.string().transform((str) => new Date(str)),
+  recurrence: z.enum(["ONE_TIME", "WEEKLY", "MONTHLY"]),
+  templateName: z.string().min(1, "Template name is required"),
+});
 
 export async function upsertNotification(
-  data: CreateNotificationData | UpdateNotificationData
-) {
+  id: string | undefined,
+  _actionState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   try {
-    const notificationData = {
-      message: data.message,
-      recipientType: data.recipientType,
-      selectedClientIds: data.selectedClientIds,
-      membershipFilter: data.membershipFilter,
-      sendDate: data.sendDate,
-      recurrence: data.recurrence,
-      templateName: data.templateName,
-    };
+    const data = upsertNotificationSchema.parse({
+      message: formData.get("message"),
+      recipientType: formData.get("recipientType"),
+      selectedClientIds: JSON.parse(
+        (formData.get("selectedClientIds") as string) || "[]"
+      ),
+      membershipFilter: formData.get("membershipFilter") || undefined,
+      sendDate: formData.get("sendDate"),
+      recurrence: formData.get("recurrence"),
+      templateName: formData.get("templateName"),
+    });
 
-    let notification;
-    if ("id" in data && data.id) {
+    if (id) {
       // Update existing notification
-      notification = await prisma.scheduledNotification.update({
-        where: { id: data.id },
-        data: notificationData,
+      await prisma.scheduledNotification.update({
+        where: { id },
+        data,
       });
     } else {
       // Create new notification
-      notification = await prisma.scheduledNotification.create({
-        data: notificationData,
+      await prisma.scheduledNotification.create({
+        data,
       });
     }
 
     revalidatePath(notificationsPath());
-    return { success: true, notification };
+    return toActionState(
+      "SUCCESS",
+      id ? "Notification updated" : "Notification created"
+    );
   } catch (error) {
     console.error("Error upserting notification:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return toActionState(
+      "ERROR",
+      error instanceof Error ? error.message : "Unknown error"
+    );
   }
 }

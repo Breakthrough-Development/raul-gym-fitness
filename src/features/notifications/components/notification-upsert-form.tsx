@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { WhatsAppTemplate } from "@/lib/whatsapp";
-import { MembershipFilter, RecipientType } from "@prisma/client";
 import { useActionState, useEffect, useState } from "react";
 import { upsertNotification } from "../actions/upsert-notification";
 import {
@@ -28,6 +27,7 @@ import {
 } from "../constants";
 import { getAllClients } from "../queries/get-all-clients";
 import { getWhatsAppTemplates } from "../queries/get-whatsapp-templates";
+import { MembershipFilter, RecipientType } from "../temp-types";
 import { NotificationWithClients } from "../types";
 
 export type NotificationUpsertFormProps = {
@@ -55,7 +55,7 @@ export const NotificationUpsertForm = ({
     notification?.selectedClientIds || []
   );
   const [recipientType, setRecipientType] = useState<RecipientType>(
-    notification?.recipientType || "ALL"
+    notification?.recipientType || RecipientType.ALL
   );
   const [membershipFilter, setMembershipFilter] =
     useState<MembershipFilter | null>(notification?.membershipFilter || null);
@@ -75,7 +75,7 @@ export const NotificationUpsertForm = ({
 
   const handleRecipientTypeChange = (value: RecipientType) => {
     setRecipientType(value);
-    if (value === "ALL") {
+    if (value === RecipientType.ALL) {
       setSelectedClients([]);
     }
   };
@@ -98,20 +98,14 @@ export const NotificationUpsertForm = ({
             id="message"
             name="message"
             placeholder="e.g., Monthly membership reminder"
-            defaultValue={
-              (actionState.payload?.get("message") as string) ??
-              notification?.message
-            }
+            defaultValue={notification?.message || ""}
           />
           <FieldError actionState={actionState} name="message" />
 
           <Label htmlFor="templateName">WhatsApp Template</Label>
           <Select
             name="templateName"
-            defaultValue={
-              (actionState.payload?.get("templateName") as string) ??
-              notification?.templateName
-            }
+            defaultValue={notification?.templateName || ""}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a template" />
@@ -149,7 +143,7 @@ export const NotificationUpsertForm = ({
             </SelectContent>
           </Select>
 
-          {recipientType === "ALL" && (
+          {recipientType === RecipientType.ALL && (
             <div className="space-y-2">
               <Label>Filter by Membership Type (Optional)</Label>
               <Select
@@ -175,7 +169,7 @@ export const NotificationUpsertForm = ({
             </div>
           )}
 
-          {recipientType === "SELECTED" && (
+          {recipientType === RecipientType.SELECTED && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">
@@ -234,11 +228,12 @@ export const NotificationUpsertForm = ({
         <div className="space-y-4">
           <Label>Send Date</Label>
           <DatePicker
+            id="sendDate"
             name="sendDate"
             defaultValue={
               notification?.sendDate
-                ? new Date(notification.sendDate)
-                : new Date()
+                ? new Date(notification.sendDate).toISOString().split("T")[0]
+                : new Date().toISOString().split("T")[0]
             }
           />
           <FieldError actionState={actionState} name="sendDate" />
@@ -246,10 +241,7 @@ export const NotificationUpsertForm = ({
           <Label htmlFor="recurrence">Recurrence</Label>
           <Select
             name="recurrence"
-            defaultValue={
-              (actionState.payload?.get("recurrence") as string) ??
-              notification?.recurrence
-            }
+            defaultValue={notification?.recurrence || "ONE_TIME"}
           >
             <SelectTrigger>
               <SelectValue />
@@ -266,7 +258,7 @@ export const NotificationUpsertForm = ({
         </div>
 
         <SubmitButton label={notification ? "Update" : "Create"} />
-        {actionState.message}
+        {actionState.status === "ERROR" && actionState.message}
       </div>
     </Form>
   );

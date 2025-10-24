@@ -12,9 +12,7 @@ export type NotificationListProps = {
 export async function NotificationList({
   searchParams,
 }: NotificationListProps) {
-  const { notifications, totalCount, totalPages } = await getNotifications(
-    searchParams
-  );
+  const { notifications, totalPages } = await getNotifications(searchParams);
 
   return (
     <section className="flex flex-col gap-y-4 animate-fade-from-top">
