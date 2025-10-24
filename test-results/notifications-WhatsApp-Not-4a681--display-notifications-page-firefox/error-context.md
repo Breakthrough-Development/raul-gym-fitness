@@ -1,0 +1,108 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [active]:
+    - generic [ref=e6] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=e7]:
+        - img [ref=e8]
+      - generic [ref=e12]:
+        - button "Open issues overlay" [ref=e13]:
+          - generic [ref=e14]:
+            - generic [ref=e15]: "0"
+            - generic [ref=e16]: "1"
+          - generic [ref=e17]: Issue
+        - button "Collapse issues badge" [ref=e18]:
+          - img [ref=e19]
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - navigation [ref=e26]:
+            - button "previous" [disabled] [ref=e27]:
+              - img "previous" [ref=e28]
+            - generic [ref=e30]:
+              - generic [ref=e31]: 1/
+              - text: "1"
+            - button "next" [disabled] [ref=e32]:
+              - img "next" [ref=e33]
+          - img
+        - generic [ref=e35]:
+          - link "Next.js 15.4.5 (outdated) Webpack" [ref=e36] [cursor=pointer]:
+            - /url: https://nextjs.org/docs/messages/version-staleness
+            - img [ref=e37]
+            - generic "An outdated version detected (latest is 16.0.0), upgrade is highly recommended!" [ref=e39]: Next.js 15.4.5 (outdated)
+            - generic [ref=e40]: Webpack
+          - img
+      - dialog "Runtime TypeError" [ref=e42]:
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]:
+              - generic [ref=e48]:
+                - generic [ref=e49]: Runtime TypeError
+                - generic [ref=e50]: Server
+              - generic [ref=e51]:
+                - button "Copy Stack Trace" [ref=e52] [cursor=pointer]:
+                  - img [ref=e53]
+                - button "No related documentation found" [disabled] [ref=e55]:
+                  - img [ref=e56]
+                - link "Learn more about enabling Node.js inspector for server code with Chrome DevTools" [ref=e58] [cursor=pointer]:
+                  - /url: https://nextjs.org/docs/app/building-your-application/configuring/debugging#server-side-code
+                  - img [ref=e59]
+            - paragraph [ref=e68]: searchParams.entries is not a function
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - paragraph [ref=e72]:
+                - img [ref=e74]
+                - generic [ref=e78]: src/features/notifications/search-params.ts (19:37) @ parseNotificationSearchParams
+                - button "Open in editor" [ref=e79] [cursor=pointer]:
+                  - img [ref=e81]
+              - generic [ref=e84]:
+                - generic [ref=e85]: "17 | ): NotificationSearchParams {"
+                - generic [ref=e86]: 18 | return notificationSearchParamsSchema.parse(
+                - generic [ref=e87]: "> 19 | Object.fromEntries(searchParams.entries())"
+                - generic [ref=e88]: "| ^"
+                - generic [ref=e89]: 20 | );
+                - generic [ref=e90]: "21 | }"
+                - generic [ref=e91]: 22 |
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - paragraph [ref=e94]:
+                  - text: Call Stack
+                  - generic [ref=e95]: "37"
+                - button "Show 30 ignore-listed frame(s)" [ref=e96] [cursor=pointer]:
+                  - text: Show 30 ignore-listed frame(s)
+                  - img [ref=e97]
+              - generic [ref=e99]:
+                - generic [ref=e100]:
+                  - text: parseNotificationSearchParams
+                  - button "Open parseNotificationSearchParams in editor" [ref=e101] [cursor=pointer]:
+                    - img [ref=e102]
+                - text: src/features/notifications/search-params.ts (19:37)
+              - generic [ref=e104]:
+                - generic [ref=e105]:
+                  - text: NotificationsPage
+                  - button "Open NotificationsPage in editor" [ref=e106] [cursor=pointer]:
+                    - img [ref=e107]
+                - text: src/app/(authenticated)/dashboard/notifications/page.tsx (17:34)
+              - generic [ref=e109]:
+                - generic [ref=e110]: (app-pages-browser)/./node_modules/next/dist/client/app-index.js
+                - text: .next/static/chunks/main-app.js (160:1)
+              - generic [ref=e111]:
+                - generic [ref=e112]: (app-pages-browser)/./node_modules/next/dist/client/app-next-dev.js
+                - text: .next/static/chunks/main-app.js (182:1)
+              - generic [ref=e113]:
+                - generic [ref=e114]: __webpack_exec__
+                - text: .next/static/chunks/main-app.js (1801:67)
+              - generic [ref=e115]:
+                - generic [ref=e116]: <unknown>
+                - text: .next/static/chunks/main-app.js (1802:154)
+              - generic [ref=e117]:
+                - generic [ref=e118]: <unknown>
+                - text: .next/static/chunks/main-app.js (9:61)
+        - generic [ref=e119]:
+          - generic [ref=e120]: "1"
+          - generic [ref=e121]: "2"
+  - generic [ref=e123]:
+    - 'heading "Application error: a server-side exception has occurred while loading localhost (see the server logs for more information)." [level=2] [ref=e124]'
+    - paragraph [ref=e125]: "Digest: 1271885658"
+```
