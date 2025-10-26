@@ -20,7 +20,7 @@ export async function sendWhatsAppTemplate(
 ): Promise<SendResult> {
   const phoneNumberId = env.WHATSAPP_PHONE_NUMBER_ID;
   const token = env.WHATSAPP_ACCESS_TOKEN;
-  const url = `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`;
+  const url = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
 
   const body = {
     messaging_product: "whatsapp",
@@ -100,9 +100,9 @@ type FetchTemplatesResult =
     };
 
 export async function fetchWhatsAppTemplates(): Promise<FetchTemplatesResult> {
-  const phoneNumberId = env.WHATSAPP_PHONE_NUMBER_ID;
+  const businessAccountId = env.WHATSAPP_BUSINESS_ACCOUNT_ID;
   const token = env.WHATSAPP_ACCESS_TOKEN;
-  const url = `https://graph.facebook.com/v19.0/${phoneNumberId}/message_templates`;
+  const url = `https://graph.facebook.com/v22.0/${businessAccountId}/message_templates`;
 
   const response = await fetch(url, {
     method: "GET",

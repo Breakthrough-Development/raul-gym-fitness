@@ -19,6 +19,9 @@ const serverSchema = z.object({
     .string()
     .min(1, "WHATSAPP_PHONE_NUMBER_ID is required"),
   WHATSAPP_ACCESS_TOKEN: z.string().min(1, "WHATSAPP_ACCESS_TOKEN is required"),
+  WHATSAPP_BUSINESS_ACCOUNT_ID: z
+    .string()
+    .min(1, "WHATSAPP_BUSINESS_ACCOUNT_ID is required"),
   WHATSAPP_TEMPLATE_PRE: z.string().min(1, "WHATSAPP_TEMPLATE_PRE is required"),
   WHATSAPP_TEMPLATE_POST: z
     .string()
