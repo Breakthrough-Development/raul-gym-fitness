@@ -206,11 +206,17 @@ export const SearchableSelect = ({
           </SelectLabel>
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option) => (
-              <div
-                key={option.value}
-                className="relative flex items-center group"
-              >
-                <SelectItem value={option.value} className="flex-1 pr-10">
+              <div key={option.value} className="relative">
+                <SelectItem
+                  value={option.value}
+                  className={cn(
+                    showOptionsMenu &&
+                      onOptionMenuAction &&
+                      optionMenuItems.length > 0
+                      ? "pr-14 pl-3"
+                      : "pl-3"
+                  )}
+                >
                   {option.label}
                 </SelectItem>
 
@@ -218,7 +224,7 @@ export const SearchableSelect = ({
                   onOptionMenuAction &&
                   optionMenuItems.length > 0 && (
                     <div
-                      className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute right-8 top-1/2 -translate-y-1/2 z-10"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <DropdownMenu>
