@@ -13,11 +13,14 @@ const SignInPage = () => {
         content={<SignInForm />}
         footer={
           <div className="flex flex-row flex-wrap justify-between w-full">
-            <Link className="text-sm text-muted-foreground" href={signUpPath()}>
+            <Link
+              className="text-base text-muted-foreground md:text-lg"
+              href={signUpPath()}
+            >
               ¿Aún no tienes cuenta?
             </Link>
             <Link
-              className="text-sm text-muted-foreground"
+              className="text-base text-muted-foreground md:text-lg"
               href={passwordForgotPath()}
             >
               ¿Olvidaste tu contraseña?

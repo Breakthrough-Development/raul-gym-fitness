@@ -17,7 +17,7 @@ const Placeholder = ({
       {cloneElement(icon, {
         className: "w-16 h-16",
       })}
-      <h2 className="text-lg text-center">{label}</h2>
+      <h2 className="text-xl text-center md:text-2xl">{label}</h2>
       {cloneElement(button, {
         className: "h-10",
       })}

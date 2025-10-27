@@ -93,16 +93,21 @@ export const NotificationUpsertForm = ({
       <div className="space-y-6">
         {/* Basic Information */}
         <div className="space-y-4">
-          <Label htmlFor="message">Message Description</Label>
+          <Label htmlFor="message" className="text-base md:text-lg">
+            Message Description
+          </Label>
           <Input
             id="message"
             name="message"
             placeholder="e.g., Monthly membership reminder"
             defaultValue={notification?.message || ""}
+            className="text-base md:text-lg"
           />
           <FieldError actionState={actionState} name="message" />
 
-          <Label htmlFor="templateName">WhatsApp Template</Label>
+          <Label htmlFor="templateName" className="text-base md:text-lg">
+            WhatsApp Template
+          </Label>
           {templates.length === 0 ? (
             <div className="space-y-2">
               <Input
@@ -110,8 +115,9 @@ export const NotificationUpsertForm = ({
                 name="templateName"
                 placeholder="Enter template name (e.g., membership_reminder)"
                 defaultValue={notification?.templateName || ""}
+                className="text-base md:text-lg"
               />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-base text-muted-foreground md:text-lg">
                 No templates available from WhatsApp API. Enter template name
                 manually.
               </p>
@@ -121,7 +127,7 @@ export const NotificationUpsertForm = ({
               name="templateName"
               defaultValue={notification?.templateName || undefined}
             >
-              <SelectTrigger>
+              <SelectTrigger className="text-base md:text-lg">
                 <SelectValue placeholder="Select a template" />
               </SelectTrigger>
               <SelectContent>
@@ -140,13 +146,13 @@ export const NotificationUpsertForm = ({
 
         {/* Recipients */}
         <div className="space-y-4">
-          <Label>Recipients</Label>
+          <Label className="text-base md:text-lg">Recipients</Label>
 
           <Select
             value={recipientType}
             onValueChange={handleRecipientTypeChange}
           >
-            <SelectTrigger>
+            <SelectTrigger className="text-base md:text-lg">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -160,14 +166,16 @@ export const NotificationUpsertForm = ({
 
           {recipientType === RecipientType.ALL && (
             <div className="space-y-2">
-              <Label>Filter by Membership Type (Optional)</Label>
+              <Label className="text-base md:text-lg">
+                Filter by Membership Type (Optional)
+              </Label>
               <Select
                 value={membershipFilter || ""}
                 onValueChange={(value) =>
                   setMembershipFilter(value as MembershipFilter | null)
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-base md:text-lg">
                   <SelectValue placeholder="All memberships" />
                 </SelectTrigger>
                 <SelectContent>
@@ -187,7 +195,7 @@ export const NotificationUpsertForm = ({
           {recipientType === RecipientType.SELECTED && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm">
+                <CardTitle className="text-base md:text-lg">
                   Select Individual Clients
                 </CardTitle>
               </CardHeader>
@@ -203,7 +211,7 @@ export const NotificationUpsertForm = ({
                     />
                     <label
                       htmlFor={`client-${client.id}`}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 md:text-lg"
                     >
                       {client.nombre} {client.apellido}
                       {!client.telefono && (
@@ -215,7 +223,7 @@ export const NotificationUpsertForm = ({
                   </div>
                 ))}
                 {clients.length === 0 && (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-base text-muted-foreground md:text-lg">
                     No clients found
                   </p>
                 )}
@@ -241,7 +249,7 @@ export const NotificationUpsertForm = ({
 
         {/* Scheduling */}
         <div className="space-y-4">
-          <Label>Send Date</Label>
+          <Label className="text-base md:text-lg">Send Date</Label>
           <DatePicker
             id="sendDate"
             name="sendDate"
@@ -253,12 +261,14 @@ export const NotificationUpsertForm = ({
           />
           <FieldError actionState={actionState} name="sendDate" />
 
-          <Label htmlFor="recurrence">Recurrence</Label>
+          <Label htmlFor="recurrence" className="text-base md:text-lg">
+            Recurrence
+          </Label>
           <Select
             name="recurrence"
             defaultValue={notification?.recurrence || "ONE_TIME"}
           >
-            <SelectTrigger>
+            <SelectTrigger className="text-base md:text-lg">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

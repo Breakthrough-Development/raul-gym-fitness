@@ -18,6 +18,7 @@ const SignInForm = () => {
         name="email"
         placeholder="Correo electrónico"
         defaultValue={actionState.payload?.get("email") as string}
+        className="text-base md:text-lg"
       />
       <FieldError actionState={actionState} name="email" />
 

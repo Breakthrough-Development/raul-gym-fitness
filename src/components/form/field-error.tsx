@@ -8,7 +8,11 @@ type FieldErrorProps = {
 const FieldError = ({ actionState, name }: FieldErrorProps) => {
   const message = actionState.fieldErrors[name]?.[0];
   if (!message) return null;
-  return <span className="text-xs text-red text-red-500">{message}</span>;
+  return (
+    <span className="text-sm text-red text-red-500 md:text-base">
+      {message}
+    </span>
+  );
 };
 
 export { FieldError };

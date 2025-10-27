@@ -19,6 +19,12 @@ export type SearchableSelectOption = {
   label: string;
 };
 
+export type SearchableSelectActionItem = {
+  id: string;
+  label: string;
+  icon?: React.ReactNode;
+};
+
 export type SearchableSelectProps = {
   name: string;
   placeholder?: string;
@@ -28,6 +34,8 @@ export type SearchableSelectProps = {
   emptyMessage?: string;
   className?: string;
   disabled?: boolean;
+  actionItems?: SearchableSelectActionItem[];
+  onActionItemClick?: (actionId: string) => void;
 };
 
 // Custom SelectContent that conditionally shows scroll buttons
@@ -78,6 +86,8 @@ export const SearchableSelect = ({
   emptyMessage = "No se encontraron opciones",
   className,
   disabled = false,
+  actionItems = [],
+  onActionItemClick,
 }: SearchableSelectProps) => {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -131,11 +141,39 @@ export const SearchableSelect = ({
             placeholder={searchPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full"
+            className="w-full text-base md:text-lg"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           />
         </div>
+        {actionItems.length > 0 && (
+          <div className="border-b">
+            {actionItems.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-2 px-2 py-1.5 text-base md:text-lg cursor-pointer hover:bg-accent rounded-sm mx-1 my-0.5"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onActionItemClick?.(item.id);
+                  setIsOpen(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onActionItemClick?.(item.id);
+                    setIsOpen(false);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                {item.icon}
+                <span className="font-medium text-primary">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
         <SelectGroup>
           <SelectLabel>
             {search
@@ -149,7 +187,7 @@ export const SearchableSelect = ({
               </SelectItem>
             ))
           ) : (
-            <div className="px-2 py-1.5 text-sm text-muted-foreground">
+            <div className="px-2 py-1.5 text-base md:text-lg text-muted-foreground">
               {emptyMessage}
             </div>
           )}

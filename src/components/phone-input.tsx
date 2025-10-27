@@ -55,7 +55,11 @@ export const PhoneInput = ({
 
   return (
     <>
-      {label && <Label htmlFor={name}>{label}</Label>}
+      {label && (
+        <Label htmlFor={name} className="text-base md:text-lg">
+          {label}
+        </Label>
+      )}
       <Input
         id={name}
         name={name}
@@ -65,6 +69,7 @@ export const PhoneInput = ({
         value={value.slice(0, 15)} // Limit to 10 digits by truncating formatted string
         maxLength={15} // Max length of formatted string "(XXX) XXX-XXXX"
         onChange={onChange}
+        className="text-base md:text-lg"
       />
       <FieldError actionState={actionState} name={name} />
     </>

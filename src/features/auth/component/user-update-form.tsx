@@ -49,6 +49,7 @@ export const UserUpdateForm = ({
             (actionState.payload?.get("username") as string) || username
           }
           disabled={!isEditing}
+          className="text-base md:text-lg"
         />
         <FieldError actionState={actionState} name="username" />
 
@@ -59,6 +60,7 @@ export const UserUpdateForm = ({
             (actionState.payload?.get("firstName") as string) || firstName
           }
           disabled={!isEditing}
+          className="text-base md:text-lg"
         />
         <FieldError actionState={actionState} name="firstName" />
 
@@ -69,6 +71,7 @@ export const UserUpdateForm = ({
             (actionState.payload?.get("lastName") as string) || lastName
           }
           disabled={!isEditing}
+          className="text-base md:text-lg"
         />
         <FieldError actionState={actionState} name="lastName" />
 
@@ -77,6 +80,7 @@ export const UserUpdateForm = ({
           placeholder="Correo electrónico"
           defaultValue={(actionState.payload?.get("email") as string) || email}
           disabled={!isEditing}
+          className="text-base md:text-lg"
         />
         <FieldError actionState={actionState} name="email" />
 

@@ -11,7 +11,10 @@ const SignUpPage = () => {
         description="Regístrate para comenzar"
         content={<SignUpForm />}
         footer={
-          <Link className="text-sm text-muted-foreground" href={signInPath()}>
+          <Link
+            className="text-base text-muted-foreground md:text-lg"
+            href={signInPath()}
+          >
             ¿Ya tienes cuenta? Inicia sesión ahora.
           </Link>
         }

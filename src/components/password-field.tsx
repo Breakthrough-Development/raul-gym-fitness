@@ -1,14 +1,18 @@
-import * as React from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
+import * as React from "react";
 
 export function PasswordField(props: React.ComponentProps<"input">) {
   const [show, setShow] = React.useState(false);
 
   return (
     <div className="relative">
-      <Input {...props} type={show ? "text" : "password"} className="pr-10" />
+      <Input
+        {...props}
+        type={show ? "text" : "password"}
+        className="pr-10 text-base md:text-lg"
+      />
       <Button
         type="button"
         variant="ghost"

@@ -22,3 +22,4 @@ export async function getWhatsAppTemplates(): Promise<WhatsAppTemplate[]> {
     return [];
   }
 }
+

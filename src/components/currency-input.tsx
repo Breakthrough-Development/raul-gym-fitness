@@ -26,13 +26,16 @@ export const CurrencyInput = ({
 
   return (
     <>
-      <Label htmlFor={name}>Monto</Label>
+      <Label htmlFor={name} className="text-base md:text-lg">
+        Monto
+      </Label>
       <Input
         id={name}
         name={name}
         type="decimal"
         inputMode="decimal"
         defaultValue={amountDefaultValue()}
+        className="text-base md:text-lg"
       />
       <FieldError actionState={actionState} name={name} />
     </>

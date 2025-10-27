@@ -54,7 +54,9 @@ const Header = () => {
               <Button asChild variant="ghost">
                 <Link href={homePath()}>
                   <LucideDumbbell />
-                  <h1 className="text-lg font-bold">Raul Gym Fitness</h1>
+                  <h1 className="text-xl font-bold md:text-2xl">
+                    Raul Gym Fitness
+                  </h1>
                 </Link>
               </Button>
             </li>

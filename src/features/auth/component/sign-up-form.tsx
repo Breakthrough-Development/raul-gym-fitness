@@ -18,7 +18,7 @@ const SignUpForm = () => {
     <div>
       <Form action={action} actionState={actionState} className=" gap-y-8">
         <div className="flex flex-col gap-y-2">
-          <Label htmlFor={"frase-secreta"}>
+          <Label htmlFor={"frase-secreta"} className="text-base md:text-lg">
             Por favor ingrese la frase secreta
           </Label>
           <Input
@@ -27,6 +27,7 @@ const SignUpForm = () => {
             placeholder="Por favor ingrese la frase secreta"
             value={secretPhrase}
             onChange={(e) => setSecretPhrase(e.target.value)}
+            className="text-base md:text-lg"
           />
           <FieldError actionState={actionState} name="frase-secreta" />
         </div>
@@ -38,6 +39,7 @@ const SignUpForm = () => {
             name="username"
             placeholder="Nombre de usuario"
             defaultValue={actionState.payload?.get("username") as string}
+            className="text-base md:text-lg"
           />
           <FieldError actionState={actionState} name="username" />
 
@@ -45,6 +47,7 @@ const SignUpForm = () => {
             name="firstName"
             placeholder="Nombre"
             defaultValue={actionState.payload?.get("firstName") as string}
+            className="text-base md:text-lg"
           />
           <FieldError actionState={actionState} name="firstName" />
 
@@ -52,6 +55,7 @@ const SignUpForm = () => {
             name="lastName"
             placeholder="Apellido"
             defaultValue={actionState.payload?.get("lastName") as string}
+            className="text-base md:text-lg"
           />
           <FieldError actionState={actionState} name="lastName" />
 
@@ -59,6 +63,7 @@ const SignUpForm = () => {
             name="email"
             placeholder="Correo electrónico"
             defaultValue={actionState.payload?.get("email") as string}
+            className="text-base md:text-lg"
           />
           <FieldError actionState={actionState} name="email" />
 

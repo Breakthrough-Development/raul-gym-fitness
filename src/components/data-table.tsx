@@ -78,7 +78,7 @@ export const DataTable = <TData,>({
           onChange={(event) =>
             table.getColumn(searchColumn)?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm text-base md:text-lg"
         />
       </header>
       <div className="overflow-hidden rounded-md border">

@@ -12,17 +12,27 @@ import { upsertClient } from "../actions/upsert-client";
 
 export type ClientUpsertFormProps = {
   client?: Cliente;
+  onSuccess?: (actionState: unknown) => void;
+  formAction?: (formData: FormData) => void;
 };
 
-export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
-  const [actionState, formAction] = useActionState(
+export const ClientUpsertForm = ({
+  client,
+  onSuccess,
+  formAction: customFormAction,
+}: ClientUpsertFormProps) => {
+  const [actionState, defaultFormAction] = useActionState(
     upsertClient.bind(null, client?.id),
     EMPTY_ACTION_STATE
   );
 
+  const formAction = customFormAction || defaultFormAction;
+
   return (
-    <Form action={formAction} actionState={actionState}>
-      <Label htmlFor="firstName">Nombre</Label>
+    <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
+      <Label htmlFor="firstName" className="text-base md:text-lg">
+        Nombre
+      </Label>
       <Input
         id="firstName"
         name="nombre"
@@ -31,10 +41,13 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
         defaultValue={
           (actionState.payload?.get("nombre") as string) ?? client?.nombre
         }
+        className="text-base md:text-lg"
       />
       <FieldError actionState={actionState} name="nombre" />
 
-      <Label htmlFor="lastName">Apellido (opcional)</Label>
+      <Label htmlFor="lastName" className="text-base md:text-lg">
+        Apellido (opcional)
+      </Label>
       <Input
         id="lastName"
         name="apellido"
@@ -42,6 +55,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
         defaultValue={
           (actionState.payload?.get("apellido") as string) ?? client?.apellido
         }
+        className="text-base md:text-lg"
       />
       <FieldError actionState={actionState} name="apellido" />
 
@@ -55,7 +69,9 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
         }
       />
 
-      <Label htmlFor="email">Correo electrónico (opcional)</Label>
+      <Label htmlFor="email" className="text-base md:text-lg">
+        Correo electrónico (opcional)
+      </Label>
       <Input
         id="email"
         name="email"
@@ -63,6 +79,7 @@ export const ClientUpsertForm = ({ client }: ClientUpsertFormProps) => {
         defaultValue={
           (actionState.payload?.get("email") as string) ?? client?.email
         }
+        className="text-base md:text-lg"
       />
       <FieldError actionState={actionState} name="email" />
 
