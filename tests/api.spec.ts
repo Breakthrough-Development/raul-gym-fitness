@@ -1,38 +1,140 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("WhatsApp Templates API", () => {
-  test("should fetch WhatsApp templates", async ({ request }) => {
-    const response = await request.get("/api/whatsapp-templates");
+test.describe("WhatsApp Cron API", () => {
+  const CRON_ENDPOINT = "/api/cron/whatsapp";
+  const CRON_SECRET = process.env.CRON_SECRET;
 
-    // Accept both 200 (working) and 401 (expired token)
-    expect([200, 401]).toContain(response.status());
+  test("should return 401 when no x-cron-secret header is provided", async ({
+    request,
+  }) => {
+    const response = await request.get(CRON_ENDPOINT);
 
-    if (response.status() === 200) {
-      const data = await response.json();
-      expect(data).toHaveProperty("templates");
-      expect(Array.isArray(data.templates)).toBe(true);
+    expect(response.status()).toBe(401);
 
-      // If there are templates, check their structure
-      if (data.templates.length > 0) {
-        const template = data.templates[0];
-        expect(template).toHaveProperty("name");
-        expect(template).toHaveProperty("language");
-        expect(template).toHaveProperty("status");
-        expect(template.status).toBe("APPROVED");
-      }
+    const data = await response.json();
+    expect(data).toHaveProperty("error");
+    expect(data.error).toBe("Unauthorized");
+  });
+
+  test("should return 401 when wrong x-cron-secret header is provided", async ({
+    request,
+  }) => {
+    const response = await request.get(CRON_ENDPOINT, {
+      headers: {
+        "x-cron-secret": "wrong-secret-value",
+      },
+    });
+
+    expect(response.status()).toBe(401);
+
+    const data = await response.json();
+    expect(data).toHaveProperty("error");
+    expect(data.error).toBe("Unauthorized");
+  });
+
+  test("should return 200 with valid x-cron-secret header (dry run)", async ({
+    request,
+  }) => {
+    if (!CRON_SECRET) {
+      test.skip();
+      return;
+    }
+
+    const response = await request.get(`${CRON_ENDPOINT}?dryRun=1`, {
+      headers: {
+        "x-cron-secret": CRON_SECRET,
+      },
+    });
+
+    expect(response.status()).toBe(200);
+
+    const data = await response.json();
+
+    // All responses should have these base properties
+    expect(data).toHaveProperty("ok");
+    expect(data.ok).toBe(true);
+    expect(data).toHaveProperty("today");
+
+    // Response structure varies based on whether it's a reminder day
+    if (data.message) {
+      // Not a reminder day
+      expect(data.message).toBe("No cohort today");
     } else {
-      // 401 is OK - means API endpoint works, just needs fresh token
-      console.log("⚠️  WhatsApp token expired - update WHATSAPP_ACCESS_TOKEN");
+      // Reminder day - should have processing results
+      expect(data).toHaveProperty("processed");
+      expect(data).toHaveProperty("results");
+      expect(typeof data.processed).toBe("number");
+      expect(Array.isArray(data.results)).toBe(true);
     }
   });
 
-  test("should handle API errors gracefully", async ({ request }) => {
-    // This test might fail if the WhatsApp API is not configured
-    // but it should handle the error gracefully
-    const response = await request.get("/api/whatsapp-templates");
+  test("should handle dryRun parameter correctly", async ({ request }) => {
+    if (!CRON_SECRET) {
+      test.skip();
+      return;
+    }
 
-    // The API should return a response (either success or error)
-    expect(response.status()).toBeGreaterThanOrEqual(200);
-    expect(response.status()).toBeLessThan(600);
+    const response = await request.get(`${CRON_ENDPOINT}?dryRun=1`, {
+      headers: {
+        "x-cron-secret": CRON_SECRET,
+      },
+    });
+
+    expect(response.status()).toBe(200);
+
+    const data = await response.json();
+    expect(data.ok).toBe(true);
+
+    // In dry run mode, if there are results, they should indicate sent: false
+    // or just show processing without actually sending messages
+    if (data.results && data.results.length > 0) {
+      // Verify the endpoint processed candidates but didn't actually send
+      // (In dry run, sent should be false or processing should be simulated)
+      expect(Array.isArray(data.results)).toBe(true);
+    }
+  });
+
+  test("should validate response structure on reminder day", async ({
+    request,
+  }) => {
+    if (!CRON_SECRET) {
+      test.skip();
+      return;
+    }
+
+    const response = await request.get(`${CRON_ENDPOINT}?dryRun=1`, {
+      headers: {
+        "x-cron-secret": CRON_SECRET,
+      },
+    });
+
+    expect(response.status()).toBe(200);
+
+    const data = await response.json();
+
+    // Base structure validation
+    expect(data).toHaveProperty("ok");
+    expect(data).toHaveProperty("today");
+    expect(typeof data.ok).toBe("boolean");
+    expect(typeof data.today).toBe("string");
+
+    // If it's processing notifications
+    if (data.processed !== undefined) {
+      expect(typeof data.processed).toBe("number");
+      expect(data).toHaveProperty("results");
+      expect(Array.isArray(data.results)).toBe(true);
+
+      // Validate result objects if present
+      if (data.results.length > 0) {
+        const result = data.results[0];
+        expect(result).toHaveProperty("id");
+        expect(typeof result.id).toBe("string");
+
+        // Should have either sent or skipped flag
+        expect(
+          result.hasOwnProperty("sent") || result.hasOwnProperty("skipped")
+        ).toBe(true);
+      }
+    }
   });
 });

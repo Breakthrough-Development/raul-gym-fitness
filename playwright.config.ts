@@ -35,8 +35,19 @@ export default defineConfig({
     // Setup project
     { name: "setup", testMatch: /.*\.setup\.ts/ },
 
+    // API tests - no browser or auth needed
+    {
+      name: "api",
+      testMatch: /.*api\.spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+      // No dependencies on setup - API tests use request context only
+    },
+
     {
       name: "chromium",
+      testIgnore: /.*api\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
         // Use prepared auth state
@@ -47,6 +58,7 @@ export default defineConfig({
 
     {
       name: "firefox",
+      testIgnore: /.*api\.spec\.ts/,
       use: {
         ...devices["Desktop Firefox"],
         storageState: "playwright/.auth/user.json",
@@ -56,6 +68,7 @@ export default defineConfig({
 
     {
       name: "webkit",
+      testIgnore: /.*api\.spec\.ts/,
       use: {
         ...devices["Desktop Safari"],
         storageState: "playwright/.auth/user.json",
