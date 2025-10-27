@@ -77,9 +77,10 @@ export const PaymentUpsertForm = ({
   };
 
   // Handle successful client creation
-  const handleClientCreated = (actionState: ActionState<Cliente>) => {
-    if (actionState.status === "SUCCESS" && actionState.data) {
-      const newClient = actionState.data as Cliente;
+  const handleClientCreated = (actionState: unknown) => {
+    const typedState = actionState as ActionState<Cliente>;
+    if (typedState.status === "SUCCESS" && typedState.data) {
+      const newClient = typedState.data as Cliente;
       // Add new client to the local client list
       setClientList((prev) => [...prev, newClient]);
       // Auto-select the new client
