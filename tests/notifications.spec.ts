@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { NotificationTestUtils } from "./utils";
 
 test.describe("WhatsApp Notifications", () => {
   test.use({ storageState: "playwright/.auth/user.json" });
@@ -57,6 +58,8 @@ test.describe("WhatsApp Notifications", () => {
   });
 
   test("should create a notification", async ({ page }) => {
+    const utils = new NotificationTestUtils(page);
+
     // Click the create notification button
     await page.click('button:has-text("Create Notification")');
 
@@ -95,6 +98,9 @@ test.describe("WhatsApp Notifications", () => {
 
     // Check for success message or redirect
     await expect(page.locator("text=Notification created")).toBeVisible();
+
+    // Clean up - delete the test notification to avoid accumulation
+    await utils.deleteNotification("Test notification");
   });
 
   test("should search notifications", async ({ page }) => {
