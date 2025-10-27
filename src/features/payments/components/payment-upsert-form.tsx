@@ -15,7 +15,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -122,21 +121,9 @@ export const PaymentUpsertForm = ({
       <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
         <div className="flex gap-x-2 mb-1">
           <div className="flex flex-col gap-y-2">
-            <div className="flex items-center gap-x-2">
-              <Label htmlFor="clientId" className="text-base md:text-lg">
-                Cliente
-              </Label>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6"
-                disabled={!selectedClientId}
-                onClick={() => setIsEditClientModalOpen(true)}
-              >
-                <Pencil className="h-4 w-4" />
-              </Button>
-            </div>
+            <Label htmlFor="clientId" className="text-base md:text-lg">
+              Cliente
+            </Label>
             <SearchableSelect
               key={selectedClientId}
               defaultValue={selectedClientId}
@@ -152,8 +139,23 @@ export const PaymentUpsertForm = ({
                   label: "Nuevo Cliente",
                   icon: <Plus className="h-4 w-4" />,
                 },
+                ...(selectedClientId
+                  ? [
+                      {
+                        id: "edit-client",
+                        label: "Editar Cliente",
+                        icon: <Pencil className="h-4 w-4" />,
+                      },
+                    ]
+                  : []),
               ]}
-              onActionItemClick={handleNewClientClick}
+              onActionItemClick={(actionId) => {
+                if (actionId === "new-client") {
+                  handleNewClientClick();
+                } else if (actionId === "edit-client") {
+                  setIsEditClientModalOpen(true);
+                }
+              }}
               onValueChange={setSelectedClientId}
             />
             <FieldError actionState={actionState} name="clientId" />

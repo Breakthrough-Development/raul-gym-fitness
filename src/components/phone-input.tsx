@@ -12,7 +12,8 @@ export type PhoneInputProps = {
   placeholder?: string;
 };
 
-function formatPhone(value: string): string {
+function formatPhone(value: string | null | undefined): string {
+  if (!value) return ""; // Handle null/undefined
   const digits = value.replace(/\D/g, "");
   // Format as (XXX) XXX-XXXX for up to 10 digits; if more, append the rest
   const area = digits.slice(0, 3);
