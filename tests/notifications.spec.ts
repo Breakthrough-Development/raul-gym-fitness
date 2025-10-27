@@ -38,9 +38,22 @@ test.describe("WhatsApp Notifications", () => {
     // Check that the form fields are present
     await expect(page.locator('input[name="message"]')).toBeVisible();
     await expect(page.locator('input[name="templateName"]')).toBeVisible();
-    await expect(page.locator('[data-slot="select-trigger"]')).toBeVisible(); // Recipient type select
-    await expect(page.locator('input[name="sendDate"]')).toBeVisible();
-    await expect(page.locator('select[name="recurrence"]')).toBeVisible();
+    // Recipient Type select (defaults to "All Clients")
+    await expect(
+      page
+        .locator('[data-slot="select-trigger"]')
+        .filter({ hasText: "All Clients" })
+    ).toBeVisible();
+    // DatePicker renders a button containing the date and a hidden input
+    await expect(
+      page.getByRole("button", { name: /\d{4}-\d{2}-\d{2}/ })
+    ).toBeVisible();
+    // Recurrence select (defaults to "One Time")
+    await expect(
+      page
+        .locator('[data-slot="select-trigger"]')
+        .filter({ hasText: "One Time" })
+    ).toBeVisible();
   });
 
   test("should create a notification", async ({ page }) => {
@@ -56,21 +69,29 @@ test.describe("WhatsApp Notifications", () => {
     // Fill template name (now an input field)
     await page.fill('input[name="templateName"]', "test_template");
 
-    // Select recipient type (click the select trigger and select option)
-    await page.click('[data-slot="select-trigger"]');
-    await page.click("text=All Clients");
+    // Recipient type defaults to "All Clients"; no interaction needed
 
-    // Set send date to tomorrow
+    // Open DatePicker and pick tomorrow
+    const dateButton = page
+      .getByRole("button", { name: /\d{4}-\d{2}-\d{2}/ })
+      .first();
+    await dateButton.click();
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const dateString = tomorrow.toISOString().split("T")[0];
-    await page.fill('input[name="sendDate"]', dateString);
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, "0");
+    const dd = String(tomorrow.getDate()).padStart(2, "0");
+    const tomorrowText = `${yyyy}-${mm}-${dd}`;
+    await page.getByRole("button", { name: String(Number(dd)) }).click();
+    await expect(
+      page.getByRole("button", { name: tomorrowText })
+    ).toBeVisible();
 
-    // Select recurrence
-    await page.selectOption('select[name="recurrence"]', "ONE_TIME");
+    // Recurrence defaults to "One Time"; no interaction needed
 
-    // Submit the form
-    await page.click('button:has-text("Create")');
+    // Submit the form (scope to the open dialog to avoid overlay interception)
+    const dialog = page.locator('[role="alertdialog"]');
+    await dialog.locator('button:has-text("Create")').click();
 
     // Check for success message or redirect
     await expect(page.locator("text=Notification created")).toBeVisible();
