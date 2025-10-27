@@ -1,5 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import * as SelectPrimitive from "@radix-ui/react-select";
+import { MoreHorizontal } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export type SearchableSelectOption = {
@@ -24,6 +32,13 @@ export type SearchableSelectActionItem = {
   id: string;
   label: string;
   icon?: React.ReactNode;
+};
+
+export type SearchableSelectOptionMenuItem = {
+  id: string;
+  label: string;
+  icon?: React.ReactNode;
+  variant?: "default" | "destructive";
 };
 
 export type SearchableSelectProps = {
@@ -38,6 +53,9 @@ export type SearchableSelectProps = {
   actionItems?: SearchableSelectActionItem[];
   onActionItemClick?: (actionId: string) => void;
   onValueChange?: (value: string) => void;
+  showOptionsMenu?: boolean;
+  optionMenuItems?: SearchableSelectOptionMenuItem[];
+  onOptionMenuAction?: (optionValue: string, actionId: string) => void;
 };
 
 // Custom SelectContent that conditionally shows scroll buttons
@@ -91,6 +109,9 @@ export const SearchableSelect = ({
   actionItems = [],
   onActionItemClick,
   onValueChange,
+  showOptionsMenu = false,
+  optionMenuItems = [],
+  onOptionMenuAction,
 }: SearchableSelectProps) => {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -185,9 +206,66 @@ export const SearchableSelect = ({
           </SelectLabel>
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
+              <div
+                key={option.value}
+                className="relative flex items-center group"
+              >
+                <SelectItem value={option.value} className="flex-1 pr-10">
+                  {option.label}
+                </SelectItem>
+
+                {showOptionsMenu &&
+                  onOptionMenuAction &&
+                  optionMenuItems.length > 0 && (
+                    <div
+                      className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                            }}
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                          {optionMenuItems.map((item) => (
+                            <DropdownMenuItem
+                              key={item.id}
+                              className={cn(
+                                "flex items-center gap-2",
+                                item.variant === "destructive" &&
+                                  "text-destructive focus:text-destructive"
+                              )}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                onOptionMenuAction(option.value, item.id);
+                                setIsOpen(false);
+                              }}
+                            >
+                              {item.icon}
+                              <span>{item.label}</span>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  )}
+              </div>
             ))
           ) : (
             <div className="px-2 py-1.5 text-base md:text-lg text-muted-foreground">

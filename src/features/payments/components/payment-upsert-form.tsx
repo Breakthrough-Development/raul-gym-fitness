@@ -10,8 +10,11 @@ import {
 import { SearchableSelect } from "@/components/search-select";
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -26,11 +29,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createClient } from "@/features/clients/actions/create-client";
+import { deleteClientInline } from "@/features/clients/actions/delete-client-inline";
 import { upsertClient } from "@/features/clients/actions/upsert-client";
+import { upsertClientInline } from "@/features/clients/actions/upsert-client-inline";
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 import { Cliente, EstadoMembresia, Pago } from "@prisma/client";
-import { Pencil, Plus } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useActionState, useState } from "react";
+import { toast } from "sonner";
 import { upsertPayment } from "../actions/upsert-payment";
 export type PaymentUpsertFormProps = {
   payment?: Pick<Pago, "id" | "monto" | "membresia" | "clienteId">;
@@ -59,6 +65,11 @@ export const PaymentUpsertForm = ({
 
   // State for controlling the "Edit Client" modal
   const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);
+
+  // State for controlling the "Delete Client" dialog
+  const [isDeleteClientDialogOpen, setIsDeleteClientDialogOpen] =
+    useState(false);
+  const [clientToDelete, setClientToDelete] = useState<Cliente | null>(null);
 
   // Action state for client creation
   const [, clientFormAction] = useActionState(createClient, EMPTY_ACTION_STATE);
@@ -116,6 +127,91 @@ export const PaymentUpsertForm = ({
     }
   };
 
+  // Optimistic Edit Handler
+  const handleEditClient = async (client: Cliente, formData: FormData) => {
+    // 1. Show loading toast
+    const toastId = toast.loading("Actualizando cliente...");
+
+    // 2. Optimistically update UI
+    const optimisticClient = {
+      ...client,
+      nombre: (formData.get("nombre") as string) || client.nombre,
+      apellido: (formData.get("apellido") as string) || client.apellido || "",
+      email: (formData.get("email") as string) || client.email || null,
+      telefono: (formData.get("telefono") as string) || client.telefono || null,
+    };
+
+    setClientList((prev) =>
+      prev.map((c) => (c.id === client.id ? optimisticClient : c))
+    );
+
+    // 3. Close modal immediately (optimistic)
+    setIsEditClientModalOpen(false);
+
+    // 4. Perform actual update in background
+    try {
+      const result = await upsertClientInline(client.id, formData);
+
+      if (result.status === "SUCCESS" && result.data) {
+        // Update with real data from server
+        setClientList((prev) =>
+          prev.map((c) => (c.id === client.id ? result.data : c))
+        );
+        toast.success("Cliente actualizado", { id: toastId });
+      } else {
+        // Revert optimistic update on error
+        setClientList((prev) =>
+          prev.map((c) => (c.id === client.id ? client : c))
+        );
+        toast.error(result.message, { id: toastId });
+      }
+    } catch (error) {
+      // Revert optimistic update on error
+      setClientList((prev) =>
+        prev.map((c) => (c.id === client.id ? client : c))
+      );
+      toast.error("Error al actualizar cliente", { id: toastId });
+    }
+  };
+
+  // Optimistic Delete Handler
+  const handleDeleteClient = async (client: Cliente) => {
+    // 1. Show loading toast
+    const toastId = toast.loading("Eliminando cliente...");
+
+    // 2. Optimistically remove from UI
+    const previousList = clientList;
+    setClientList((prev) => prev.filter((c) => c.id !== client.id));
+
+    // 3. Clear selection if deleting selected client
+    if (selectedClientId === client.id) {
+      setSelectedClientId(undefined);
+    }
+
+    // 4. Close dialog immediately (optimistic)
+    setIsDeleteClientDialogOpen(false);
+
+    // 5. Perform actual delete in background
+    try {
+      const result = await deleteClientInline(client.id);
+
+      if (result.status === "SUCCESS") {
+        toast.success("Cliente eliminado", { id: toastId });
+      } else {
+        // Revert optimistic update on error
+        setClientList(previousList);
+        if (selectedClientId === undefined) {
+          setSelectedClientId(client.id);
+        }
+        toast.error(result.message, { id: toastId });
+      }
+    } catch (error) {
+      // Revert optimistic update on error
+      setClientList(previousList);
+      toast.error("Error al eliminar cliente", { id: toastId });
+    }
+  };
+
   return (
     <>
       <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
@@ -139,24 +235,35 @@ export const PaymentUpsertForm = ({
                   label: "Nuevo Cliente",
                   icon: <Plus className="h-4 w-4" />,
                 },
-                ...(selectedClientId
-                  ? [
-                      {
-                        id: "edit-client",
-                        label: "Editar Cliente",
-                        icon: <Pencil className="h-4 w-4" />,
-                      },
-                    ]
-                  : []),
               ]}
-              onActionItemClick={(actionId) => {
-                if (actionId === "new-client") {
-                  handleNewClientClick();
-                } else if (actionId === "edit-client") {
+              onActionItemClick={handleNewClientClick}
+              onValueChange={setSelectedClientId}
+              showOptionsMenu={true}
+              optionMenuItems={[
+                {
+                  id: "edit",
+                  label: "Editar",
+                  icon: <Pencil className="h-4 w-4 mr-2" />,
+                },
+                {
+                  id: "delete",
+                  label: "Eliminar",
+                  icon: <Trash2 className="h-4 w-4 mr-2" />,
+                  variant: "destructive",
+                },
+              ]}
+              onOptionMenuAction={(clientId, actionId) => {
+                const client = clientList.find((c) => c.id === clientId);
+                if (!client) return;
+
+                if (actionId === "edit") {
+                  setSelectedClientId(clientId);
                   setIsEditClientModalOpen(true);
+                } else if (actionId === "delete") {
+                  setClientToDelete(client);
+                  setIsDeleteClientDialogOpen(true);
                 }
               }}
-              onValueChange={setSelectedClientId}
             />
             <FieldError actionState={actionState} name="clientId" />
           </div>
@@ -270,6 +377,35 @@ export const PaymentUpsertForm = ({
             onSuccess={handleClientUpdated}
             formAction={editClientFormAction}
           />
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Dialog for deleting a client */}
+      <AlertDialog
+        open={isDeleteClientDialogOpen}
+        onOpenChange={setIsDeleteClientDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Eliminar cliente?</AlertDialogTitle>
+            <AlertDialogDescription>
+              ¿Estás seguro de que deseas eliminar a {clientToDelete?.nombre}{" "}
+              {clientToDelete?.apellido}? Esta acción no se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                if (clientToDelete) {
+                  await handleDeleteClient(clientToDelete);
+                }
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </>
