@@ -30,7 +30,7 @@ export default async function NotificationsPage({
           title="Create Notification"
           description="Set up a new WhatsApp notification to send to your clients"
           trigger={
-            <Button className="flex gap-x-2">
+            <Button className="flex gap-x-2" variant="ghost">
               <LucidePlus className="h-4 w-4" />
               Create Notification
             </Button>
