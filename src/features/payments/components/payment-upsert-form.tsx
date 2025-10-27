@@ -30,7 +30,6 @@ import {
 } from "@/components/ui/select";
 import { createClient } from "@/features/clients/actions/create-client";
 import { deleteClientInline } from "@/features/clients/actions/delete-client-inline";
-import { upsertClient } from "@/features/clients/actions/upsert-client";
 import { upsertClientInline } from "@/features/clients/actions/upsert-client-inline";
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 import { Cliente, EstadoMembresia, Pago } from "@prisma/client";
@@ -74,12 +73,8 @@ export const PaymentUpsertForm = ({
   // Action state for client creation
   const [, clientFormAction] = useActionState(createClient, EMPTY_ACTION_STATE);
 
-  // Action state for client editing
+  // Get selected client for editing
   const selectedClient = clientList.find((c) => c.id === selectedClientId);
-  const [, editClientFormAction] = useActionState(
-    upsertClient.bind(null, selectedClient?.id),
-    EMPTY_ACTION_STATE
-  );
 
   const membershipStatus = Object.values(EstadoMembresia);
 
@@ -109,21 +104,6 @@ export const PaymentUpsertForm = ({
       setSelectedClientId(newClient.id);
       // Close the modal
       setIsClientModalOpen(false);
-    }
-  };
-
-  // Handle successful client update
-  const handleClientUpdated = (actionState: unknown) => {
-    const typedState = actionState as ActionState<Cliente>;
-    if (typedState.status === "SUCCESS" && typedState.data) {
-      const updatedClient = typedState.data as Cliente;
-      // Update the client in the local client list
-      setClientList((prev) =>
-        prev.map((c) => (c.id === updatedClient.id ? updatedClient : c))
-      );
-      // Keep the same client selected
-      // Close the modal
-      setIsEditClientModalOpen(false);
     }
   };
 
@@ -374,8 +354,11 @@ export const PaymentUpsertForm = ({
           </AlertDialogHeader>
           <ClientUpsertForm
             client={selectedClient}
-            onSuccess={handleClientUpdated}
-            formAction={editClientFormAction}
+            onSubmit={async (formData) => {
+              if (selectedClient) {
+                await handleEditClient(selectedClient, formData);
+              }
+            }}
           />
         </AlertDialogContent>
       </AlertDialog>

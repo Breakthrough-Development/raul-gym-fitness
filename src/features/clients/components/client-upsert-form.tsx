@@ -14,12 +14,14 @@ export type ClientUpsertFormProps = {
   client?: Cliente;
   onSuccess?: (actionState: unknown) => void;
   formAction?: (formData: FormData) => void;
+  onSubmit?: (formData: FormData) => Promise<void>;
 };
 
 export const ClientUpsertForm = ({
   client,
   onSuccess,
   formAction: customFormAction,
+  onSubmit,
 }: ClientUpsertFormProps) => {
   const [actionState, defaultFormAction] = useActionState(
     upsertClient.bind(null, client?.id),
@@ -28,8 +30,23 @@ export const ClientUpsertForm = ({
 
   const formAction = customFormAction || defaultFormAction;
 
+  // If onSubmit is provided, create a wrapper that calls it
+  const handleSubmit = onSubmit
+    ? async (formData: FormData) => {
+        await onSubmit(formData);
+        // Call onSuccess if provided
+        if (onSuccess) {
+          onSuccess({ status: "SUCCESS" });
+        }
+      }
+    : undefined;
+
   return (
-    <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
+    <Form
+      action={handleSubmit || formAction}
+      actionState={actionState}
+      onSuccess={handleSubmit ? undefined : onSuccess}
+    >
       <Label htmlFor="firstName" className="text-base md:text-lg">
         Nombre
       </Label>
