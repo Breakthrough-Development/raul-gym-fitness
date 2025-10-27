@@ -15,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -26,9 +27,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createClient } from "@/features/clients/actions/create-client";
+import { upsertClient } from "@/features/clients/actions/upsert-client";
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 import { Cliente, EstadoMembresia, Pago } from "@prisma/client";
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import { useActionState, useState } from "react";
 import { upsertPayment } from "../actions/upsert-payment";
 export type PaymentUpsertFormProps = {
@@ -56,8 +58,18 @@ export const PaymentUpsertForm = ({
   // State for controlling the "Create Client" modal
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
 
+  // State for controlling the "Edit Client" modal
+  const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);
+
   // Action state for client creation
   const [, clientFormAction] = useActionState(createClient, EMPTY_ACTION_STATE);
+
+  // Action state for client editing
+  const selectedClient = clientList.find((c) => c.id === selectedClientId);
+  const [, editClientFormAction] = useActionState(
+    upsertClient.bind(null, selectedClient?.id),
+    EMPTY_ACTION_STATE
+  );
 
   const membershipStatus = Object.values(EstadoMembresia);
 
@@ -90,14 +102,41 @@ export const PaymentUpsertForm = ({
     }
   };
 
+  // Handle successful client update
+  const handleClientUpdated = (actionState: unknown) => {
+    const typedState = actionState as ActionState<Cliente>;
+    if (typedState.status === "SUCCESS" && typedState.data) {
+      const updatedClient = typedState.data as Cliente;
+      // Update the client in the local client list
+      setClientList((prev) =>
+        prev.map((c) => (c.id === updatedClient.id ? updatedClient : c))
+      );
+      // Keep the same client selected
+      // Close the modal
+      setIsEditClientModalOpen(false);
+    }
+  };
+
   return (
     <>
       <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
         <div className="flex gap-x-2 mb-1">
           <div className="flex flex-col gap-y-2">
-            <Label htmlFor="clientId" className="text-base md:text-lg">
-              Cliente
-            </Label>
+            <div className="flex items-center gap-x-2">
+              <Label htmlFor="clientId" className="text-base md:text-lg">
+                Cliente
+              </Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                disabled={!selectedClientId}
+                onClick={() => setIsEditClientModalOpen(true)}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </div>
             <SearchableSelect
               key={selectedClientId}
               defaultValue={selectedClientId}
@@ -115,6 +154,7 @@ export const PaymentUpsertForm = ({
                 },
               ]}
               onActionItemClick={handleNewClientClick}
+              onValueChange={setSelectedClientId}
             />
             <FieldError actionState={actionState} name="clientId" />
           </div>
@@ -185,6 +225,48 @@ export const PaymentUpsertForm = ({
           <ClientUpsertForm
             onSuccess={handleClientCreated}
             formAction={clientFormAction}
+          />
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Modal for editing an existing client */}
+      <AlertDialog
+        open={isEditClientModalOpen}
+        onOpenChange={setIsEditClientModalOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex justify-between items-center">
+              <AlertDialogTitle>Editar Cliente</AlertDialogTitle>
+              <button
+                onClick={() => setIsEditClientModalOpen(false)}
+                className="rounded-full h-6 w-6 p-0 hover:bg-secondary flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+                <span className="sr-only">Close</span>
+              </button>
+            </div>
+            <AlertDialogDescription className="sr-only">
+              Completa el formulario para editar el cliente
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <ClientUpsertForm
+            client={selectedClient}
+            onSuccess={handleClientUpdated}
+            formAction={editClientFormAction}
           />
         </AlertDialogContent>
       </AlertDialog>

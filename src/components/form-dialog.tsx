@@ -30,9 +30,7 @@ export const useFormDialog = ({
   const dialogTrigger = cloneElement(trigger, {
     onClick: (event: React.MouseEvent) => {
       event.preventDefault();
-      // Defer opening to the next tick to avoid focus conflicts
-      // with menus/popovers that might still be closing.
-      setTimeout(() => setIsOpen(true), 0);
+      setIsOpen(true);
     },
     className: cn(
       (trigger.props as { className?: string }).className,

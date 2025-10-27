@@ -17,6 +17,7 @@
     "type": "tsc --noEmit",
     "test": "playwright test",
     "pw": "playwright test",
+    "test:ai": "AI_TEST=true playwright test --max-failures=1",
     "test:fix": "playwright test --max-failures=1 --workers=1",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",

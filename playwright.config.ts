@@ -5,6 +5,8 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests",
+  /* Timeout for each test */
+  timeout: 30000,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -14,7 +16,7 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: "html",
+  reporter: process.env.AI_TEST ? "list" : "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -28,6 +30,12 @@ export default defineConfig({
 
     /* Record video on failure */
     video: "retain-on-failure",
+
+    /* Action timeout to prevent hanging */
+    actionTimeout: 10000,
+
+    /* Navigation timeout to prevent hanging */
+    navigationTimeout: 15000,
   },
 
   /* Configure projects for major browsers */
@@ -101,7 +109,7 @@ export default defineConfig({
   webServer: {
     command: "bun dev",
     url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: process.env.AI_TEST ? false : !process.env.CI,
     timeout: 120 * 1000,
   },
 });

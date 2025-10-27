@@ -23,10 +23,10 @@ test.describe("WhatsApp Notifications", () => {
 
   test("should open create notification modal", async ({ page }) => {
     // Click the create notification button
-    await page.click('button:has-text("Create Notification")');
+    await page.locator('button:has-text("Create Notification")').click();
 
-    // Wait for modal to appear
-    await page.waitForSelector('[role="alertdialog"]', { timeout: 10000 });
+    // Use expect with auto-waiting instead of waitForSelector
+    await expect(page.getByRole("alertdialog")).toBeVisible();
 
     // Check that the modal opens - use more specific selector
     await expect(
@@ -61,10 +61,10 @@ test.describe("WhatsApp Notifications", () => {
     const utils = new NotificationTestUtils(page);
 
     // Click the create notification button
-    await page.click('button:has-text("Create Notification")');
+    await page.locator('button:has-text("Create Notification")').click();
 
-    // Wait for modal to appear
-    await page.waitForSelector('[role="alertdialog"]', { timeout: 10000 });
+    // Use expect with auto-waiting instead of waitForSelector
+    await expect(page.getByRole("alertdialog")).toBeVisible();
 
     // Fill in the form
     await page.fill('input[name="message"]', "Test notification");
@@ -79,13 +79,19 @@ test.describe("WhatsApp Notifications", () => {
       .getByRole("button", { name: /\d{4}-\d{2}-\d{2}/ })
       .first();
     await dateButton.click();
+
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
+
+    // Use data-day attribute for precise date selection (avoids duplicate day numbers)
+    const dataDay = tomorrow.toLocaleDateString("en-US"); // Format: "M/D/YYYY"
+    await page.locator(`button[data-day="${dataDay}"]`).click();
+
+    // Verify the date was selected
     const yyyy = tomorrow.getFullYear();
     const mm = String(tomorrow.getMonth() + 1).padStart(2, "0");
     const dd = String(tomorrow.getDate()).padStart(2, "0");
     const tomorrowText = `${yyyy}-${mm}-${dd}`;
-    await page.getByRole("button", { name: String(Number(dd)) }).click();
     await expect(
       page.getByRole("button", { name: tomorrowText })
     ).toBeVisible();
@@ -93,7 +99,7 @@ test.describe("WhatsApp Notifications", () => {
     // Recurrence defaults to "One Time"; no interaction needed
 
     // Submit the form (scope to the open dialog to avoid overlay interception)
-    const dialog = page.locator('[role="alertdialog"]');
+    const dialog = page.getByRole("alertdialog");
     await dialog.locator('button:has-text("Create")').click();
 
     // Check for success message or redirect

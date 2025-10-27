@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -36,6 +37,7 @@ export type SearchableSelectProps = {
   disabled?: boolean;
   actionItems?: SearchableSelectActionItem[];
   onActionItemClick?: (actionId: string) => void;
+  onValueChange?: (value: string) => void;
 };
 
 // Custom SelectContent that conditionally shows scroll buttons
@@ -88,6 +90,7 @@ export const SearchableSelect = ({
   disabled = false,
   actionItems = [],
   onActionItemClick,
+  onValueChange,
 }: SearchableSelectProps) => {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -127,6 +130,7 @@ export const SearchableSelect = ({
       defaultValue={defaultValue}
       open={isOpen}
       onOpenChange={setIsOpen}
+      onValueChange={onValueChange}
       disabled={disabled}
     >
       <SelectTrigger className={className}>
@@ -149,9 +153,10 @@ export const SearchableSelect = ({
         {actionItems.length > 0 && (
           <div className="border-b">
             {actionItems.map((item) => (
-              <div
+              <Button
                 key={item.id}
-                className="flex items-center gap-2 px-2 py-1.5 text-base md:text-lg cursor-pointer hover:bg-accent rounded-sm mx-1 my-0.5"
+                variant="ghost"
+                className="flex items-center gap-2 px-2 py-1.5 text-base md:text-lg justify-start w-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   onActionItemClick?.(item.id);
@@ -165,12 +170,10 @@ export const SearchableSelect = ({
                     setIsOpen(false);
                   }
                 }}
-                role="button"
-                tabIndex={0}
               >
                 {item.icon}
-                <span className="font-medium text-primary">{item.label}</span>
-              </div>
+                <span className="font-medium">{item.label}</span>
+              </Button>
             ))}
           </div>
         )}
