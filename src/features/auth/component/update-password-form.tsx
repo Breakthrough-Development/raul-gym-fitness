@@ -21,6 +21,7 @@ export const ResetPasswordForm = () => {
         name="currentPassword"
         placeholder="Contraseña actual"
         defaultValue={actionState.payload?.get("currentPassword") as string}
+        autoComplete="current-password"
       />
       <FieldError actionState={actionState} name="currentPassword" />
 
@@ -29,6 +30,7 @@ export const ResetPasswordForm = () => {
         name="newPassword"
         placeholder="Nueva contraseña"
         defaultValue={actionState.payload?.get("newPassword") as string}
+        autoComplete="new-password"
       />
       <FieldError actionState={actionState} name="newPassword" />
 
@@ -37,6 +39,7 @@ export const ResetPasswordForm = () => {
         name="confirmPassword"
         placeholder="Confirmar contraseña"
         defaultValue={actionState.payload?.get("confirmPassword") as string}
+        autoComplete="new-password"
       />
       <FieldError actionState={actionState} name="confirmPassword" />
 

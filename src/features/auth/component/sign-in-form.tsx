@@ -26,6 +26,7 @@ const SignInForm = () => {
         name="password"
         placeholder="Contraseña"
         defaultValue={actionState.payload?.get("password") as string}
+        autoComplete="current-password"
       />
       <FieldError actionState={actionState} name="password" />
 

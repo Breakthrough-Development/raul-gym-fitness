@@ -12,6 +12,7 @@ export function PasswordField(props: React.ComponentProps<"input">) {
         {...props}
         type={show ? "text" : "password"}
         className="pr-10 text-base md:text-lg"
+        autoComplete={props.autoComplete}
       />
       <Button
         type="button"

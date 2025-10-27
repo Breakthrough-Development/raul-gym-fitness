@@ -63,11 +63,8 @@ export const createClient = async (
 
     revalidatePath(dashboardPath());
 
-    return toActionState("SUCCESS", "Cliente creado", {
-      data: createdClient,
-    });
+    return toActionState("SUCCESS", "Cliente creado", undefined, createdClient);
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }
 };
-

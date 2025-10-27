@@ -41,9 +41,9 @@ export const NotificationPagination = ({
       <PaginationContent>
         {currentPage > 1 && (
           <PaginationItem>
-            <PaginationButton onClick={() => handlePageChange(currentPage - 1)}>
-              <PaginationPrevious />
-            </PaginationButton>
+            <PaginationPrevious
+              onClick={() => handlePageChange(currentPage - 1)}
+            />
           </PaginationItem>
         )}
 
@@ -60,9 +60,7 @@ export const NotificationPagination = ({
 
         {currentPage < totalPages && (
           <PaginationItem>
-            <PaginationButton onClick={() => handlePageChange(currentPage + 1)}>
-              <PaginationNext />
-            </PaginationButton>
+            <PaginationNext onClick={() => handlePageChange(currentPage + 1)} />
           </PaginationItem>
         )}
       </PaginationContent>

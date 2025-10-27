@@ -3,7 +3,10 @@ import { CurrencyInput } from "@/components/currency-input";
 import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
-import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
+import {
+  ActionState,
+  EMPTY_ACTION_STATE,
+} from "@/components/form/util/to-action-state";
 import { SearchableSelect } from "@/components/search-select";
 import {
   AlertDialog,
@@ -54,10 +57,7 @@ export const PaymentUpsertForm = ({
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
 
   // Action state for client creation
-  const [clientActionState, clientFormAction] = useActionState(
-    createClient,
-    EMPTY_ACTION_STATE
-  );
+  const [, clientFormAction] = useActionState(createClient, EMPTY_ACTION_STATE);
 
   const membershipStatus = Object.values(EstadoMembresia);
 
@@ -77,7 +77,7 @@ export const PaymentUpsertForm = ({
   };
 
   // Handle successful client creation
-  const handleClientCreated = (actionState: any) => {
+  const handleClientCreated = (actionState: ActionState<Cliente>) => {
     if (actionState.status === "SUCCESS" && actionState.data) {
       const newClient = actionState.data as Cliente;
       // Add new client to the local client list

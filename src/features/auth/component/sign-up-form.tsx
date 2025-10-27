@@ -78,6 +78,7 @@ const SignUpForm = () => {
             name="password"
             placeholder="Contraseña"
             defaultValue={actionState.payload?.get("password") as string}
+            autoComplete="new-password"
           />
           <FieldError actionState={actionState} name="password" />
 
@@ -86,6 +87,7 @@ const SignUpForm = () => {
             name="confirmPassword"
             placeholder="Confirmar contraseña"
             defaultValue={actionState.payload?.get("confirmPassword") as string}
+            autoComplete="new-password"
           />
           <FieldError actionState={actionState} name="confirmPassword" />
 
