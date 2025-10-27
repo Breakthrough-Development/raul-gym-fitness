@@ -40,4 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Playwright test artifacts
+/playwright-report/
+/test-results/
+/playwright/.auth/
+
 documentation/*
