@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { cloneElement, useState } from "react";
 import {
   AlertDialog,
@@ -33,7 +34,10 @@ export const useFormDialog = ({
       // with menus/popovers that might still be closing.
       setTimeout(() => setIsOpen(true), 0);
     },
-    className: "cursor-pointer",
+    className: cn(
+      (trigger.props as { className?: string }).className,
+      "cursor-pointer"
+    ),
   } as React.HTMLAttributes<HTMLElement>);
 
   const formElement = cloneElement(
