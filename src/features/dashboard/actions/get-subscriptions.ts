@@ -1,27 +1,62 @@
+"use server";
+
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { prisma } from "@/lib/prisma";
 import { EstadoMembresia } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
 
 type Mode = "month" | "year" | "all";
 
-function toInt(value: string | null, fallback: number): number {
-  const n = value ? Number.parseInt(value, 10) : NaN;
+type SubscriptionsParams = {
+  mode?: Mode;
+  year?: number;
+  month?: number;
+  membership: EstadoMembresia;
+};
+
+type SubscriptionsResponse =
+  | {
+      mode: "month";
+      year: number;
+      month: number;
+      membership: EstadoMembresia;
+      series: { x: number; y: number }[];
+      total: number;
+      prevTotal: number;
+    }
+  | {
+      mode: "year";
+      year: number;
+      membership: EstadoMembresia;
+      series: { x: number; y: number }[];
+      total: number;
+      prevTotal: number;
+    }
+  | {
+      mode: "all";
+      membership: EstadoMembresia;
+      series: { x: number; y: number }[];
+      total: number;
+      prevTotal: number;
+    };
+
+function toInt(value: number | undefined, fallback: number): number {
+  const n = value ?? NaN;
   return Number.isFinite(n) ? n : fallback;
 }
 
-export async function GET(req: NextRequest) {
+export async function getSubscriptions(
+  params: SubscriptionsParams
+): Promise<SubscriptionsResponse> {
   const { user } = await getAuth();
-  if (!user)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
 
-  const { searchParams } = new URL(req.url);
-  const membership =
-    (searchParams.get("membership") as EstadoMembresia) || "DIARIO";
-  const mode = (searchParams.get("mode") as Mode) || "month";
+  const membership = params.membership || "DIARIO";
+  const mode = params.mode || "month";
   const now = new Date();
-  const year = toInt(searchParams.get("year"), now.getFullYear());
-  const month = toInt(searchParams.get("month"), now.getMonth() + 1); // 1-12
+  const year = toInt(params.year, now.getFullYear());
+  const month = toInt(params.month, now.getMonth() + 1); // 1-12
 
   if (mode === "month") {
     const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
@@ -59,7 +94,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({
+    return {
       mode,
       year,
       month,
@@ -67,7 +102,7 @@ export async function GET(req: NextRequest) {
       series,
       total,
       prevTotal: prev,
-    });
+    };
   }
 
   if (mode === "year") {
@@ -96,14 +131,14 @@ export async function GET(req: NextRequest) {
         membresia: membership,
       },
     });
-    return NextResponse.json({
+    return {
       mode,
       year,
       membership,
       series,
       total,
       prevTotal: prev,
-    });
+    };
   }
 
   const allPayments = await prisma.pago.findMany({
@@ -120,11 +155,11 @@ export async function GET(req: NextRequest) {
   }
   const years = Array.from(map.keys()).sort((a, b) => a - b);
   const series = years.map((y) => ({ x: y, y: map.get(y) ?? 0 }));
-  return NextResponse.json({
+  return {
     mode: "all",
     membership,
     series,
     total,
     prevTotal: 0,
-  });
+  };
 }

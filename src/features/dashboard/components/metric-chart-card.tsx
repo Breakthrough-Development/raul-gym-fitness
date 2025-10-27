@@ -66,22 +66,28 @@ const monthNamesShort = [
   "Dec",
 ];
 
+type QueryParams = {
+  mode?: Mode;
+  year?: number;
+  month?: number;
+};
+
 export type MetricChartCardProps = {
   title: string;
-  endpoint: string; // e.g. "/api/revenue" or "/api/subscriptions"
+  queryKey: string;
+  queryFn: (params: QueryParams) => Promise<ApiResponse>;
   unitLabel: string; // e.g. "Revenue" or "Subscriptions"
   yFormatter: (value: number) => string; // format ticks/tooltip values
-  extraParams?: Record<string, string>;
   chart?: "line" | "area";
   className?: string;
 };
 
 export const MetricChartCard = ({
   title,
-  endpoint,
+  queryKey: baseQueryKey,
+  queryFn,
   unitLabel,
   yFormatter,
-  extraParams,
   chart = "line",
   className,
 }: MetricChartCardProps) => {
@@ -91,23 +97,14 @@ export const MetricChartCard = ({
   const [month, setMonth] = useState<number>(now.getMonth() + 1);
 
   const queryKey = useMemo(
-    () => ["metric", { endpoint, mode, year, month, extraParams }],
-    [endpoint, mode, year, month, extraParams]
+    () => ["metric", baseQueryKey, { mode, year, month }],
+    [baseQueryKey, mode, year, month]
   );
 
   const { data } = useQuery<ApiResponse>({
     queryKey,
     queryFn: async () => {
-      const params = new URLSearchParams();
-      params.set("mode", mode);
-      if (mode !== "all") params.set("year", String(year));
-      if (mode === "month") params.set("month", String(month));
-      if (extraParams) {
-        for (const [k, v] of Object.entries(extraParams)) params.set(k, v);
-      }
-      const res = await fetch(`${endpoint}?${params.toString()}`);
-      if (!res.ok) throw new Error("Error al obtener la métrica");
-      return (await res.json()) as ApiResponse;
+      return await queryFn({ mode, year, month });
     },
   });
 

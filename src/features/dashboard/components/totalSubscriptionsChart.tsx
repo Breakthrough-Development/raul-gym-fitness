@@ -1,4 +1,5 @@
 "use client";
+import { getSubscriptions } from "@/features/dashboard/actions/get-subscriptions";
 import { EstadoMembresia } from "@prisma/client";
 import { MetricChartCard } from "./metric-chart-card";
 
@@ -13,12 +14,12 @@ export const TotalSubscriptionsChart = ({
   return (
     <MetricChartCard
       title={title}
-      endpoint="/api/subscriptions"
+      queryKey="subscriptions"
+      queryFn={(params) => getSubscriptions({ ...params, membership: type })}
       unitLabel="Subscriptions"
       yFormatter={(v) => String(v)}
       chart="area"
       className="pb-0"
-      extraParams={{ membership: type }}
     />
   );
 };

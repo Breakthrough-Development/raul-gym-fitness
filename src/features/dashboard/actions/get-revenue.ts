@@ -1,24 +1,56 @@
+"use server";
+
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { prisma } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
 
 type Mode = "month" | "year" | "all";
 
-function toInt(value: string | null, fallback: number): number {
-  const n = value ? Number.parseInt(value, 10) : NaN;
+type RevenueParams = {
+  mode?: Mode;
+  year?: number;
+  month?: number;
+};
+
+type RevenueResponse =
+  | {
+      mode: "month";
+      year: number;
+      month: number;
+      series: { x: number; y: number }[];
+      total: number;
+      prevTotal: number;
+    }
+  | {
+      mode: "year";
+      year: number;
+      series: { x: number; y: number }[];
+      total: number;
+      prevTotal: number;
+    }
+  | {
+      mode: "all";
+      series: { x: number; y: number }[];
+      total: number;
+      prevTotal: number;
+    };
+
+function toInt(value: number | undefined, fallback: number): number {
+  const n = value ?? NaN;
   return Number.isFinite(n) ? n : fallback;
 }
 
-export async function GET(req: NextRequest) {
+export async function getRevenue(
+  params: RevenueParams
+): Promise<RevenueResponse> {
   const { user } = await getAuth();
-  if (!user)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
 
-  const { searchParams } = new URL(req.url);
-  const mode = (searchParams.get("mode") as Mode) || "month";
+  const mode = params.mode || "month";
   const now = new Date();
-  const year = toInt(searchParams.get("year"), now.getFullYear());
-  const month = toInt(searchParams.get("month"), now.getMonth() + 1); // 1-12
+  const year = toInt(params.year, now.getFullYear());
+  const month = toInt(params.month, now.getMonth() + 1); // 1-12
 
   if (mode === "month") {
     const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
@@ -51,14 +83,14 @@ export async function GET(req: NextRequest) {
     });
     const prevTotal = prev._sum.monto ?? 0;
 
-    return NextResponse.json({
+    return {
       mode,
       year,
       month,
       series,
       total,
       prevTotal,
-    });
+    };
   }
 
   if (mode === "year") {
@@ -84,7 +116,7 @@ export async function GET(req: NextRequest) {
       _sum: { monto: true },
     });
     const prevTotal = prev._sum.monto ?? 0;
-    return NextResponse.json({ mode, year, series, total, prevTotal });
+    return { mode, year, series, total, prevTotal };
   }
 
   // all: group by year across all data
@@ -103,5 +135,5 @@ export async function GET(req: NextRequest) {
   const years = Array.from(map.keys()).sort((a, b) => a - b);
   const series = years.map((y) => ({ x: y, y: map.get(y) ?? 0 }));
   const prevTotal = 0; // not meaningful for all-time
-  return NextResponse.json({ mode: "all", series, total, prevTotal });
+  return { mode: "all", series, total, prevTotal };
 }
