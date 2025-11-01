@@ -17,7 +17,7 @@ export const PhoneField = ({
       actionState={actionState}
       defaultValue={defaultValue}
       isOptional={isOptional}
-      name="telefono"
+      name="phone"
     />
   );
 };

@@ -19,7 +19,7 @@ const signUpSchema = z
   .object({
     username: z
       .string()
-      .min(1)
+      .min(1, { message: "Es requerido" })
       .max(191)
       .refine(
         (value) => !value.includes(" "),
@@ -27,7 +27,7 @@ const signUpSchema = z
       ),
     firstName: z
       .string()
-      .min(1)
+      .min(1, { message: "Es requerido" })
       .max(191)
       .refine(
         (value) => !value.includes(" "),
@@ -35,16 +35,16 @@ const signUpSchema = z
       ),
     lastName: z
       .string()
-      .min(1)
+      .min(1, { message: "Es requerido" })
       .max(191)
       .refine(
         (value) => !value.includes(" "),
         "El apellido no puede contener espacios"
       ),
     email: z.email().min(1, { message: "Es requerido" }).max(191),
-    phone: z.string().min(1).max(20),
-    password: z.string().min(6).max(191),
-    confirmPassword: z.string().min(6).max(191),
+    phone: z.string().min(1, { message: "Es requerido" }).max(20),
+    password: z.string().min(6, { message: "Es requerido" }).max(191),
+    confirmPassword: z.string().min(6, { message: "Es requerido" }).max(191),
     "frase-secreta": z.string().min(1, { message: "Es requerido" }),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {

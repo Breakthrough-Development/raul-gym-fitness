@@ -34,13 +34,13 @@ const SignUpForm = () => {
           disabled={secretPhrase.length === 0}
           className="flex flex-col gap-y-2"
         >
-          <UsernameField actionState={actionState} isOptional={true} />
-          <FirstNameField actionState={actionState} isOptional={true} />
-          <LastNameField actionState={actionState} isOptional={true} />
-          <EmailField actionState={actionState} isOptional={true} />
-          <PhoneField actionState={actionState} isOptional={true} />
-          <PasswordField actionState={actionState} isOptional={true} />
-          <ConfirmPasswordField actionState={actionState} isOptional={true} />
+          <UsernameField actionState={actionState} />
+          <FirstNameField actionState={actionState} />
+          <LastNameField actionState={actionState} />
+          <EmailField actionState={actionState} />
+          <PhoneField actionState={actionState} />
+          <PasswordField actionState={actionState} />
+          <ConfirmPasswordField actionState={actionState} />
           <SubmitButton label="Registrarse" />
         </fieldset>
       </Form>
