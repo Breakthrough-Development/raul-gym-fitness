@@ -7,11 +7,13 @@ export type FirstNameFieldProps = {
   actionState: ActionState;
   isOptional?: boolean;
   defaultValue?: string;
+  disabled?: boolean;
 };
 export const FirstNameField = ({
   actionState,
   isOptional = false,
   defaultValue,
+  disabled = false,
 }: FirstNameFieldProps) => {
   return (
     <>
@@ -26,6 +28,7 @@ export const FirstNameField = ({
           (actionState.payload?.get("firstName") as string) || defaultValue
         }
         className="text-base md:text-lg"
+        disabled={disabled}
       />
       <FieldError actionState={actionState} name="firstName" />
     </>

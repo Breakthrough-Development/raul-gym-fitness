@@ -5,12 +5,14 @@ export type PhoneInputProps = {
   actionState: ActionState;
   defaultValue?: string;
   isOptional?: boolean;
+  disabled?: boolean;
 };
 
 export const PhoneField = ({
   actionState,
   defaultValue,
   isOptional = false,
+  disabled = false,
 }: PhoneInputProps) => {
   return (
     <DynamicPhoneField
@@ -18,6 +20,7 @@ export const PhoneField = ({
       defaultValue={defaultValue}
       isOptional={isOptional}
       name="phone"
+      disabled={disabled}
     />
   );
 };

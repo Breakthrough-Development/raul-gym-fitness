@@ -1,13 +1,14 @@
 "use client";
 
-import { FieldError } from "@/components/form/field-error";
+import { EmailField } from "@/components/form/fields/emailField";
+import { FirstNameField } from "@/components/form/fields/firstNameField";
+import { LastNameField } from "@/components/form/fields/lastNameField";
 import { PhoneField } from "@/components/form/fields/phoneField";
 import { UsernameField } from "@/components/form/fields/usernameFIeld";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useActionState, useEffect, useState } from "react";
 import { updateUser } from "../actions/update-user";
 
@@ -49,38 +50,29 @@ export const UserUpdateForm = ({
           disabled={!isEditing}
         />
 
-        <Input
-          name="firstName"
-          placeholder="Nombre"
-          defaultValue={
-            (actionState.payload?.get("firstName") as string) || firstName
-          }
+        <FirstNameField
+          actionState={actionState}
+          defaultValue={firstName}
           disabled={!isEditing}
-          className="text-base md:text-lg"
         />
-        <FieldError actionState={actionState} name="firstName" />
 
-        <Input
-          name="lastName"
-          placeholder="Apellido"
-          defaultValue={
-            (actionState.payload?.get("lastName") as string) || lastName
-          }
+        <LastNameField
+          actionState={actionState}
+          defaultValue={lastName}
           disabled={!isEditing}
-          className="text-base md:text-lg"
         />
-        <FieldError actionState={actionState} name="lastName" />
 
-        <Input
-          name="email"
-          placeholder="Correo electrónico"
-          defaultValue={(actionState.payload?.get("email") as string) || email}
+        <EmailField
+          actionState={actionState}
+          defaultValue={email}
           disabled={!isEditing}
-          className="text-base md:text-lg"
         />
-        <FieldError actionState={actionState} name="email" />
 
-        <PhoneField actionState={actionState} defaultValue={phone as string} />
+        <PhoneField
+          actionState={actionState}
+          defaultValue={phone as string}
+          disabled={!isEditing}
+        />
       </fieldset>
 
       <div className="flex flex-row gap-2">

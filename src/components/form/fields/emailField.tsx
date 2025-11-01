@@ -8,10 +8,14 @@ import { Label } from "@/components/ui/label";
 export type EmailFieldProps = {
   actionState: ActionState;
   isOptional?: boolean;
+  disabled?: boolean;
+  defaultValue?: string;
 };
 export const EmailField = ({
   actionState,
   isOptional = false,
+  disabled = false,
+  defaultValue,
 }: EmailFieldProps) => {
   return (
     <>
@@ -22,8 +26,11 @@ export const EmailField = ({
         id="email"
         name="email"
         placeholder="Correo electrónico"
-        defaultValue={actionState.payload?.get("email") as string}
+        defaultValue={
+          (actionState.payload?.get("email") as string) || defaultValue
+        }
         className="text-base md:text-lg"
+        disabled={disabled}
       />
       <FieldError actionState={actionState} name="email" />
     </>

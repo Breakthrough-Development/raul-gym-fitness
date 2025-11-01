@@ -9,6 +9,7 @@ export type PhoneInputProps = {
   defaultValue?: string;
   isOptional?: boolean;
   name: string;
+  disabled?: boolean;
 };
 
 function formatPhone(value: string | null | undefined): string {
@@ -35,6 +36,7 @@ export const DynamicPhoneField = ({
   defaultValue,
   isOptional = false,
   name,
+  disabled = false,
 }: PhoneInputProps) => {
   const phoneDefaultValue = () => {
     const payloadValue = actionState.payload?.get(name) as string | undefined;
@@ -69,6 +71,7 @@ export const DynamicPhoneField = ({
         maxLength={15} // Max length of formatted string "(XXX) XXX-XXXX"
         onChange={onChange}
         className="text-base md:text-lg"
+        disabled={disabled}
       />
       <FieldError actionState={actionState} name={name} />
     </>
