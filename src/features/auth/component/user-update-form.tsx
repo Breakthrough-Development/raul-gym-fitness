@@ -2,6 +2,7 @@
 
 import { FieldError } from "@/components/form/field-error";
 import { PhoneField } from "@/components/form/fields/phoneField";
+import { UsernameField } from "@/components/form/fields/usernameFIeld";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
@@ -42,16 +43,11 @@ export const UserUpdateForm = ({
   return (
     <Form action={handleAction} actionState={actionState}>
       <fieldset disabled={!isEditing} className="flex flex-col gap-y-2">
-        <Input
-          name="username"
-          placeholder="Nombre de usuario"
-          defaultValue={
-            (actionState.payload?.get("username") as string) || username
-          }
+        <UsernameField
+          actionState={actionState}
+          defaultValue={username}
           disabled={!isEditing}
-          className="text-base md:text-lg"
         />
-        <FieldError actionState={actionState} name="username" />
 
         <Input
           name="firstName"
