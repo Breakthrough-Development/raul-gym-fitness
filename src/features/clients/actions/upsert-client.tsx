@@ -21,10 +21,10 @@ export const upsertClient = async (
   await getAuthOrRedirect();
 
   try {
-    const nombre = formData.get("nombre") as string | null;
-    const apellido = formData.get("apellido") as string | null;
+    const nombre = formData.get("firstName") as string | null;
+    const apellido = formData.get("lastName") as string | null;
     const email = formData.get("email") as string | null;
-    const telefono = normalizeToE164(formData.get("telefono") as string | null);
+    const telefono = normalizeToE164(formData.get("phone") as string | null);
 
     const data = upsertClientSchema.parse({
       nombre,
