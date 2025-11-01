@@ -5,7 +5,7 @@ import { ActionState } from "../../util/to-action-state";
 export type PasswordFieldProps = {
   actionState: ActionState;
   name: string;
-  autoComplete: string;
+  autoComplete: "current-password" | "new-password";
   defaultValue: string;
   placeholder: string;
   label: string;

@@ -1,10 +1,9 @@
 "use client";
 
-import { FieldError } from "@/components/form/field-error";
+import { DynamicPasswordField } from "@/components/form/fields/dynamic-fields/DynamicPasswordField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { PasswordInput } from "@/components/password-input";
 import { useActionState } from "react";
 import { resetPassword } from "../actions/update-password";
 
@@ -16,34 +15,30 @@ export const ResetPasswordForm = () => {
 
   return (
     <Form action={action} actionState={actionState}>
-      
-      <PasswordInput
-        type="password"
+      <DynamicPasswordField
+        actionState={actionState}
         name="currentPassword"
-        placeholder="Contraseña actual"
-        defaultValue={actionState.payload?.get("currentPassword") as string}
         autoComplete="current-password"
+        defaultValue={actionState.payload?.get("currentPassword") as string}
+        placeholder="Contraseña actual"
+        label="Contraseña actual"
       />
-      <FieldError actionState={actionState} name="currentPassword" />
-
-      <PasswordInput
-        type="password"
+      <DynamicPasswordField
+        actionState={actionState}
         name="newPassword"
-        placeholder="Nueva contraseña"
+        autoComplete="new-password"
         defaultValue={actionState.payload?.get("newPassword") as string}
-        autoComplete="new-password"
+        placeholder="Nueva contraseña"
+        label="Nueva contraseña"
       />
-      <FieldError actionState={actionState} name="newPassword" />
-
-      <PasswordInput
-        type="password"
+      <DynamicPasswordField
+        actionState={actionState}
         name="confirmPassword"
-        placeholder="Confirmar contraseña"
-        defaultValue={actionState.payload?.get("confirmPassword") as string}
         autoComplete="new-password"
+        defaultValue={actionState.payload?.get("confirmPassword") as string}
+        placeholder="Confirmar contraseña"
+        label="Confirmar contraseña"
       />
-      <FieldError actionState={actionState} name="confirmPassword" />
-
       <div className="flex flex-row flex-wrap justify-between w-full">
         <SubmitButton label="Actualizar contraseña" />
       </div>
