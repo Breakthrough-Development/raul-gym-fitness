@@ -16,6 +16,7 @@ export const ResetPasswordForm = () => {
 
   return (
     <Form action={action} actionState={actionState}>
+      
       <PasswordInput
         type="password"
         name="currentPassword"
