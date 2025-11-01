@@ -4,7 +4,7 @@ import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { PasswordField } from "@/components/password-field";
+import { PasswordInput } from "@/components/password-input";
 import { useActionState } from "react";
 import { resetPassword } from "../actions/update-password";
 
@@ -16,7 +16,7 @@ export const ResetPasswordForm = () => {
 
   return (
     <Form action={action} actionState={actionState}>
-      <PasswordField
+      <PasswordInput
         type="password"
         name="currentPassword"
         placeholder="Contraseña actual"
@@ -25,7 +25,7 @@ export const ResetPasswordForm = () => {
       />
       <FieldError actionState={actionState} name="currentPassword" />
 
-      <PasswordField
+      <PasswordInput
         type="password"
         name="newPassword"
         placeholder="Nueva contraseña"
@@ -34,7 +34,7 @@ export const ResetPasswordForm = () => {
       />
       <FieldError actionState={actionState} name="newPassword" />
 
-      <PasswordField
+      <PasswordInput
         type="password"
         name="confirmPassword"
         placeholder="Confirmar contraseña"

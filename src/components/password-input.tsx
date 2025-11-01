@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import * as React from "react";
 
-export function PasswordField(props: React.ComponentProps<"input">) {
+export function PasswordInput(props: React.ComponentProps<"input">) {
   const [show, setShow] = React.useState(false);
 
   return (

@@ -4,7 +4,7 @@ import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { PasswordField } from "@/components/password-field";
+import { PasswordInput } from "@/components/password-input";
 import { PhoneInput } from "@/components/phone-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -73,7 +73,7 @@ const SignUpForm = () => {
             defaultValue={actionState.payload?.get("phone") as string}
           />
           <FieldError actionState={actionState} name="phone" />
-          <PasswordField
+          <PasswordInput
             type="password"
             name="password"
             placeholder="Contraseña"
@@ -82,7 +82,7 @@ const SignUpForm = () => {
           />
           <FieldError actionState={actionState} name="password" />
 
-          <PasswordField
+          <PasswordInput
             type="password"
             name="confirmPassword"
             placeholder="Confirmar contraseña"
