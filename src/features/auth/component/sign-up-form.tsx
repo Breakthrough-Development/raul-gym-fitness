@@ -1,13 +1,13 @@
 "use client";
 
 import { FieldError } from "@/components/form/field-error";
+import { ConfirmPasswordField } from "@/components/form/fields/confirmPasswordField";
 import { EmailField } from "@/components/form/fields/emailField";
 import { PasswordField } from "@/components/form/fields/passwordField";
 import { PhoneField } from "@/components/form/fields/phoneField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { PasswordInput } from "@/components/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useActionState, useState } from "react";
@@ -61,19 +61,10 @@ const SignUpForm = () => {
           />
           <FieldError actionState={actionState} name="lastName" />
 
-          <EmailField actionState={actionState} />
-          <PhoneField actionState={actionState} />
-          <PasswordField actionState={actionState} />
-
-          <PasswordInput
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirmar contraseña"
-            defaultValue={actionState.payload?.get("confirmPassword") as string}
-            autoComplete="new-password"
-          />
-          <FieldError actionState={actionState} name="confirmPassword" />
-
+          <EmailField actionState={actionState} isOptional={true}/>
+          <PhoneField actionState={actionState} isOptional={true} />
+          <PasswordField actionState={actionState} isOptional={true} />
+          <ConfirmPasswordField actionState={actionState} isOptional={true} />
           <SubmitButton label="Registrarse" />
         </fieldset>
       </Form>

@@ -1,21 +1,21 @@
 import { ActionState } from "../util/to-action-state";
 import { DynamicPasswordField } from "./dynamic-fields/DynamicPasswordField";
-export type PasswordFieldProps = {
+export type ConfirmPasswordFieldProps = {
   actionState: ActionState;
   isOptional?: boolean;
 };
-export const PasswordField = ({
+export const ConfirmPasswordField = ({
   actionState,
   isOptional = false,
-}: PasswordFieldProps) => {
+}: ConfirmPasswordFieldProps) => {
   return (
     <DynamicPasswordField
       actionState={actionState}
-      name="password"
-      autoComplete="current-password"
-      defaultValue={actionState.payload?.get("password") as string}
-      placeholder="Contraseña"
-      label="Contraseña"
+      name="confirmPassword"
+      autoComplete="new-password"
+      defaultValue={actionState.payload?.get("confirmPassword") as string}
+      placeholder="Confirmar contraseña"
+      label="Confirmar contraseña"
       isOptional={isOptional}
     />
   );

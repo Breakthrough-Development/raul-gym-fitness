@@ -7,12 +7,16 @@ import { Label } from "@/components/ui/label";
 
 export type EmailFieldProps = {
   actionState: ActionState;
+  isOptional?: boolean;
 };
-export const EmailField = ({ actionState }: EmailFieldProps) => {
+export const EmailField = ({
+  actionState,
+  isOptional = false,
+}: EmailFieldProps) => {
   return (
     <>
       <Label htmlFor="email" className="text-base md:text-lg">
-        Correo electrónico
+        Correo electrónico {isOptional ? "(opcional)" : ""}
       </Label>
       <Input
         id="email"
