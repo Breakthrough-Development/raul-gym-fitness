@@ -1,8 +1,8 @@
 import { CardComp } from "@/components/card-comp";
+import { Button } from "@/components/ui/button";
 import { SignInForm } from "@/features/auth/component/sign-in-form";
 import { passwordForgotPath, signUpPath } from "@/paths";
 import Link from "next/link";
-
 const SignInPage = () => {
   return (
     <div className="flex-1 flex flex-col justify-center items-center">
@@ -13,18 +13,16 @@ const SignInPage = () => {
         content={<SignInForm />}
         footer={
           <div className="flex flex-row flex-wrap justify-between w-full">
-            <Link
-              className="text-base text-muted-foreground md:text-lg"
-              href={signUpPath()}
-            >
-              ¿Aún no tienes cuenta?
-            </Link>
-            <Link
-              className="text-base text-muted-foreground md:text-lg"
-              href={passwordForgotPath()}
-            >
-              ¿Olvidaste tu contraseña?
-            </Link>
+            <Button asChild variant="ghost" size="lg">
+              <Link href={signUpPath()}>
+                ¿Aún no tienes cuenta?
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="lg">
+              <Link href={passwordForgotPath()}>
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </Button>
           </div>
         }
       />
