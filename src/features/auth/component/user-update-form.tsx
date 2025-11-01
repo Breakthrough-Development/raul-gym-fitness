@@ -1,10 +1,10 @@
 "use client";
 
 import { FieldError } from "@/components/form/field-error";
+import { PhoneField } from "@/components/form/fields/phoneField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { PhoneInput } from "@/components/phone-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useActionState, useEffect, useState } from "react";
@@ -84,12 +84,7 @@ export const UserUpdateForm = ({
         />
         <FieldError actionState={actionState} name="email" />
 
-        <PhoneInput
-          actionState={actionState}
-          name="phone"
-          defaultValue={(actionState.payload?.get("phone") as string) || phone}
-        />
-        <FieldError actionState={actionState} name="phone" />
+        <PhoneField actionState={actionState} defaultValue={phone as string} />
       </fieldset>
 
       <div className="flex flex-row gap-2">

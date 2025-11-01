@@ -1,9 +1,9 @@
 "use client";
 import { FieldError } from "@/components/form/field-error";
+import { PhoneField } from "@/components/form/fields/phoneField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { PhoneInput } from "@/components/phone-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Cliente } from "@prisma/client";
@@ -76,14 +76,10 @@ export const ClientUpsertForm = ({
       />
       <FieldError actionState={actionState} name="apellido" />
 
-      <PhoneInput
-        label="Teléfono (opcional)"
+      <PhoneField
+        isOptional={true}
         actionState={actionState}
-        name="telefono"
-        placeholder="(123) 456-7890"
-        defaultValue={
-          (actionState.payload?.get("telefono") as string) ?? client?.telefono
-        }
+        defaultValue={client?.telefono as string}
       />
 
       <Label htmlFor="email" className="text-base md:text-lg">

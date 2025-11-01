@@ -3,13 +3,12 @@ import { FieldError } from "@/components/form/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react";
-import { ActionState } from "./form/util/to-action-state";
+import { ActionState } from "../../util/to-action-state";
 export type PhoneInputProps = {
   actionState: ActionState;
   defaultValue?: string;
+  isOptional?: boolean;
   name: string;
-  label?: string;
-  placeholder?: string;
 };
 
 function formatPhone(value: string | null | undefined): string {
@@ -31,16 +30,17 @@ function formatPhone(value: string | null | undefined): string {
   return extra ? `${formatted} ${extra}` : formatted;
 }
 
-export const PhoneInput = ({
+export const DynamicPhoneField = ({
   actionState,
   defaultValue,
+  isOptional = false,
   name,
-  label,
-  placeholder = "(123) 456-7890",
 }: PhoneInputProps) => {
   const phoneDefaultValue = () => {
     const payloadValue = actionState.payload?.get(name) as string | undefined;
-    if (payloadValue && payloadValue.length > 0) return payloadValue;
+    if (payloadValue && payloadValue.length > 0) {
+      return payloadValue;
+    }
     if (defaultValue !== undefined) return defaultValue;
     return "";
   };
@@ -56,17 +56,15 @@ export const PhoneInput = ({
 
   return (
     <>
-      {label && (
-        <Label htmlFor={name} className="text-base md:text-lg">
-          {label}
-        </Label>
-      )}
+      <Label htmlFor={name} className="text-base md:text-lg">
+        Teléfono {isOptional ? "(opcional)" : ""}
+      </Label>
       <Input
         id={name}
         name={name}
         inputMode="tel"
         autoComplete="tel"
-        placeholder={placeholder}
+        placeholder="(123) 456-7890"
         value={value.slice(0, 15)} // Limit to 10 digits by truncating formatted string
         maxLength={15} // Max length of formatted string "(XXX) XXX-XXXX"
         onChange={onChange}

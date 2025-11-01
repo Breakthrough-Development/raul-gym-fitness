@@ -1,11 +1,13 @@
 "use client";
 
 import { FieldError } from "@/components/form/field-error";
+import { EmailField } from "@/components/form/fields/emailField";
+import { PasswordField } from "@/components/form/fields/passwordField";
+import { PhoneField } from "@/components/form/fields/phoneField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { PasswordInput } from "@/components/password-input";
-import { PhoneInput } from "@/components/phone-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useActionState, useState } from "react";
@@ -59,28 +61,9 @@ const SignUpForm = () => {
           />
           <FieldError actionState={actionState} name="lastName" />
 
-          <Input
-            name="email"
-            placeholder="Correo electrónico"
-            defaultValue={actionState.payload?.get("email") as string}
-            className="text-base md:text-lg"
-          />
-          <FieldError actionState={actionState} name="email" />
-
-          <PhoneInput
-            actionState={actionState}
-            name="phone"
-            defaultValue={actionState.payload?.get("phone") as string}
-          />
-          <FieldError actionState={actionState} name="phone" />
-          <PasswordInput
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            defaultValue={actionState.payload?.get("password") as string}
-            autoComplete="new-password"
-          />
-          <FieldError actionState={actionState} name="password" />
+          <EmailField actionState={actionState} />
+          <PhoneField actionState={actionState} />
+          <PasswordField actionState={actionState} />
 
           <PasswordInput
             type="password"

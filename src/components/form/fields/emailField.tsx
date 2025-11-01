@@ -7,12 +7,12 @@ import { Label } from "@/components/ui/label";
 
 export type EmailFieldProps = {
   actionState: ActionState;
-};  
+};
 export const EmailField = ({ actionState }: EmailFieldProps) => {
   return (
     <>
-    <Label htmlFor="email" className="text-base md:text-lg">
-          Correo electrónico
+      <Label htmlFor="email" className="text-base md:text-lg">
+        Correo electrónico
       </Label>
       <Input
         id="email"

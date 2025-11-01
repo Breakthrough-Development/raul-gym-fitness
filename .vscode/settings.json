@@ -1,29 +1,12 @@
 {
-  "[typescript]": {
-    "editor.codeActionsOnSave": {
-      "source.addMissingImports": "explicit",
-      "source.organizeImports": "explicit"
-    }
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.removeUnusedImports": "explicit",
+    "source.fixAll.eslint": "explicit"
   },
-  "[typescriptreact]": {
-    "editor.codeActionsOnSave": {
-      "source.addMissingImports": "explicit",
-      "source.organizeImports": "explicit"
-    }
-  },
-  "[javascript]": {
-    "editor.codeActionsOnSave": {
-      "source.addMissingImports": "explicit",
-      "source.organizeImports": "explicit"
-    }
-  },
-  "[javascriptreact]": {
-    "editor.codeActionsOnSave": {
-      "source.addMissingImports": "explicit",
-      "source.organizeImports": "explicit"
-    }
-  },
-  "typescript.suggest.autoImports": true,
-  "javascript.suggest.autoImports": true,
-  "editor.wordWrap": "on"
+  "typescript.preferences.organizeImports": true,
+  "javascript.preferences.organizeImports": true
 }
