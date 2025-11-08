@@ -7,7 +7,7 @@ import { FirstNameField } from "@/components/form/fields/firstNameField";
 import { LastNameField } from "@/components/form/fields/lastNameField";
 import { PasswordField } from "@/components/form/fields/passwordField";
 import { PhoneField } from "@/components/form/fields/phoneField";
-import { UsernameField } from "@/components/form/fields/usernameFIeld";
+import { UsernameField } from "@/components/form/fields/usernameField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
