@@ -145,7 +145,7 @@ export const PaymentUpsertForm = ({
         );
         toast.error(result.message, { id: toastId });
       }
-    } catch (error) {
+    } catch {
       // Revert optimistic update on error
       setClientList((prev) =>
         prev.map((c) => (c.id === client.id ? client : c))
@@ -185,7 +185,7 @@ export const PaymentUpsertForm = ({
         }
         toast.error(result.message, { id: toastId });
       }
-    } catch (error) {
+    } catch {
       // Revert optimistic update on error
       setClientList(previousList);
       toast.error("Error al eliminar cliente", { id: toastId });
@@ -201,8 +201,7 @@ export const PaymentUpsertForm = ({
               Cliente
             </Label>
             <SearchableSelect
-              key={selectedClientId}
-              defaultValue={selectedClientId}
+              value={selectedClientId}
               name="clientId"
               options={clientList.map((client) => ({
                 value: client.id,

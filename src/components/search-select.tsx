@@ -45,6 +45,7 @@ export type SearchableSelectProps = {
   name: string;
   placeholder?: string;
   defaultValue?: string;
+  value?: string;
   options: SearchableSelectOption[];
   searchPlaceholder?: string;
   emptyMessage?: string;
@@ -101,6 +102,7 @@ export const SearchableSelect = ({
   name,
   placeholder = "Selecciona una opción",
   defaultValue,
+  value,
   options,
   searchPlaceholder = "Buscar...",
   emptyMessage = "No se encontraron opciones",
@@ -126,9 +128,12 @@ export const SearchableSelect = ({
     );
   }, [options, search]);
 
+  // Use value if provided (controlled), otherwise use defaultValue (uncontrolled)
+  const currentValue = value ?? defaultValue;
+
   // Get selected option for display
   const selectedOption = options.find(
-    (option) => option.value === defaultValue
+    (option) => option.value === currentValue
   );
 
   // Focus input when dropdown opens
@@ -148,7 +153,8 @@ export const SearchableSelect = ({
   return (
     <Select
       name={name}
-      defaultValue={defaultValue}
+      value={value}
+      {...(value === undefined && { defaultValue })}
       open={isOpen}
       onOpenChange={setIsOpen}
       onValueChange={onValueChange}
