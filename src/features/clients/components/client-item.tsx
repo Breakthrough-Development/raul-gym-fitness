@@ -68,14 +68,18 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
             <ul
               className={clsx("whitespace-break-spaces flex flex-col gap-y-2")}
             >
-              <li className="flex items-center gap-x-2">
-                <LucideMail className="h-4 w-4 text-muted-foreground" />
-                <span>{client.email}</span>
-              </li>
-              <li className="flex items-center gap-x-2">
-                <LucidePhone className="h-4 w-4 text-muted-foreground" />
-                <span>{formatPhoneNumber(client.telefono)}</span>
-              </li>
+              {client.email && (
+                <li className="flex items-center gap-x-2">
+                  <LucideMail className="h-4 w-4 text-muted-foreground" />
+                  <span>{client.email}</span>
+                </li>
+              )}
+              {client.telefono && (
+                <li className="flex items-center gap-x-2">
+                  <LucidePhone className="h-4 w-4 text-muted-foreground" />
+                  <span>{formatPhoneNumber(client.telefono)}</span>
+                </li>
+              )}
             </ul>
           </CardContent>
         </Card>
