@@ -6,9 +6,6 @@ import { PhoneField } from "@/components/form/fields/phoneField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
-import { PhoneInput } from "@/components/phone-input";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Client } from "@prisma/client";
 import { useActionState } from "react";
 import { upsertClient } from "../actions/upsert-client";
@@ -50,7 +47,10 @@ export const ClientUpsertForm = ({
       actionState={actionState}
       onSuccess={handleSubmit ? undefined : onSuccess}
     >
-      <FirstNameField actionState={actionState} defaultValue={client?.firstName} />
+      <FirstNameField
+        actionState={actionState}
+        defaultValue={client?.firstName}
+      />
       <LastNameField
         isOptional={true}
         actionState={actionState}
