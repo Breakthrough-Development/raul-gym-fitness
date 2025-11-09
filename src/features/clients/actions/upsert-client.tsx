@@ -21,19 +21,19 @@ export const upsertClient = async (
   await getAuthOrRedirect();
 
   try {
-    const nombre = formData.get("nombre") as string | null;
-    const apellido = formData.get("apellido") as string | null;
+    const firstName = formData.get("firstName") as string | null;
+    const lastName = formData.get("lastName") as string | null;
     const email = formData.get("email") as string | null;
-    const telefono = normalizeToE164(formData.get("telefono") as string | null);
+    const phone = normalizeToE164(formData.get("phone") as string | null);
 
     const data = upsertClientSchema.parse({
-      nombre,
-      apellido,
+      firstName,
+      lastName,
       email,
-      telefono,
+      phone,
     });
 
-    await prisma.cliente.upsert({
+    await prisma.client.upsert({
       where: { id: id || "" },
       create: data,
       update: data,

@@ -46,9 +46,9 @@ export const NotificationUpsertForm = ({
   const [clients, setClients] = useState<
     Array<{
       id: string;
-      nombre: string;
-      apellido: string | null;
-      telefono: string | null;
+      firstName: string;
+      lastName: string | null;
+      phone: string | null;
     }>
   >([]);
   const [selectedClients, setSelectedClients] = useState<string[]>(
@@ -213,8 +213,8 @@ export const NotificationUpsertForm = ({
                       htmlFor={`client-${client.id}`}
                       className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 md:text-lg"
                     >
-                      {client.nombre} {client.apellido}
-                      {!client.telefono && (
+                      {client.firstName} {client.lastName}
+                      {!client.phone && (
                         <span className="text-muted-foreground ml-1">
                           (no phone)
                         </span>

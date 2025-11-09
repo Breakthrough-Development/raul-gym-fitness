@@ -5,12 +5,12 @@ import {
   getPrevYearMonth,
   getUtcMonthRange,
 } from "@/utils/date";
-import { EstadoMembresia, EstadoPago, Prisma } from "@prisma/client";
+import { MembershipStatus, PaymentStatus, Prisma } from "@prisma/client";
 
 export type CohortCandidate = {
   id: string;
-  nombre: string;
-  telefono: string | null;
+  firstName: string;
+  phone: string | null;
 };
 
 export async function getPreEomCandidates(
@@ -21,22 +21,22 @@ export async function getPreEomCandidates(
   const { start: currentStart, end: currentEnd } = getUtcMonthRange(current);
   const { start: nextStart, end: nextEnd } = getUtcMonthRange(next);
 
-  const where: Prisma.ClienteFindManyArgs = {
+  const where: Prisma.ClientFindManyArgs = {
     where: {
-      Pago: {
+      payments: {
         some: {
-          estado: EstadoPago.PAGADO,
-          membresia: EstadoMembresia.MENSUAL,
-          creado: { gte: currentStart, lt: currentEnd },
+          status: PaymentStatus.PAID,
+          membership: MembershipStatus.MONTHLY,
+          createdAt: { gte: currentStart, lt: currentEnd },
         },
       },
       AND: [
         {
-          Pago: {
+          payments: {
             none: {
-              estado: EstadoPago.PAGADO,
-              membresia: EstadoMembresia.MENSUAL,
-              creado: { gte: nextStart, lt: nextEnd },
+              status: PaymentStatus.PAID,
+              membership: MembershipStatus.MONTHLY,
+              createdAt: { gte: nextStart, lt: nextEnd },
             },
           },
         },
@@ -54,9 +54,9 @@ export async function getPreEomCandidates(
     },
   };
 
-  const clients = await prisma.cliente.findMany({
+  const clients = await prisma.client.findMany({
     ...where,
-    select: { id: true, nombre: true, telefono: true },
+    select: { id: true, firstName: true, phone: true },
   });
 
   return clients;
@@ -70,22 +70,22 @@ export async function getPostEomCandidates(
   const { start: currentStart, end: currentEnd } = getUtcMonthRange(current);
   const { start: prevStart, end: prevEnd } = getUtcMonthRange(prev);
 
-  const where: Prisma.ClienteFindManyArgs = {
+  const where: Prisma.ClientFindManyArgs = {
     where: {
-      Pago: {
+      payments: {
         some: {
-          estado: EstadoPago.PAGADO,
-          membresia: EstadoMembresia.MENSUAL,
-          creado: { gte: prevStart, lt: prevEnd },
+          status: PaymentStatus.PAID,
+          membership: MembershipStatus.MONTHLY,
+          createdAt: { gte: prevStart, lt: prevEnd },
         },
       },
       AND: [
         {
-          Pago: {
+          payments: {
             none: {
-              estado: EstadoPago.PAGADO,
-              membresia: EstadoMembresia.MENSUAL,
-              creado: { gte: currentStart, lt: currentEnd },
+              status: PaymentStatus.PAID,
+              membership: MembershipStatus.MONTHLY,
+              createdAt: { gte: currentStart, lt: currentEnd },
             },
           },
         },
@@ -102,9 +102,9 @@ export async function getPostEomCandidates(
     },
   };
 
-  const clients = await prisma.cliente.findMany({
+  const clients = await prisma.client.findMany({
     ...where,
-    select: { id: true, nombre: true, telefono: true },
+    select: { id: true, firstName: true, phone: true },
   });
 
   return clients;

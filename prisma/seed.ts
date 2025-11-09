@@ -10,23 +10,23 @@ const seed = async () => {
   const t0 = performance.now();
   console.log("DB seed: Started ...");
 
-  await prisma.pago.deleteMany();
-  await prisma.cliente.deleteMany();
-  await prisma.usuario.deleteMany();
+  await prisma.payment.deleteMany();
+  await prisma.client.deleteMany();
+  await prisma.user.deleteMany();
 
   const passwordHash = await hash(process.env.SEED_PASSWORD || "gemeimnis");
   const adminPasswordHash = await hash("gemeimnis"); // Hardcoded for admin user
 
   // Create users (admin and royeradames)
-  const dbUsers = await prisma.usuario.createManyAndReturn({
+  const dbUsers = await prisma.user.createManyAndReturn({
     data: users.map((user) => ({
       ...user,
-      password: user.usuario === "admin" ? adminPasswordHash : passwordHash,
+      password: user.username === "admin" ? adminPasswordHash : passwordHash,
     })),
   });
 
   // Create clients from the clients data file
-  const dbClients = await prisma.cliente.createManyAndReturn({
+  const dbClients = await prisma.client.createManyAndReturn({
     data: clients,
   });
 
@@ -40,20 +40,20 @@ const seed = async () => {
       if (paymentIndex < payments.length) {
         paymentsWithClients.push({
           ...payments[paymentIndex],
-          clienteId: dbClients[i].id,
+          clientId: dbClients[i].id,
         });
       }
     }
   }
 
-  await prisma.pago.createManyAndReturn({
+  await prisma.payment.createManyAndReturn({
     data: paymentsWithClients,
   });
 
   const t1 = performance.now();
   console.log(`DB seed: Completed in ${t1 - t0}ms`);
   console.log(
-    `Created ${dbUsers.length} usuarios and ${dbClients.length} clientes`
+    `Created ${dbUsers.length} users and ${dbClients.length} clients`
   );
 };
 

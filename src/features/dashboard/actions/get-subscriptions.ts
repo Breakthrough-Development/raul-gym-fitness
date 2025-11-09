@@ -2,7 +2,7 @@
 
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { prisma } from "@/lib/prisma";
-import { EstadoMembresia } from "@prisma/client";
+import { MembershipStatus } from "@prisma/client";
 
 type Mode = "month" | "year" | "all";
 
@@ -10,7 +10,7 @@ type SubscriptionsParams = {
   mode?: Mode;
   year?: number;
   month?: number;
-  membership: EstadoMembresia;
+  membership: MembershipStatus;
 };
 
 type SubscriptionsResponse =
@@ -18,7 +18,7 @@ type SubscriptionsResponse =
       mode: "month";
       year: number;
       month: number;
-      membership: EstadoMembresia;
+      membership: MembershipStatus;
       series: { x: number; y: number }[];
       total: number;
       prevTotal: number;
@@ -26,14 +26,14 @@ type SubscriptionsResponse =
   | {
       mode: "year";
       year: number;
-      membership: EstadoMembresia;
+      membership: MembershipStatus;
       series: { x: number; y: number }[];
       total: number;
       prevTotal: number;
     }
   | {
       mode: "all";
-      membership: EstadoMembresia;
+      membership: MembershipStatus;
       series: { x: number; y: number }[];
       total: number;
       prevTotal: number;
@@ -52,7 +52,7 @@ export async function getSubscriptions(
     throw new Error("Unauthorized");
   }
 
-  const membership = params.membership || "DIARIO";
+  const membership = params.membership || "DAILY";
   const mode = params.mode || "month";
   const now = new Date();
   const year = toInt(params.year, now.getFullYear());
@@ -62,14 +62,14 @@ export async function getSubscriptions(
     const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
     const end = new Date(year, month, 1, 0, 0, 0, 0);
 
-    const payments = await prisma.pago.findMany({
+    const payments = await prisma.payment.findMany({
       where: {
-        creado: { gte: start, lt: end },
-        estado: "PAGADO",
-        membresia: membership,
+        createdAt: { gte: start, lt: end },
+        status: "PAID",
+        membership: membership,
       },
-      select: { creado: true },
-      orderBy: { creado: "asc" },
+      select: { createdAt: true },
+      orderBy: { createdAt: "asc" },
     });
 
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -79,18 +79,18 @@ export async function getSubscriptions(
     }));
     let total = 0;
     for (const p of payments) {
-      const day = p.creado.getDate();
+      const day = p.createdAt.getDate();
       series[day - 1].y += 1;
       total += 1;
     }
 
     const prevStart = new Date(year, month - 2, 1, 0, 0, 0, 0);
     const prevEnd = new Date(year, month - 1, 1, 0, 0, 0, 0);
-    const prev = await prisma.pago.count({
+    const prev = await prisma.payment.count({
       where: {
-        creado: { gte: prevStart, lt: prevEnd },
-        estado: "PAGADO",
-        membresia: membership,
+        createdAt: { gte: prevStart, lt: prevEnd },
+        status: "PAID",
+        membership: membership,
       },
     });
 
@@ -108,27 +108,27 @@ export async function getSubscriptions(
   if (mode === "year") {
     const start = new Date(year, 0, 1, 0, 0, 0, 0);
     const end = new Date(year + 1, 0, 1, 0, 0, 0, 0);
-    const payments = await prisma.pago.findMany({
+    const payments = await prisma.payment.findMany({
       where: {
-        creado: { gte: start, lt: end },
-        estado: "PAGADO",
-        membresia: membership,
+        createdAt: { gte: start, lt: end },
+        status: "PAID",
+        membership: membership,
       },
-      select: { creado: true },
-      orderBy: { creado: "asc" },
+      select: { createdAt: true },
+      orderBy: { createdAt: "asc" },
     });
     const series = Array.from({ length: 12 }, (_, i) => ({ x: i + 1, y: 0 }));
     let total = 0;
     for (const p of payments) {
-      const m = p.creado.getMonth() + 1;
+      const m = p.createdAt.getMonth() + 1;
       series[m - 1].y += 1;
       total += 1;
     }
-    const prev = await prisma.pago.count({
+    const prev = await prisma.payment.count({
       where: {
-        creado: { gte: new Date(year - 1, 0, 1), lt: new Date(year, 0, 1) },
-        estado: "PAGADO",
-        membresia: membership,
+        createdAt: { gte: new Date(year - 1, 0, 1), lt: new Date(year, 0, 1) },
+        status: "PAID",
+        membership: membership,
       },
     });
     return {
@@ -141,15 +141,15 @@ export async function getSubscriptions(
     };
   }
 
-  const allPayments = await prisma.pago.findMany({
-    where: { estado: "PAGADO", membresia: membership },
-    select: { creado: true },
-    orderBy: { creado: "asc" },
+  const allPayments = await prisma.payment.findMany({
+    where: { status: "PAID", membership: membership },
+    select: { createdAt: true },
+    orderBy: { createdAt: "asc" },
   });
   const map = new Map<number, number>();
   let total = 0;
   for (const p of allPayments) {
-    const y = p.creado.getFullYear();
+    const y = p.createdAt.getFullYear();
     map.set(y, (map.get(y) ?? 0) + 1);
     total += 1;
   }

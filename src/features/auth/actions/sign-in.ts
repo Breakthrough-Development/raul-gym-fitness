@@ -30,7 +30,7 @@ const signIn = async (_actionState: ActionState, formData: FormData) => {
       Object.fromEntries(formData)
     );
 
-    const user = await prisma.usuario.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email: email.toLowerCase(),
       },
@@ -57,7 +57,7 @@ const signIn = async (_actionState: ActionState, formData: FormData) => {
     const sessionToken = generateRandomToken();
     const sessionCookie = await createSession(sessionToken, user.id);
 
-    await setSessionCookie(sessionToken, sessionCookie.expira);
+    await setSessionCookie(sessionToken, sessionCookie.expiresAt);
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }

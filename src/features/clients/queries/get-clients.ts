@@ -16,13 +16,13 @@ export const getClients = async (searchParams: ClientParsedSearchParams) => {
       ? {
           OR: [
             {
-              nombre: {
+              firstName: {
                 contains: searchTerms[0],
                 mode: "insensitive" as const,
               },
             },
             {
-              apellido: {
+              lastName: {
                 contains: searchTerms[0],
                 mode: "insensitive" as const,
               },
@@ -32,13 +32,13 @@ export const getClients = async (searchParams: ClientParsedSearchParams) => {
       : {
           AND: [
             {
-              nombre: {
+              firstName: {
                 contains: searchTerms[0],
                 mode: "insensitive" as const,
               },
             },
             {
-              apellido: {
+              lastName: {
                 contains: searchTerms[1],
                 mode: "insensitive" as const,
               },
@@ -51,7 +51,7 @@ export const getClients = async (searchParams: ClientParsedSearchParams) => {
   const take = size;
 
   const [clients, count] = await prisma.$transaction([
-    prisma.cliente.findMany({
+    prisma.client.findMany({
       where,
       skip,
       take,
@@ -59,10 +59,10 @@ export const getClients = async (searchParams: ClientParsedSearchParams) => {
         [searchParams.sortKey]: searchParams.sortValue,
       },
       include: {
-        Pago: true,
+        payments: true,
       },
     }),
-    prisma.cliente.count({
+    prisma.client.count({
       where,
     }),
   ]);

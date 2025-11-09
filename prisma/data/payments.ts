@@ -2,23 +2,23 @@
 // Each user gets 3 payments: 1 mensual and 2 diario (or vice versa)
 const generatePayments = () => {
   const payments = [];
-  const membershipTypes = ["DIARIO", "MENSUAL"] as const;
+  const membershipTypes = ["DAILY", "MONTHLY"] as const;
 
   // Generate 3 payments per user (102 users = 306 payments)
   for (let i = 0; i < 306; i++) {
-    const membresia =
+    const membership =
       membershipTypes[Math.floor(Math.random() * membershipTypes.length)];
 
     // Different amount ranges for daily vs monthly
-    const monto =
-      membresia === "DIARIO"
+    const amount =
+      membership === "DAILY"
         ? Math.floor(Math.random() * 200) + 50 // $50-$250 para diario
         : Math.floor(Math.random() * 500) + 300; // $300-$800 para mensual
 
     payments.push({
-      monto,
-      estado: "PAGADO" as const,
-      membresia,
+      amount,
+      status: "PAID" as const,
+      membership,
     });
   }
 

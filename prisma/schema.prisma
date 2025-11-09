@@ -7,65 +7,65 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Usuario {
-    id       String   @id @default(cuid())
-    nombre   String
-    apellido String
-    usuario  String   @unique
-    email    String   @unique
-    telefono String   @unique
-    password String
-    sesiones Sesion[]
+model User {
+    id        String    @id @default(cuid())
+    firstName String
+    lastName  String
+    username  String    @unique
+    email     String    @unique
+    phone     String    @unique
+    password  String
+    sessions  Session[]
 }
 
-model Cliente {
+model Client {
     id                   String                 @id @default(cuid())
-    nombre               String
-    apellido             String?
+    firstName            String
+    lastName             String?
     email                String?                @unique
-    telefono             String?
-    Pago                 Pago[]
+    phone                String?
+    payments             Payment[]
     WhatsappNotification WhatsappNotification[]
-    creado               DateTime               @default(now())
+    createdAt            DateTime               @default(now())
 }
 
-model Sesion {
+model Session {
     id        String   @id
-    expira    DateTime
-    usuarioId String
-    usuario   Usuario  @relation(references: [id], fields: [usuarioId], onDelete: Cascade)
+    expiresAt DateTime
+    userId    String
+    user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
-model Pago {
-    id          String          @id @default(cuid())
-    creado      DateTime        @default(now())
-    actualizado DateTime        @updatedAt
-    monto       Int
-    estado      EstadoPago      @default(ABIERTO)
-    membresia   EstadoMembresia
-    cliente     Cliente         @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-    clienteId   String
+model Payment {
+    id          String        @id @default(cuid())
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    amount      Int
+    status      PaymentStatus @default(OPEN)
+    membership  MembershipStatus
+    client      Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+    clientId    String
 
-    @@index([clienteId])
+    @@index([clientId])
 }
 
-enum EstadoPago {
-    ABIERTO
-    PAGADO
-    PENDIENTE
-    FALLIDO
+enum PaymentStatus {
+    OPEN
+    PAID
+    PENDING
+    FAILED
 }
 
-enum EstadoMembresia {
-    DIARIO
-    MENSUAL
+enum MembershipStatus {
+    DAILY
+    MONTHLY
 }
 
 // Notifications sent to clients via WhatsApp to avoid duplicates per cohort/month
 model WhatsappNotification {
     id                String             @id @default(cuid())
-    cliente           Cliente            @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-    clienteId         String
+    client            Client              @relation(fields: [clientId], references: [id], onDelete: Cascade)
+    clientId          String
     cohort            NotificationCohort
     year              Int
     month             Int
@@ -74,7 +74,7 @@ model WhatsappNotification {
     error             String?
     createdAt         DateTime           @default(now())
 
-    @@unique([clienteId, cohort, year, month])
+    @@unique([clientId, cohort, year, month])
     @@index([cohort, year, month])
 }
 
@@ -117,8 +117,8 @@ enum RecipientType {
 }
 
 enum MembershipFilter {
-    DIARIO
-    MENSUAL
+    DAILY
+    MONTHLY
     BOTH
 }
 

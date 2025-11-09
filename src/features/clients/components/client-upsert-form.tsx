@@ -6,12 +6,12 @@ import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { PhoneInput } from "@/components/phone-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Cliente } from "@prisma/client";
+import { Client } from "@prisma/client";
 import { useActionState } from "react";
 import { upsertClient } from "../actions/upsert-client";
 
 export type ClientUpsertFormProps = {
-  client?: Cliente;
+  client?: Client;
   onSuccess?: (actionState: unknown) => void;
   formAction?: (formData: FormData) => void;
   onSubmit?: (formData: FormData) => Promise<void>;
@@ -52,37 +52,37 @@ export const ClientUpsertForm = ({
       </Label>
       <Input
         id="firstName"
-        name="nombre"
+        name="firstName"
         placeholder="Royer"
         type="text"
         defaultValue={
-          (actionState.payload?.get("nombre") as string) ?? client?.nombre
+          (actionState.payload?.get("firstName") as string) ?? client?.firstName
         }
         className="text-base md:text-lg"
       />
-      <FieldError actionState={actionState} name="nombre" />
+      <FieldError actionState={actionState} name="firstName" />
 
       <Label htmlFor="lastName" className="text-base md:text-lg">
         Apellido (opcional)
       </Label>
       <Input
         id="lastName"
-        name="apellido"
+        name="lastName"
         placeholder="Adames"
         defaultValue={
-          (actionState.payload?.get("apellido") as string) ?? client?.apellido
+          (actionState.payload?.get("lastName") as string) ?? client?.lastName
         }
         className="text-base md:text-lg"
       />
-      <FieldError actionState={actionState} name="apellido" />
+      <FieldError actionState={actionState} name="lastName" />
 
       <PhoneInput
         label="Teléfono (opcional)"
         actionState={actionState}
-        name="telefono"
+        name="phone"
         placeholder="(123) 456-7890"
         defaultValue={
-          (actionState.payload?.get("telefono") as string) ?? client?.telefono
+          (actionState.payload?.get("phone") as string) ?? client?.phone
         }
       />
 

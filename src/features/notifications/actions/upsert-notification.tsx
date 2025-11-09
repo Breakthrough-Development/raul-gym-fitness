@@ -13,7 +13,7 @@ const upsertNotificationSchema = z.object({
   message: z.string().min(1, "Message is required"),
   recipientType: z.enum(["ALL", "SELECTED"]),
   selectedClientIds: z.array(z.string()).default([]),
-  membershipFilter: z.enum(["DIARIO", "MENSUAL", "BOTH"]).optional(),
+  membershipFilter: z.enum(["DAILY", "MONTHLY", "BOTH"]).optional(),
   sendDate: z.string().transform((str) => new Date(str)),
   recurrence: z.enum(["ONE_TIME", "WEEKLY", "MONTHLY"]),
   templateName: z.string().min(1, "Template name is required"),

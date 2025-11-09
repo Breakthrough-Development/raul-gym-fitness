@@ -56,10 +56,10 @@ export async function getRevenue(
     const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
     const end = new Date(year, month, 1, 0, 0, 0, 0);
 
-    const payments = await prisma.pago.findMany({
-      where: { creado: { gte: start, lt: end }, estado: "PAGADO" },
-      select: { monto: true, creado: true },
-      orderBy: { creado: "asc" },
+    const payments = await prisma.payment.findMany({
+      where: { createdAt: { gte: start, lt: end }, status: "PAID" },
+      select: { amount: true, createdAt: true },
+      orderBy: { createdAt: "asc" },
     });
 
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -69,19 +69,19 @@ export async function getRevenue(
     }));
     let total = 0;
     for (const p of payments) {
-      const day = p.creado.getDate();
-      series[day - 1].y += p.monto;
-      total += p.monto;
+      const day = p.createdAt.getDate();
+      series[day - 1].y += p.amount;
+      total += p.amount;
     }
 
     // previous month for delta
     const prevStart = new Date(year, month - 2, 1, 0, 0, 0, 0);
     const prevEnd = new Date(year, month - 1, 1, 0, 0, 0, 0);
-    const prev = await prisma.pago.aggregate({
-      where: { creado: { gte: prevStart, lt: prevEnd }, estado: "PAGADO" },
-      _sum: { monto: true },
+    const prev = await prisma.payment.aggregate({
+      where: { createdAt: { gte: prevStart, lt: prevEnd }, status: "PAID" },
+      _sum: { amount: true },
     });
-    const prevTotal = prev._sum.monto ?? 0;
+    const prevTotal = prev._sum.amount ?? 0;
 
     return {
       mode,
@@ -96,41 +96,41 @@ export async function getRevenue(
   if (mode === "year") {
     const start = new Date(year, 0, 1, 0, 0, 0, 0);
     const end = new Date(year + 1, 0, 1, 0, 0, 0, 0);
-    const payments = await prisma.pago.findMany({
-      where: { creado: { gte: start, lt: end }, estado: "PAGADO" },
-      select: { monto: true, creado: true },
-      orderBy: { creado: "asc" },
+    const payments = await prisma.payment.findMany({
+      where: { createdAt: { gte: start, lt: end }, status: "PAID" },
+      select: { amount: true, createdAt: true },
+      orderBy: { createdAt: "asc" },
     });
     const series = Array.from({ length: 12 }, (_, i) => ({ x: i + 1, y: 0 }));
     let total = 0;
     for (const p of payments) {
-      const m = p.creado.getMonth() + 1;
-      series[m - 1].y += p.monto;
-      total += p.monto;
+      const m = p.createdAt.getMonth() + 1;
+      series[m - 1].y += p.amount;
+      total += p.amount;
     }
-    const prev = await prisma.pago.aggregate({
+    const prev = await prisma.payment.aggregate({
       where: {
-        creado: { gte: new Date(year - 1, 0, 1), lt: new Date(year, 0, 1) },
-        estado: "PAGADO",
+        createdAt: { gte: new Date(year - 1, 0, 1), lt: new Date(year, 0, 1) },
+        status: "PAID",
       },
-      _sum: { monto: true },
+      _sum: { amount: true },
     });
-    const prevTotal = prev._sum.monto ?? 0;
+    const prevTotal = prev._sum.amount ?? 0;
     return { mode, year, series, total, prevTotal };
   }
 
   // all: group by year across all data
-  const allPayments = await prisma.pago.findMany({
-    where: { estado: "PAGADO" },
-    select: { monto: true, creado: true },
-    orderBy: { creado: "asc" },
+  const allPayments = await prisma.payment.findMany({
+    where: { status: "PAID" },
+    select: { amount: true, createdAt: true },
+    orderBy: { createdAt: "asc" },
   });
   const map = new Map<number, number>();
   let total = 0;
   for (const p of allPayments) {
-    const y = p.creado.getFullYear();
-    map.set(y, (map.get(y) ?? 0) + p.monto);
-    total += p.monto;
+    const y = p.createdAt.getFullYear();
+    map.set(y, (map.get(y) ?? 0) + p.amount);
+    total += p.amount;
   }
   const years = Array.from(map.keys()).sort((a, b) => a - b);
   const series = years.map((y) => ({ x: y, y: map.get(y) ?? 0 }));

@@ -4,12 +4,12 @@ import { useFormDialog } from "@/components/form-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert-form";
 import { PaymentWithMetadata } from "@/features/payments/types";
-import { Cliente } from "@prisma/client";
+import { Client } from "@prisma/client";
 import { LucidePencil } from "lucide-react";
 
 export type EditPaymentOptionProps = {
   payment: PaymentWithMetadata;
-  clients: Cliente[];
+  clients: Client[];
 };
 
 export const EditPaymentOption = ({

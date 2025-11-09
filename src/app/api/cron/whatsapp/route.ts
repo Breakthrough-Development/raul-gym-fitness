@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
   type WhatsappNotificationDelegate = {
     create: (args: {
       data: {
-        clienteId: string;
+        clientId: string;
         cohort: "PRE_EOM" | "POST_EOM";
         year: number;
         month: number;
@@ -57,7 +57,11 @@ export async function GET(req: NextRequest) {
   const isPost = isPostEomReminderDay(timeZone);
 
   if (!isPre && !isPost) {
-    return NextResponse.json({ ok: true, message: "No cohort today", today });
+    return NextResponse.json({ 
+      ok: true, 
+      message: "No cohort today", 
+      today: `${today.year}-${String(today.month).padStart(2, "0")}-${String(today.day).padStart(2, "0")}` 
+    });
   }
 
   const preTemplate = env.WHATSAPP_TEMPLATE_PRE;
@@ -69,12 +73,12 @@ export async function GET(req: NextRequest) {
   async function processPre() {
     const candidates = await getPreEomCandidates(timeZone);
     for (const c of candidates.slice(0, maxSends)) {
-      const phone = c.telefono;
+      const phone = c.phone;
       if (!phone?.startsWith("+")) {
         if (!dryRun) {
           await whatsapp.create({
             data: {
-              clienteId: c.id,
+              clientId: c.id,
               cohort: "PRE_EOM",
               year: current.year,
               month: current.month,
@@ -88,14 +92,14 @@ export async function GET(req: NextRequest) {
       }
 
       const monthName = monthLongName(current.year, current.month);
-      const vars = [c.nombre, monthName];
+      const vars = [c.firstName, monthName];
 
       if (!dryRun) {
         const send = await sendWhatsAppTemplate(phone, preTemplate, vars);
         if (send.ok) {
           await whatsapp.create({
             data: {
-              clienteId: c.id,
+              clientId: c.id,
               cohort: "PRE_EOM",
               year: current.year,
               month: current.month,
@@ -106,7 +110,7 @@ export async function GET(req: NextRequest) {
         } else {
           await whatsapp.create({
             data: {
-              clienteId: c.id,
+              clientId: c.id,
               cohort: "PRE_EOM",
               year: current.year,
               month: current.month,
@@ -123,12 +127,12 @@ export async function GET(req: NextRequest) {
   async function processPost() {
     const candidates = await getPostEomCandidates(timeZone);
     for (const c of candidates.slice(0, maxSends)) {
-      const phone = c.telefono;
+      const phone = c.phone;
       if (!phone?.startsWith("+")) {
         if (!dryRun) {
           await whatsapp.create({
             data: {
-              clienteId: c.id,
+              clientId: c.id,
               cohort: "POST_EOM",
               year: current.year,
               month: current.month,
@@ -142,14 +146,14 @@ export async function GET(req: NextRequest) {
       }
 
       const monthName = monthLongName(prev.year, prev.month);
-      const vars = [c.nombre, monthName];
+      const vars = [c.firstName, monthName];
 
       if (!dryRun) {
         const send = await sendWhatsAppTemplate(phone, postTemplate, vars);
         if (send.ok) {
           await whatsapp.create({
             data: {
-              clienteId: c.id,
+              clientId: c.id,
               cohort: "POST_EOM",
               year: current.year,
               month: current.month,
@@ -160,7 +164,7 @@ export async function GET(req: NextRequest) {
         } else {
           await whatsapp.create({
             data: {
-              clienteId: c.id,
+              clientId: c.id,
               cohort: "POST_EOM",
               year: current.year,
               month: current.month,
@@ -179,7 +183,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     ok: true,
-    today,
+    today: `${today.year}-${String(today.month).padStart(2, "0")}-${String(today.day).padStart(2, "0")}`,
     processed: results.length,
     results,
   });

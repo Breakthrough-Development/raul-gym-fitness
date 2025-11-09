@@ -9,11 +9,11 @@ export const createSession = async (sessionToken: string, userId: string) => {
 
   const session = {
     id: sessionId,
-    usuarioId: userId,
-    expira: new Date(Date.now() + SESSION_MAX_DURATION_MS),
+    userId: userId,
+    expiresAt: new Date(Date.now() + SESSION_MAX_DURATION_MS),
   };
 
-  await prisma.sesion.create({
+  await prisma.session.create({
     data: session,
   });
 
@@ -24,12 +24,12 @@ export const validateSession = async (sessionToken: string) => {
   const sessionId = hashToken(sessionToken);
 
   // failing here
-  const result = await prisma.sesion.findUnique({
+  const result = await prisma.session.findUnique({
     where: {
       id: sessionId,
     },
     include: {
-      usuario: true,
+      user: true,
     },
   });
 
@@ -37,12 +37,12 @@ export const validateSession = async (sessionToken: string) => {
   if (!result) {
     return { user: null, session: null };
   }
-  const { usuario, ...session } = result;
+  const { user, ...session } = result;
 
   // if the session is expired, delete it
-  if (Date.now() >= session.expira.getTime()) {
+  if (Date.now() >= session.expiresAt.getTime()) {
     // or your ORM of choice
-    await prisma.sesion.delete({
+    await prisma.session.delete({
       where: {
         id: sessionId,
       },
@@ -52,23 +52,23 @@ export const validateSession = async (sessionToken: string) => {
   }
 
   // if 15 days are left until the session expires, refresh the session
-  if (Date.now() >= session.expira.getTime() - SESSION_REFRESH_INTERVAL_MS) {
-    session.expira = new Date(Date.now() + SESSION_MAX_DURATION_MS);
-    await prisma.sesion.update({
+  if (Date.now() >= session.expiresAt.getTime() - SESSION_REFRESH_INTERVAL_MS) {
+    session.expiresAt = new Date(Date.now() + SESSION_MAX_DURATION_MS);
+    await prisma.session.update({
       where: {
         id: sessionId,
       },
       data: {
-        expira: session.expira,
+        expiresAt: session.expiresAt,
       },
     });
   }
 
-  return { user: usuario, session };
+  return { user: user, session };
 };
 
 export const invalidateSession = async (sessionId: string) => {
-  await prisma.sesion.delete({
+  await prisma.session.delete({
     where: {
       id: sessionId,
     },

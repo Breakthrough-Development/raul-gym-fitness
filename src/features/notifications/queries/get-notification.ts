@@ -17,15 +17,15 @@ export async function getNotification(
   // If there are selected client IDs, fetch the client details
   let clients;
   if (notification.selectedClientIds.length > 0) {
-    clients = await prisma.cliente.findMany({
+    clients = await prisma.client.findMany({
       where: {
         id: { in: notification.selectedClientIds },
       },
       select: {
         id: true,
-        nombre: true,
-        apellido: true,
-        telefono: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
       },
     });
   }

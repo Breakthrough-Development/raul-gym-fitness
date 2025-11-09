@@ -59,7 +59,7 @@ export const updateUser = async (
 
     const { user: authUser } = await getAuthOrRedirect();
 
-    const dbUser = await prisma.usuario.findUnique({
+    const dbUser = await prisma.user.findUnique({
       where: {
         id: authUser.id,
       },
@@ -74,23 +74,23 @@ export const updateUser = async (
     const normalizedEmail = (email ?? "").toLowerCase();
 
     if (
-      dbUser.usuario === username &&
-      dbUser.nombre === firstName &&
-      (dbUser.apellido ?? "") === lastName &&
+      dbUser.username === username &&
+      dbUser.firstName === firstName &&
+      (dbUser.lastName ?? "") === lastName &&
       (dbUser.email ?? "") === normalizedEmail &&
-      (dbUser.telefono ?? "") === (phone ?? "")
+      (dbUser.phone ?? "") === (phone ?? "")
     ) {
       return toActionState("ERROR", "No se realizaron cambios", formData);
     }
 
-    await prisma.usuario.update({
+    await prisma.user.update({
       where: { id: authUser.id },
       data: {
-        usuario: username,
-        nombre: firstName,
-        apellido: lastName,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
         email: normalizedEmail.length > 0 ? normalizedEmail : undefined,
-        telefono: phone && phone.length > 0 ? phone : undefined,
+        phone: phone && phone.length > 0 ? phone : undefined,
       },
     });
   } catch (error) {

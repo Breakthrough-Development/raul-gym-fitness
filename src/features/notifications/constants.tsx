@@ -11,8 +11,8 @@ export const RECIPIENT_TYPE_OPTIONS = [
 
 export const MEMBERSHIP_FILTER_OPTIONS = [
   { value: null, label: "All Memberships" },
-  { value: MembershipFilter.DIARIO, label: "Daily Members" },
-  { value: MembershipFilter.MENSUAL, label: "Monthly Members" },
+  { value: MembershipFilter.DAILY, label: "Daily Members" },
+  { value: MembershipFilter.MONTHLY, label: "Monthly Members" },
   { value: MembershipFilter.BOTH, label: "Both Daily & Monthly" },
 ] as const;
 

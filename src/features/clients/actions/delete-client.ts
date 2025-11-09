@@ -13,7 +13,7 @@ import { revalidatePath } from "next/cache";
 export const deleteClient = async (id: string) => {
   await getAuthOrRedirect();
   try {
-    const client = await prisma.cliente.findUnique({
+    const client = await prisma.client.findUnique({
       where: { id },
     });
 
@@ -21,7 +21,7 @@ export const deleteClient = async (id: string) => {
       return toActionState("ERROR", "Cliente no encontrado");
     }
 
-    await prisma.cliente.delete({
+    await prisma.client.delete({
       where: { id },
     });
 

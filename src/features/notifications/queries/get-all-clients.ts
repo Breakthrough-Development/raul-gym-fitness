@@ -3,15 +3,15 @@
 import { prisma } from "@/lib/prisma";
 
 export async function getAllClients() {
-  return await prisma.cliente.findMany({
+  return await prisma.client.findMany({
     select: {
       id: true,
-      nombre: true,
-      apellido: true,
-      telefono: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
     },
     orderBy: {
-      nombre: "asc",
+      firstName: "asc",
     },
   });
 }

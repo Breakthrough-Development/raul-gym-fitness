@@ -9,13 +9,13 @@ import {
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { dashboardPath } from "@/paths";
-import { EstadoMembresia, EstadoPago } from "@prisma/client";
+import { PaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
 const upsertPaymentSchema = z.object({
   amount: z.coerce.number().positive(),
-  membership: z.enum(EstadoMembresia),
+  membership: z.enum(["DAILY", "MONTHLY"]),
   clientId: z.cuid(),
 });
 
@@ -33,22 +33,22 @@ export const upsertPayment = async (
         membership: formData.get("membership"),
         clientId: formData.get("clientId"),
       }),
-      status: EstadoPago.PAGADO,
+      status: PaymentStatus.PAID,
     };
 
-    await prisma.pago.upsert({
+    await prisma.payment.upsert({
       where: { id: id || "" },
       create: {
-        monto: data.amount,
-        membresia: data.membership,
-        estado: data.status,
-        clienteId: data.clientId,
+        amount: data.amount,
+        membership: data.membership,
+        status: data.status,
+        clientId: data.clientId,
       },
       update: {
-        monto: data.amount,
-        membresia: data.membership,
-        estado: data.status,
-        clienteId: data.clientId,
+        amount: data.amount,
+        membership: data.membership,
+        status: data.status,
+        clientId: data.clientId,
       },
     });
   } catch (error) {
