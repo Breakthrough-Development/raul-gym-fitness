@@ -15,9 +15,13 @@ import { signInPath, signUpPath } from "@/paths";
 import { getActivePath } from "@/utils/get-active-path";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { navItems } from "./constants";
+import { NavItem } from "./types";
 
-export const Sidebar = () => {
+type SidebarProps = {
+  navItems: NavItem[];
+};
+
+export const Sidebar = ({ navItems }: SidebarProps) => {
   const { user, isFetched } = useAuth();
   const pathname = usePathname();
   const { activeIndex } = getActivePath(

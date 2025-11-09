@@ -5,7 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { Sidebar } from "./_navigation/sidebar/sidebar";
+import { SidebarWrapper } from "./_navigation/sidebar/sidebar-wrapper";
 import { ReactQueryProvider } from "./_providers/react-query/react-query-provider";
 import "./globals.css";
 
@@ -40,7 +40,7 @@ export default function RootLayout({
               <SidebarProvider className="flex-col" defaultOpen={false}>
                 <Header />
                 <div className="flex min-h-svh border-collapse">
-                  <Sidebar />
+                  <SidebarWrapper />
                   <main className="flex-1 py-24 px-8 bg-secondary/20 flex flex-col">
                     {children}
                   </main>

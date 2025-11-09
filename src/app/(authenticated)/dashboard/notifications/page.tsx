@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { NotificationList } from "@/features/notifications/components/notification-list";
 import { NotificationUpsertForm } from "@/features/notifications/components/notification-upsert-form";
 import { parseNotificationSearchParams } from "@/features/notifications/search-params";
+import { featureFlags } from "@/lib/feature-flags";
+import { homePath } from "@/paths";
+import { redirect } from "next/navigation";
 import { LucidePlus } from "lucide-react";
 
 export type NotificationsPageProps = {
@@ -12,6 +15,13 @@ export type NotificationsPageProps = {
 export default async function NotificationsPage({
   searchParams,
 }: NotificationsPageProps) {
+  if (
+    !featureFlags.whatsappNotifications &&
+    !featureFlags.scheduledNotifications
+  ) {
+    redirect(homePath());
+  }
+
   const resolvedSearchParams = await searchParams;
   const parsedSearchParams =
     parseNotificationSearchParams(resolvedSearchParams);

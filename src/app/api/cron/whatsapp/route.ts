@@ -14,6 +14,7 @@ import {
 } from "@/utils/date";
 // Use string literals for enums to avoid client version desync
 import { env } from "@/env";
+import { featureFlags } from "@/lib/feature-flags";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +28,13 @@ function requireSecret(req: NextRequest) {
 export async function GET(req: NextRequest) {
   if (!requireSecret(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!featureFlags.whatsappNotifications) {
+    return NextResponse.json(
+      { ok: false, message: "WhatsApp notifications feature is disabled" },
+      { status: 403 }
+    );
   }
 
   const url = new URL(req.url);

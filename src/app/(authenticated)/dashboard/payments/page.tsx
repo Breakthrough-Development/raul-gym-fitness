@@ -9,7 +9,10 @@ import { PaymentPagination } from "@/features/payments/components/payment-pagina
 import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert-form";
 import { getPayments } from "@/features/payments/queries/get-payments";
 import { PaymentSearchParamsCache } from "@/features/payments/search-params";
+import { featureFlags } from "@/lib/feature-flags";
+import { homePath } from "@/paths";
 import { SearchParams } from "nuqs";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -18,6 +21,9 @@ type PaymentPageProps = {
 };
 
 const profilePage = async ({ searchParams }: PaymentPageProps) => {
+  if (!featureFlags.paymentManagement) {
+    redirect(homePath());
+  }
   const cacheClientSearchParams = ClientSearchParamsCache.parse(
     await searchParams
   );

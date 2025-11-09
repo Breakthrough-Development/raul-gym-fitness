@@ -2,8 +2,15 @@ import { AccountTabs } from "@/app/(authenticated)/account/_navigation/account-t
 import Heading from "@/components/heading";
 import { UserUpdateForm } from "@/features/auth/component/user-update-form";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { featureFlags } from "@/lib/feature-flags";
+import { homePath } from "@/paths";
+import { redirect } from "next/navigation";
 
 const profilePage = async () => {
+  if (!featureFlags.userManagement) {
+    redirect(homePath());
+  }
+
   const { user: authUser } = await getAuthOrRedirect();
 
   return (

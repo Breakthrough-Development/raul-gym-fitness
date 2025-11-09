@@ -6,6 +6,9 @@ import { PaymentDataTable } from "@/features/payments/components/payment-data-ta
 import { PaymentPagination } from "@/features/payments/components/payment-pagination";
 import { getPaymentsByClient } from "@/features/payments/queries/get-payments-by-client";
 import { PaymentSearchParamsCache } from "@/features/payments/search-params";
+import { featureFlags } from "@/lib/feature-flags";
+import { homePath } from "@/paths";
+import { redirect } from "next/navigation";
 
 type ClientDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -16,6 +19,9 @@ export default async function ClientDetailPage({
   params,
   searchParams,
 }: ClientDetailPageProps) {
+  if (!featureFlags.clientManagement) {
+    redirect(homePath());
+  }
   const { id } = await params;
   const client = await getClient(id);
   const parsedPaymentSearchParams = PaymentSearchParamsCache.parse(

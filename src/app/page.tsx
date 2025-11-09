@@ -13,6 +13,7 @@ import { PaymentPagination } from "@/features/payments/components/payment-pagina
 import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert-form";
 import { getPayments } from "@/features/payments/queries/get-payments";
 import { PaymentSearchParamsCache } from "@/features/payments/search-params";
+import { featureFlags } from "@/lib/feature-flags";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -37,83 +38,91 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <div className="flex-1 flex flex-col gap-y-8 max-w-7xl mx-auto">
       <Heading title="Inicio" description="Tu lugar de inicio" />
 
-      <Suspense fallback={<Spinner />}>
-        <section className="flex flex-wrap gap-6 justify-center">
-          <h2 className="sr-only text-3xl font-bold tracking-tight">
-            Cálculos automáticos
-          </h2>
-          <div className="flex-1 min-w-lg max-w-2xl">
-            <TotalRevenueChart />
-          </div>
-          <div className="flex-1 min-w-lg max-w-2xl">
-            <TotalSubscriptionsChart
-              title="Suscripciones diarias"
-              type="DAILY"
-            />
-          </div>
-          <div className="flex-1 min-w-lg max-w-2xl">
-            <TotalSubscriptionsChart
-              title="Suscripciones mensuales"
-              type="MONTHLY"
-            />
-          </div>
-        </section>
-      </Suspense>
-
-      <Suspense fallback={<Spinner />}>
-        <section className="flex-1 flex flex-col gap-y-8 ">
-          <Heading
-            title="Página de clientes"
-            description="Todos tus clientes en un solo lugar."
-          />
-
-          <CardComp
-            title="Lista de pagos"
-            description="Todos tus pagos en un solo lugar."
-            content={<PaymentUpsertForm clients={clients.list} />}
-            className="w-full max-w-[420px] self-center"
-          ></CardComp>
-
-          <ErrorBoundary
-            fallback={<Placeholder label="Error al cargar los pagos" />}
-          >
-            <Suspense fallback={<Spinner />}>
-              <PaymentDataTable
-                className="animate-fade-from-top"
-                data={payments}
-                pagination={<PaymentPagination paginatedMetaData={metadata} />}
-                clients={clients.list}
+      {featureFlags.dashboardCharts && (
+        <Suspense fallback={<Spinner />}>
+          <section className="flex flex-wrap gap-6 justify-center">
+            <h2 className="sr-only text-3xl font-bold tracking-tight">
+              Cálculos automáticos
+            </h2>
+            <div className="flex-1 min-w-lg max-w-2xl">
+              <TotalRevenueChart />
+            </div>
+            <div className="flex-1 min-w-lg max-w-2xl">
+              <TotalSubscriptionsChart
+                title="Suscripciones diarias"
+                type="DAILY"
               />
-            </Suspense>
-          </ErrorBoundary>
-        </section>
-      </Suspense>
+            </div>
+            <div className="flex-1 min-w-lg max-w-2xl">
+              <TotalSubscriptionsChart
+                title="Suscripciones mensuales"
+                type="MONTHLY"
+              />
+            </div>
+          </section>
+        </Suspense>
+      )}
+      {featureFlags.paymentManagement && (
+        <Suspense fallback={<Spinner />}>
+          <section className="flex-1 flex flex-col gap-y-8 ">
+            <Heading
+              title="Página de clientes"
+              description="Todos tus clientes en un solo lugar."
+            />
 
-      <Suspense fallback={<Spinner />}>
-        <section className="flex-1 flex flex-col gap-y-8">
-          <Heading
-            title="Página de clientes"
-            description="Todos tus clientes en un solo lugar."
-          />
+            <CardComp
+              title="Lista de pagos"
+              description="Todos tus pagos en un solo lugar."
+              content={<PaymentUpsertForm clients={clients.list} />}
+              className="w-full max-w-[420px] self-center"
+            ></CardComp>
 
-          <CardComp
-            title="Lista de clientes"
-            description="Todos tus clientes en un solo lugar."
-            content={<ClientUpsertForm />}
-            className="w-full max-w-[420px] self-center"
-          ></CardComp>
+            <ErrorBoundary
+              fallback={<Placeholder label="Error al cargar los pagos" />}
+            >
+              <Suspense fallback={<Spinner />}>
+                <PaymentDataTable
+                  className="animate-fade-from-top"
+                  data={payments}
+                  pagination={
+                    <PaymentPagination paginatedMetaData={metadata} />
+                  }
+                  clients={clients.list}
+                />
+              </Suspense>
+            </ErrorBoundary>
+          </section>
+        </Suspense>
+      )}
+      {featureFlags.clientManagement && (
+        <Suspense fallback={<Spinner />}>
+          <section className="flex-1 flex flex-col gap-y-8">
+            <Heading
+              title="Página de clientes"
+              description="Todos tus clientes en un solo lugar."
+            />
 
-          <ErrorBoundary
-            fallback={<Placeholder label="Error al cargar los clientes" />}
-          >
-            <Suspense fallback={<Spinner />}>
-              <ClientList
-                searchParams={ClientSearchParamsCache.parse(await searchParams)}
-              ></ClientList>
-            </Suspense>
-          </ErrorBoundary>
-        </section>
-      </Suspense>
+            <CardComp
+              title="Lista de clientes"
+              description="Todos tus clientes en un solo lugar."
+              content={<ClientUpsertForm />}
+              className="w-full max-w-[420px] self-center"
+            ></CardComp>
+
+            <ErrorBoundary
+              fallback={<Placeholder label="Error al cargar los clientes" />}
+            >
+              <Suspense fallback={<Spinner />}>
+                <ClientList
+                  searchParams={ClientSearchParamsCache.parse(
+                    await searchParams
+                  )}
+                ></ClientList>
+              </Suspense>
+            </ErrorBoundary>
+          </section>
+        </Suspense>
+      )}
     </div>
   );
 }
