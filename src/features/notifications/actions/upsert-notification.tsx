@@ -6,17 +6,18 @@ import {
 } from "@/components/form/util/to-action-state";
 import { prisma } from "@/lib/prisma";
 import { notificationsPath } from "@/paths";
+import { MembershipFilter, RecipientType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const upsertNotificationSchema = z.object({
-  message: z.string().min(1, "Message is required"),
+  message: z.string().min(1, { message: "El mensaje es requerido" }),
   recipientType: z.enum(["ALL", "SELECTED"]),
   selectedClientIds: z.array(z.string()).default([]),
   membershipFilter: z.enum(["DAILY", "MONTHLY", "BOTH"]).optional(),
-  sendDate: z.string().transform((str) => new Date(str)),
+  sendDate: z.string().min(1, { message: "La fecha de envío es requerida" }).transform((str) => new Date(str)),
   recurrence: z.enum(["ONE_TIME", "WEEKLY", "MONTHLY"]),
-  templateName: z.string().min(1, "Template name is required"),
+  templateName: z.string().min(1, { message: "El nombre de la plantilla es requerido" }),
 });
 
 export async function upsertNotification(
@@ -25,7 +26,7 @@ export async function upsertNotification(
   formData: FormData
 ): Promise<ActionState> {
   try {
-    const data = upsertNotificationSchema.parse({
+    const parsed = upsertNotificationSchema.parse({
       message: formData.get("message"),
       recipientType: formData.get("recipientType"),
       selectedClientIds: JSON.parse(
@@ -39,6 +40,13 @@ export async function upsertNotification(
       recurrence: formData.get("recurrence"),
       templateName: formData.get("templateName"),
     });
+    
+    const data = {
+      ...parsed,
+      recipientType: parsed.recipientType as RecipientType,
+      recurrence: parsed.recurrence as "ONE_TIME" | "WEEKLY" | "MONTHLY",
+      membershipFilter: parsed.membershipFilter as MembershipFilter | undefined,
+    };
 
     if (id) {
       // Update existing notification
@@ -56,13 +64,13 @@ export async function upsertNotification(
     revalidatePath(notificationsPath());
     return toActionState(
       "SUCCESS",
-      id ? "Notification updated" : "Notification created"
+      id ? "Notificación actualizada" : "Notificación creada"
     );
   } catch (error) {
     console.error("Error upserting notification:", error);
     return toActionState(
       "ERROR",
-      error instanceof Error ? error.message : "Unknown error"
+      error instanceof Error ? error.message : "Ocurrió un error desconocido"
     );
   }
 }

@@ -16,8 +16,8 @@ import { getAuth } from "../queries/get-auth";
 import { setSessionCookie } from "../utils/session-cookie";
 
 const signInSchema = z.object({
-  email: z.email().min(1, { message: "Es requerido" }).max(191),
-  password: z.string().min(6).max(191),
+  email: z.email({ message: "El correo electrónico no es válido" }).min(1, { message: "El correo electrónico es requerido" }).max(191, { message: "El correo electrónico es muy largo" }),
+  password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }).max(191, { message: "La contraseña es muy larga" }),
 });
 
 const signIn = async (_actionState: ActionState, formData: FormData) => {

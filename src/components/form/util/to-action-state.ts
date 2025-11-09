@@ -39,7 +39,7 @@ export const fromErrorToActionState = <T = unknown>(
   } else {
     return {
       status: "ERROR",
-      message: "An unknown error occurred",
+      message: "Ocurrió un error desconocido",
       fieldErrors: {},
       payload: formData,
       timestamp: Date.now(),
