@@ -17,6 +17,7 @@ import {
   LucideMoreHorizontal,
   LucidePhone,
   LucideSquareArrowOutUpRight,
+  LucideUser,
 } from "lucide-react";
 import Link from "next/link";
 import { ClientWithMetadata } from "../types";
@@ -60,6 +61,7 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
         <Card className="w-full">
           <CardHeader>
             <CardTitle className="flex gap-x-2">
+              <LucideUser className="h-4 w-4" />
               {client.firstName} {client.lastName}
             </CardTitle>
           </CardHeader>
@@ -68,18 +70,18 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
             <ul
               className={clsx("whitespace-break-spaces flex flex-col gap-y-2")}
             >
-              {client.email && (
+              {
                 <li className="flex items-center gap-x-2">
                   <LucideMail className="h-4 w-4 text-muted-foreground" />
-                  <span>{client.email}</span>
+                  <span>{client.email || "No proporcionado"}</span>
                 </li>
-              )}
-              {client.phone && (
+              }
+              {
                 <li className="flex items-center gap-x-2">
                   <LucidePhone className="h-4 w-4 text-muted-foreground" />
-                  <span>{formatPhoneNumber(client.phone)}</span>
+                  <span>{client.phone || "No proporcionado"}</span>
                 </li>
-              )}
+              }
             </ul>
           </CardContent>
         </Card>
