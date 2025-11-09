@@ -34,6 +34,10 @@
     "prisma-types:prod": "dotenv -e .env.production -- npx prisma generate",
     "prisma-seed:prod": "dotenv -e .env.production -- tsx prisma/seed.ts",
     "prisma:prod": "npm run prisma-schema:prod && npm run prisma-types:prod && npm run prisma-seed:prod",
+    "prisma:check-prod": "dotenv -e .env.production -- tsx scripts/check-env.ts",
+    "prereset:prod": "npm run prisma:check-prod",
+    "prisma-reset:prod": "dotenv -e .env.production -- npx prisma db push --force-reset --accept-data-loss",
+    "prisma:reset-prod": "npm run prereset:prod && npm run prisma-reset:prod && npm run prisma-schema:prod && npm run prisma-types:prod && npm run prisma-seed:prod",
     "prisma-studio:prod": "dotenv -e .env.production -- npx prisma studio"
   },
   "dependencies": {
