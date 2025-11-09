@@ -12,7 +12,7 @@ import { revalidatePath } from "next/cache";
 export const deletePayment = async (id: string) => {
   await getAuthOrRedirect();
   try {
-    const payment = await prisma.pago.findUnique({
+    const payment = await prisma.payment.findUnique({
       where: { id },
     });
 
@@ -20,7 +20,7 @@ export const deletePayment = async (id: string) => {
       return toActionState("ERROR", "Pago no encontrado");
     }
 
-    await prisma.pago.delete({
+    await prisma.payment.delete({
       where: {
         id,
       },

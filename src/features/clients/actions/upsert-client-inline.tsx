@@ -13,19 +13,19 @@ export const upsertClientInline = async (
   await getAuthOrRedirect();
 
   try {
-    const nombre = formData.get("nombre") as string | null;
-    const apellido = formData.get("apellido") as string | null;
+    const firstName = formData.get("firstName") as string | null;
+    const lastName = formData.get("lastName") as string | null;
     const email = formData.get("email") as string | null;
-    const telefono = normalizeToE164(formData.get("telefono") as string | null);
+    const phone = normalizeToE164(formData.get("phone") as string | null);
 
     const data = upsertClientSchema.parse({
-      nombre,
-      apellido,
+      firstName,
+      lastName,
       email,
-      telefono,
+      phone,
     });
 
-    const client = await prisma.cliente.upsert({
+    const client = await prisma.client.upsert({
       where: { id: id || "" },
       create: data,
       update: data,
@@ -38,7 +38,7 @@ export const upsertClientInline = async (
       message: id ? "Cliente actualizado" : "Cliente creado",
       data: client,
     };
-  } catch (error) {
+  } catch {
     return {
       status: "ERROR" as const,
       message: "Error al guardar cliente",

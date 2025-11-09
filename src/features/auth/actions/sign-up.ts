@@ -19,33 +19,33 @@ const signUpSchema = z
   .object({
     username: z
       .string()
-      .min(1, { message: "Es requerido" })
-      .max(191)
+      .min(1, { message: "El nombre de usuario es requerido" })
+      .max(191, { message: "El nombre de usuario es muy largo" })
       .refine(
         (value) => !value.includes(" "),
         "El nombre de usuario no puede contener espacios"
       ),
     firstName: z
       .string()
-      .min(1, { message: "Es requerido" })
-      .max(191)
+      .min(1, { message: "El nombre es requerido" })
+      .max(191, { message: "El nombre es muy largo" })
       .refine(
         (value) => !value.includes(" "),
         "El nombre no puede contener espacios"
       ),
     lastName: z
       .string()
-      .min(1, { message: "Es requerido" })
-      .max(191)
+      .min(1, { message: "El apellido es requerido" })
+      .max(191, { message: "El apellido es muy largo" })
       .refine(
         (value) => !value.includes(" "),
         "El apellido no puede contener espacios"
       ),
-    email: z.email().min(1, { message: "Es requerido" }).max(191),
-    phone: z.string().min(1, { message: "Es requerido" }).max(20),
-    password: z.string().min(6, { message: "Es requerido" }).max(191),
-    confirmPassword: z.string().min(6, { message: "Es requerido" }).max(191),
-    "frase-secreta": z.string().min(1, { message: "Es requerido" }),
+    email: z.email({ message: "El correo electrónico no es válido" }).min(1, { message: "El correo electrónico es requerido" }).max(191, { message: "El correo electrónico es muy largo" }),
+    phone: z.string().min(1, { message: "El teléfono es requerido" }).max(20, { message: "El teléfono es muy largo" }),
+    password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres" }).max(191, { message: "La contraseña es muy larga" }),
+    confirmPassword: z.string().min(6, { message: "La confirmación de contraseña debe tener al menos 6 caracteres" }).max(191, { message: "La confirmación de contraseña es muy larga" }),
+    "frase-secreta": z.string().min(1, { message: "La frase secreta es requerida" }),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
@@ -76,21 +76,21 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
 
     const passwordHash = await hashPassword(password);
 
-    const user = await prisma.usuario.create({
+    const user = await prisma.user.create({
       data: {
-        usuario: username,
+        username: username,
         email,
         password: passwordHash,
-        nombre: firstName,
-        apellido: lastName,
-        telefono: phone,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
       },
     });
 
     const sessionToken = generateRandomToken();
     const sessionCookie = await createSession(sessionToken, user.id);
 
-    await setSessionCookie(sessionToken, sessionCookie.expira);
+    await setSessionCookie(sessionToken, sessionCookie.expiresAt);
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

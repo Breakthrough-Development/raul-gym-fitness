@@ -16,9 +16,9 @@ import { isOwner } from "../utils/is-owner";
 
 const signUpSchema = z
   .object({
-    currentPassword: z.string().min(6).max(191),
-    newPassword: z.string().min(6).max(191),
-    confirmPassword: z.string().min(6).max(191),
+    currentPassword: z.string().min(6, { message: "La contraseña actual debe tener al menos 6 caracteres" }).max(191, { message: "La contraseña actual es muy larga" }),
+    newPassword: z.string().min(6, { message: "La nueva contraseña debe tener al menos 6 caracteres" }).max(191, { message: "La nueva contraseña es muy larga" }),
+    confirmPassword: z.string().min(6, { message: "La confirmación de contraseña debe tener al menos 6 caracteres" }).max(191, { message: "La confirmación de contraseña es muy larga" }),
   })
   .superRefine(({ confirmPassword, newPassword, currentPassword }, ctx) => {
     if (confirmPassword !== newPassword) {
@@ -48,7 +48,7 @@ export const resetPassword = async (
 
     const { user: authUser } = await getAuthOrRedirect();
 
-    const dbUser = await prisma.usuario.findUnique({
+    const dbUser = await prisma.user.findUnique({
       where: {
         id: authUser.id,
       },
@@ -73,7 +73,7 @@ export const resetPassword = async (
 
     const passwordHash = await hashPassword(newPassword);
 
-    await prisma.usuario.update({
+    await prisma.user.update({
       where: {
         id: authUser.id,
       },

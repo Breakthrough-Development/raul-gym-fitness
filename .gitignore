@@ -46,3 +46,6 @@ next-env.d.ts
 /playwright/.auth/
 
 documentation/*
+
+# cursor rules
+.cursorrules

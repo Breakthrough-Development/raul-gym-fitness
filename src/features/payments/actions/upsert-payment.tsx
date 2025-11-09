@@ -9,14 +9,14 @@ import {
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { dashboardPath } from "@/paths";
-import { EstadoMembresia, EstadoPago } from "@prisma/client";
+import { MembershipStatus, PaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
 const upsertPaymentSchema = z.object({
-  amount: z.coerce.number().positive(),
-  membership: z.enum(EstadoMembresia),
-  clientId: z.cuid(),
+  amount: z.coerce.number().positive({ message: "El monto debe ser un número positivo" }),
+  membership: z.enum(["DAILY", "MONTHLY"]),
+  clientId: z.cuid({ message: "Debes seleccionar un cliente válido" }),
 });
 
 export const upsertPayment = async (
@@ -27,28 +27,31 @@ export const upsertPayment = async (
   await getAuthOrRedirect();
 
   try {
+    const parsed = upsertPaymentSchema.parse({
+      amount: formData.get("amount"),
+      membership: formData.get("membership"),
+      clientId: formData.get("clientId"),
+    });
+    
     const data = {
-      ...upsertPaymentSchema.parse({
-        amount: formData.get("amount"),
-        membership: formData.get("membership"),
-        clientId: formData.get("clientId"),
-      }),
-      status: EstadoPago.PAGADO,
+      ...parsed,
+      membership: parsed.membership as MembershipStatus,
+      status: PaymentStatus.PAID,
     };
 
-    await prisma.pago.upsert({
+    await prisma.payment.upsert({
       where: { id: id || "" },
       create: {
-        monto: data.amount,
-        membresia: data.membership,
-        estado: data.status,
-        clienteId: data.clientId,
+        amount: data.amount,
+        membership: data.membership,
+        status: data.status,
+        clientId: data.clientId,
       },
       update: {
-        monto: data.amount,
-        membresia: data.membership,
-        estado: data.status,
-        clienteId: data.clientId,
+        amount: data.amount,
+        membership: data.membership,
+        status: data.status,
+        clientId: data.clientId,
       },
     });
   } catch (error) {

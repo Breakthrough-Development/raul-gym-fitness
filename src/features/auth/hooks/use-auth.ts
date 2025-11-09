@@ -1,10 +1,10 @@
 "use client";
-import type { Usuario } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getAuth } from "../queries/get-auth";
 
-type AuthUser = Usuario | null;
+type AuthUser = User | null;
 
 const useAuth = () => {
   const [user, setUser] = useState<AuthUser>(null);

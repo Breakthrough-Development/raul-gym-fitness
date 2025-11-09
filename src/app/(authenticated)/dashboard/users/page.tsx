@@ -15,11 +15,11 @@ const profilePage = async () => {
       />
       <div className="w-full max-w-[420px] self-center">
         <UserUpdateForm
-          lastName={authUser.apellido}
-          firstName={authUser.nombre}
-          username={authUser.usuario}
+          lastName={authUser.lastName}
+          firstName={authUser.firstName}
+          username={authUser.username}
           email={authUser.email}
-          phone={authUser.telefono}
+          phone={authUser.phone}
         />
       </div>
     </section>

@@ -48,13 +48,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <div className="flex-1 min-w-lg max-w-2xl">
             <TotalSubscriptionsChart
               title="Suscripciones diarias"
-              type="DIARIO"
+              type="DAILY"
             />
           </div>
           <div className="flex-1 min-w-lg max-w-2xl">
             <TotalSubscriptionsChart
               title="Suscripciones mensuales"
-              type="MENSUAL"
+              type="MONTHLY"
             />
           </div>
         </section>

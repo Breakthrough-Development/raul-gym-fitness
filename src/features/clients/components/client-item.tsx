@@ -60,7 +60,7 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
         <Card className="w-full">
           <CardHeader>
             <CardTitle className="flex gap-x-2">
-              {client.nombre} {client.apellido}
+              {client.firstName} {client.lastName}
             </CardTitle>
           </CardHeader>
 
@@ -74,10 +74,10 @@ export const ClientItem = ({ client, isDetail }: ClientItemProps) => {
                   <span>{client.email}</span>
                 </li>
               )}
-              {client.telefono && (
+              {client.phone && (
                 <li className="flex items-center gap-x-2">
                   <LucidePhone className="h-4 w-4 text-muted-foreground" />
-                  <span>{formatPhoneNumber(client.telefono)}</span>
+                  <span>{formatPhoneNumber(client.phone)}</span>
                 </li>
               )}
             </ul>

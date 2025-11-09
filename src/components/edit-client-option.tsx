@@ -3,11 +3,11 @@
 import { useFormDialog } from "@/components/form-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
-import { Cliente } from "@prisma/client";
+import { Client } from "@prisma/client";
 import { LucidePencil } from "lucide-react";
 
 export type EditClientOptionProps = {
-  client: Cliente;
+  client: Client;
 };
 
 export const EditClientOption = ({ client }: EditClientOptionProps) => {

@@ -12,17 +12,17 @@ import { revalidatePath } from "next/cache";
 import z from "zod";
 
 const createClientSchema = z.object({
-  nombre: z
+  firstName: z
     .string()
     .min(1, { message: "El nombre es requerido" })
     .max(191, { message: "El nombre es muy largo" }),
-  apellido: z.string().max(191).optional(),
+  lastName: z.string().max(191).optional(),
   email: z.preprocess((v) => {
     if (typeof v !== "string") return v;
     const s = v.trim().toLowerCase();
     return s === "" ? undefined : s;
   }, z.email({ message: "El correo electrónico no es válido" }).max(191, { message: "El correo electrónico es muy largo" }).optional()),
-  telefono: z
+  phone: z
     .string()
     .max(191, { message: "El teléfono es muy largo" })
     .optional(),
@@ -45,19 +45,19 @@ export const createClient = async (
   await getAuthOrRedirect();
 
   try {
-    const nombre = formData.get("nombre") as string | null;
-    const apellido = formData.get("apellido") as string | null;
+    const firstName = formData.get("firstName") as string | null;
+    const lastName = formData.get("lastName") as string | null;
     const email = formData.get("email") as string | null;
-    const telefono = normalizeToE164(formData.get("telefono") as string | null);
+    const phone = normalizeToE164(formData.get("phone") as string | null);
 
     const data = createClientSchema.parse({
-      nombre,
-      apellido,
+      firstName,
+      lastName,
       email,
-      telefono,
+      phone,
     });
 
-    const createdClient = await prisma.cliente.create({
+    const createdClient = await prisma.client.create({
       data,
     });
 

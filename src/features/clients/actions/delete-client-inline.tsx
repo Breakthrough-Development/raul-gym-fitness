@@ -9,7 +9,7 @@ export const deleteClientInline = async (id: string) => {
   await getAuthOrRedirect();
 
   try {
-    await prisma.cliente.delete({
+    await prisma.client.delete({
       where: { id },
     });
 
@@ -20,7 +20,7 @@ export const deleteClientInline = async (id: string) => {
       message: "Cliente eliminado",
       data: { id },
     };
-  } catch (error) {
+  } catch {
     return {
       status: "ERROR" as const,
       message: "Error al eliminar cliente",

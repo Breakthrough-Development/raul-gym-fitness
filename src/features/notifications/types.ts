@@ -24,9 +24,9 @@ export type ScheduledNotification = {
 export type NotificationWithClients = ScheduledNotification & {
   clients?: Array<{
     id: string;
-    nombre: string;
-    apellido: string | null;
-    telefono: string | null;
+    firstName: string;
+    lastName: string | null;
+    phone: string | null;
   }>;
 };
 

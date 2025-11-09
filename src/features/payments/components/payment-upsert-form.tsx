@@ -4,42 +4,42 @@ import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import {
-  ActionState,
-  EMPTY_ACTION_STATE,
+    ActionState,
+    EMPTY_ACTION_STATE,
 } from "@/components/form/util/to-action-state";
 import { SearchableSelect } from "@/components/search-select";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { createClient } from "@/features/clients/actions/create-client";
 import { deleteClientInline } from "@/features/clients/actions/delete-client-inline";
 import { upsertClientInline } from "@/features/clients/actions/upsert-client-inline";
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
-import { Cliente, EstadoMembresia, Pago } from "@prisma/client";
+import { Client, MembershipStatus, Payment } from "@prisma/client";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useActionState, useState } from "react";
 import { toast } from "sonner";
 import { upsertPayment } from "../actions/upsert-payment";
 export type PaymentUpsertFormProps = {
-  payment?: Pick<Pago, "id" | "monto" | "membresia" | "clienteId">;
-  clients: Cliente[];
+  payment?: Pick<Payment, "id" | "amount" | "membership" | "clientId">;
+  clients: Client[];
   onSuccess?: (actionState: unknown) => void;
 };
 
@@ -54,9 +54,9 @@ export const PaymentUpsertForm = ({
   );
 
   // State for managing the client list dynamically
-  const [clientList, setClientList] = useState<Cliente[]>(clients);
+  const [clientList, setClientList] = useState<Client[]>(clients);
   const [selectedClientId, setSelectedClientId] = useState<string | undefined>(
-    payment?.clienteId
+    payment?.clientId
   );
 
   // State for controlling the "Create Client" modal
@@ -68,7 +68,7 @@ export const PaymentUpsertForm = ({
   // State for controlling the "Delete Client" dialog
   const [isDeleteClientDialogOpen, setIsDeleteClientDialogOpen] =
     useState(false);
-  const [clientToDelete, setClientToDelete] = useState<Cliente | null>(null);
+  const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
 
   // Action state for client creation
   const [, clientFormAction] = useActionState(createClient, EMPTY_ACTION_STATE);
@@ -76,16 +76,16 @@ export const PaymentUpsertForm = ({
   // Get selected client for editing
   const selectedClient = clientList.find((c) => c.id === selectedClientId);
 
-  const membershipStatus = Object.values(EstadoMembresia);
+  const membershipStatus = Object.values(MembershipStatus);
 
   const membershipDefaultValue = () => {
     if (actionState.payload?.get("membership") as string) {
       return actionState.payload?.get("membership") as string;
     }
-    if (payment?.membresia) {
-      return payment?.membresia;
+    if (payment?.membership) {
+      return payment?.membership;
     }
-    return EstadoMembresia.MENSUAL;
+    return MembershipStatus.MONTHLY;
   };
 
   // Handle when "+ New Client" is clicked
@@ -95,9 +95,9 @@ export const PaymentUpsertForm = ({
 
   // Handle successful client creation
   const handleClientCreated = (actionState: unknown) => {
-    const typedState = actionState as ActionState<Cliente>;
+    const typedState = actionState as ActionState<Client>;
     if (typedState.status === "SUCCESS" && typedState.data) {
-      const newClient = typedState.data as Cliente;
+      const newClient = typedState.data as Client;
       // Add new client to the local client list
       setClientList((prev) => [...prev, newClient]);
       // Auto-select the new client
@@ -108,17 +108,17 @@ export const PaymentUpsertForm = ({
   };
 
   // Optimistic Edit Handler
-  const handleEditClient = async (client: Cliente, formData: FormData) => {
+  const handleEditClient = async (client: Client, formData: FormData) => {
     // 1. Show loading toast
     const toastId = toast.loading("Actualizando cliente...");
 
     // 2. Optimistically update UI
     const optimisticClient = {
       ...client,
-      nombre: (formData.get("nombre") as string) || client.nombre,
-      apellido: (formData.get("apellido") as string) || client.apellido || "",
+      firstName: (formData.get("firstName") as string) || client.firstName,
+      lastName: (formData.get("lastName") as string) || client.lastName || "",
       email: (formData.get("email") as string) || client.email || null,
-      telefono: (formData.get("telefono") as string) || client.telefono || null,
+      phone: (formData.get("phone") as string) || client.phone || null,
     };
 
     setClientList((prev) =>
@@ -145,7 +145,7 @@ export const PaymentUpsertForm = ({
         );
         toast.error(result.message, { id: toastId });
       }
-    } catch (error) {
+    } catch {
       // Revert optimistic update on error
       setClientList((prev) =>
         prev.map((c) => (c.id === client.id ? client : c))
@@ -155,7 +155,7 @@ export const PaymentUpsertForm = ({
   };
 
   // Optimistic Delete Handler
-  const handleDeleteClient = async (client: Cliente) => {
+  const handleDeleteClient = async (client: Client) => {
     // 1. Show loading toast
     const toastId = toast.loading("Eliminando cliente...");
 
@@ -185,7 +185,7 @@ export const PaymentUpsertForm = ({
         }
         toast.error(result.message, { id: toastId });
       }
-    } catch (error) {
+    } catch {
       // Revert optimistic update on error
       setClientList(previousList);
       toast.error("Error al eliminar cliente", { id: toastId });
@@ -201,12 +201,11 @@ export const PaymentUpsertForm = ({
               Cliente
             </Label>
             <SearchableSelect
-              key={selectedClientId}
-              defaultValue={selectedClientId}
+              value={selectedClientId}
               name="clientId"
               options={clientList.map((client) => ({
                 value: client.id,
-                label: client.nombre + " " + client.apellido,
+                label: client.firstName + " " + client.lastName,
               }))}
               placeholder="Selecciona un cliente"
               actionItems={[
@@ -271,8 +270,8 @@ export const PaymentUpsertForm = ({
         </div>
         <CurrencyInput
           actionState={actionState}
-          name="monto"
-          defaultValue={payment?.monto}
+          name="amount"
+          defaultValue={payment?.amount}
         />
 
         <SubmitButton label={payment ? "Editar" : "Crear"} />
@@ -372,8 +371,8 @@ export const PaymentUpsertForm = ({
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar cliente?</AlertDialogTitle>
             <AlertDialogDescription>
-              ¿Estás seguro de que deseas eliminar a {clientToDelete?.nombre}{" "}
-              {clientToDelete?.apellido}? Esta acción no se puede deshacer.
+              ¿Estás seguro de que deseas eliminar a {clientToDelete?.firstName}{" "}
+              {clientToDelete?.lastName}? Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -27,40 +27,40 @@ export async function sendNotification(id: string): Promise<ActionState> {
     let clients;
     if (notification.recipientType === "ALL") {
       // Get all clients with phone numbers
-      clients = await prisma.cliente.findMany({
+      clients = await prisma.client.findMany({
         where: {
-          telefono: { not: null },
+          phone: { not: null },
           ...(notification.membershipFilter && {
-            Pago: {
+            payments: {
               some: {
-                membresia:
+                membership:
                   notification.membershipFilter === "BOTH"
-                    ? { in: ["DIARIO", "MENSUAL"] }
+                    ? { in: ["DAILY", "MONTHLY"] }
                     : notification.membershipFilter,
-                estado: "PAGADO",
+                status: "PAID",
               },
             },
           }),
         },
         select: {
           id: true,
-          nombre: true,
-          apellido: true,
-          telefono: true,
+          firstName: true,
+          lastName: true,
+          phone: true,
         },
       });
     } else {
       // Get selected clients
-      clients = await prisma.cliente.findMany({
+      clients = await prisma.client.findMany({
         where: {
           id: { in: notification.selectedClientIds },
-          telefono: { not: null },
+          phone: { not: null },
         },
         select: {
           id: true,
-          nombre: true,
-          apellido: true,
-          telefono: true,
+          firstName: true,
+          lastName: true,
+          phone: true,
         },
       });
     }
@@ -71,13 +71,13 @@ export async function sendNotification(id: string): Promise<ActionState> {
 
     // Send messages to each client
     for (const client of clients) {
-      if (!client.telefono) continue;
+      if (!client.phone) continue;
 
       // Prepare template variables (using client name as example)
-      const variables = [client.nombre];
+      const variables = [client.firstName];
 
       const result = await sendWhatsAppTemplate(
-        client.telefono,
+        client.phone,
         notification.templateName,
         variables
       );
@@ -86,7 +86,7 @@ export async function sendNotification(id: string): Promise<ActionState> {
         sentCount++;
       } else {
         failedCount++;
-        errors.push(`${client.nombre}: ${result.error}`);
+        errors.push(`${client.firstName}: ${result.error}`);
       }
     }
 

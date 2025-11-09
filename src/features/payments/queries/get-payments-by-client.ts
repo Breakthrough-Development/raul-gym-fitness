@@ -21,16 +21,16 @@ export const getPaymentsByClient = async (
       ? {
           OR: [
             {
-              cliente: {
-                nombre: {
+              client: {
+                firstName: {
                   contains: searchTerms[0],
                   mode: "insensitive" as const,
                 },
               },
             },
             {
-              cliente: {
-                apellido: {
+              client: {
+                lastName: {
                   contains: searchTerms[0],
                   mode: "insensitive" as const,
                 },
@@ -41,16 +41,16 @@ export const getPaymentsByClient = async (
       : {
           AND: [
             {
-              cliente: {
-                nombre: {
+              client: {
+                firstName: {
                   contains: searchTerms[0],
                   mode: "insensitive" as const,
                 },
               },
             },
             {
-              cliente: {
-                apellido: {
+              client: {
+                lastName: {
                   contains: searchTerms[1],
                   mode: "insensitive" as const,
                 },
@@ -59,7 +59,7 @@ export const getPaymentsByClient = async (
           ],
         };
 
-  const where = { ...nameWhere, clienteId: clientId };
+  const where = { ...nameWhere, clientId: clientId };
 
   const page = searchParams[paymentPageKey] ?? 0;
   const size = searchParams[paymentSizeKey] ?? 10;
@@ -67,7 +67,7 @@ export const getPaymentsByClient = async (
   const take = size;
 
   const [payments, count] = await prisma.$transaction([
-    prisma.pago.findMany({
+    prisma.payment.findMany({
       where,
       skip,
       take,
@@ -75,10 +75,10 @@ export const getPaymentsByClient = async (
         [searchParams.sortKey]: searchParams.sortValue,
       },
       include: {
-        cliente: true,
+        client: true,
       },
     }),
-    prisma.pago.count({
+    prisma.payment.count({
       where,
     }),
   ]);

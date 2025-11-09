@@ -4,10 +4,10 @@ import { prisma } from "@/lib/prisma";
 export const getClient = async (id: string) => {
   await getAuthOrRedirect();
 
-  const client = await prisma.cliente.findUnique({
+  const client = await prisma.client.findUnique({
     where: { id },
     include: {
-      Pago: true,
+      payments: true,
     },
   });
 
