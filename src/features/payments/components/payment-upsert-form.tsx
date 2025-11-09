@@ -4,29 +4,29 @@ import { FieldError } from "@/components/form/field-error";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import {
-    ActionState,
-    EMPTY_ACTION_STATE,
+  ActionState,
+  EMPTY_ACTION_STATE,
 } from "@/components/form/util/to-action-state";
 import { SearchableSelect } from "@/components/search-select";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { createClient } from "@/features/clients/actions/create-client";
 import { deleteClientInline } from "@/features/clients/actions/delete-client-inline";
@@ -48,7 +48,7 @@ export const PaymentUpsertForm = ({
   clients,
   onSuccess,
 }: PaymentUpsertFormProps) => {
-  const [actionState, formAction] = useActionState(
+  const [actionState, formAction, isPending] = useActionState(
     upsertPayment.bind(null, payment?.id),
     EMPTY_ACTION_STATE
   );
@@ -194,7 +194,7 @@ export const PaymentUpsertForm = ({
 
   return (
     <>
-      <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
+      <Form action={formAction} actionState={actionState} onSuccess={onSuccess} isPending={isPending}>
         <div className="flex gap-x-2 mb-1">
           <div className="flex flex-col gap-y-2">
             <Label htmlFor="clientId" className="text-base md:text-lg">

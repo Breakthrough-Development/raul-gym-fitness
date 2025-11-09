@@ -2,8 +2,8 @@
 import clsx from "clsx";
 import { LucideLoaderCircle } from "lucide-react";
 import { cloneElement } from "react";
-import { useFormStatus } from "react-dom";
 import { Button } from "../ui/button";
+import { useFormPending } from "./form-context";
 
 export type SubmitButtonProps = {
   label?: string;
@@ -26,7 +26,7 @@ const SubmitButton = ({
   size = "default",
   disabled = false,
 }: SubmitButtonProps) => {
-  const { pending } = useFormStatus();
+  const isPending = useFormPending();
   const iconElement = icon
     ? cloneElement(icon, {
         className: clsx("h-4 w-4", icon.props.className),
@@ -35,11 +35,11 @@ const SubmitButton = ({
   return (
     <Button
       type="submit"
-      disabled={pending || disabled}
+      disabled={isPending || disabled}
       variant={variant}
       size={size}
     >
-      {pending && (
+      {isPending && (
         <LucideLoaderCircle
           className={clsx("h-4 w-4 animate-spin", {
             "mr-2": !!label,
@@ -47,7 +47,7 @@ const SubmitButton = ({
         />
       )}
       {label}
-      {pending ? null : iconElement}
+      {isPending ? null : iconElement}
     </Button>
   );
 };

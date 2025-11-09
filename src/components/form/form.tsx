@@ -2,6 +2,7 @@ import { useActionFeedback } from "@/components/form/hooks/use-action-feedback";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { ActionState } from "./util/to-action-state";
+import { FormContext } from "./form-context";
 type FormProps<T = unknown> = {
   action: (payload: FormData) => void;
   actionState: ActionState<T>;
@@ -9,6 +10,7 @@ type FormProps<T = unknown> = {
   onSuccess?: (actionState: ActionState<T>) => void;
   onError?: (actionState: ActionState) => void;
   className?: string;
+  isPending?: boolean;
 };
 
 const Form = <T,>({
@@ -18,6 +20,7 @@ const Form = <T,>({
   onSuccess,
   onError,
   className,
+  isPending,
 }: FormProps<T>) => {
   useActionFeedback(actionState, {
     onSuccess: () => {
@@ -34,9 +37,11 @@ const Form = <T,>({
     },
   });
   return (
-    <form action={action} className={cn("flex flex-col gap-y-2", className)}>
-      {children}
-    </form>
+    <FormContext.Provider value={{ isPending }}>
+      <form action={action} className={cn("flex flex-col gap-y-2", className)}>
+        {children} 
+      </form>
+    </FormContext.Provider>
   );
 };
 
