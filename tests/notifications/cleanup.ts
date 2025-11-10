@@ -13,13 +13,24 @@ export const TEST_PATTERNS = [
 /**
  * Clean up test notifications matching the test patterns
  * Uses the NotificationTestUtils class for simpler, more reliable deletion
+ * Has a timeout to prevent hanging
  */
 export async function cleanupTestNotifications(page: Page) {
   const utils = new NotificationTestUtils(page);
-  
+  const timeout = 20000; // 20 second timeout for cleanup
+  const startTime = Date.now();
+
   try {
-    await page.goto("/dashboard/notifications");
-    await page.waitForLoadState("networkidle");
+    await Promise.race([
+      page.goto("/dashboard/notifications"),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Cleanup timeout")), timeout)
+      ),
+    ]);
+
+    await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {
+      // Continue even if networkidle times out
+    });
 
     // Get all notifications
     const allNotifications = utils.getNotificationCards();
@@ -31,9 +42,14 @@ export async function cleanupTestNotifications(page: Page) {
 
     // Collect all matching notification messages (limit to prevent infinite loops)
     const messagesToDelete: string[] = [];
-    const maxIterations = Math.min(count, 50); // Limit to prevent excessive iterations
+    const maxIterations = Math.min(count, 20); // Reduced limit
 
     for (let i = 0; i < maxIterations; i++) {
+      // Check timeout
+      if (Date.now() - startTime > timeout) {
+        break;
+      }
+
       try {
         const notification = allNotifications.nth(i);
         const messageElement = notification.getByTestId("notification-message");
@@ -51,8 +67,13 @@ export async function cleanupTestNotifications(page: Page) {
     }
 
     // Delete all matching notifications (limit deletions to prevent timeout)
-    const maxDeletions = 20;
+    const maxDeletions = 10; // Reduced limit
     for (let i = 0; i < Math.min(messagesToDelete.length, maxDeletions); i++) {
+      // Check timeout
+      if (Date.now() - startTime > timeout) {
+        break;
+      }
+
       const message = messagesToDelete[i];
       try {
         // Check if notification still exists before attempting deletion
@@ -60,9 +81,15 @@ export async function cleanupTestNotifications(page: Page) {
         const exists = (await notification.count()) > 0;
 
         if (exists) {
-          await utils.deleteNotification(message);
-          // Small delay between deletions to avoid overwhelming the system
-          await page.waitForTimeout(200);
+          // Use Promise.race to timeout individual deletions
+          await Promise.race([
+            utils.deleteNotification(message),
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error("Deletion timeout")), 5000)
+            ),
+          ]).catch(() => {
+            // Continue if deletion times out
+          });
         }
       } catch {
         // Continue with next notification if deletion fails
@@ -70,7 +97,10 @@ export async function cleanupTestNotifications(page: Page) {
     }
   } catch (error) {
     // Silently fail cleanup - don't let cleanup errors break tests
-    console.warn("Cleanup failed:", error);
+    // Only log if it's not a timeout (timeouts are expected)
+    if (!(error instanceof Error && error.message.includes("timeout"))) {
+      console.warn("Cleanup failed:", error);
+    }
   }
 }
 

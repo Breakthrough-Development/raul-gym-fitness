@@ -66,28 +66,29 @@ test.describe("WhatsApp Notifications - Actions", () => {
       return;
     }
 
-    // Get the first pending notification's message
+    // Get the first pending notification
     const firstCard = pendingNotifications.first();
-    const messageElement = firstCard.getByTestId("notification-message");
-    await expect(messageElement).toBeVisible();
-    const messageText = await messageElement.textContent();
+    await expect(firstCard).toBeVisible();
 
-    if (!messageText) {
+    // Open the menu directly on this notification
+    await utils.openNotificationMenu(firstCard);
+
+    // Check if send option is available
+    const sendOption = page.getByTestId("notification-send-option");
+    const sendOptionCount = await sendOption.count();
+
+    if (sendOptionCount === 0) {
       test.skip();
       return;
     }
 
-    // Try to send the notification
-    try {
-      await utils.sendNotification(messageText.trim());
-    } catch (error) {
-      // If send option is not available, skip the test
-      if (error instanceof Error && error.message.includes("Send option not available")) {
-        test.skip();
-        return;
-      }
-      throw error;
-    }
+    // Click send option
+    await sendOption.first().click();
+
+    // Wait for success message (dynamic: "Sent to X clients")
+    await expect(page.getByText(/Sent to \d+ clients/i)).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test.afterAll(async ({ browser }) => {

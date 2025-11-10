@@ -1,4 +1,4 @@
-import { expect, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import { addDays, format } from "date-fns";
 
 export class NotificationTestUtils {
@@ -161,12 +161,12 @@ export class NotificationTestUtils {
   /**
    * Open the action menu for a notification
    */
-  async openNotificationMenu(notification: ReturnType<typeof this.getNotificationByMessage>) {
+  async openNotificationMenu(notification: Locator) {
     await notification.getByTestId("notification-menu-button").click();
-    // Wait for dropdown menu to be visible
+    // Wait for dropdown menu content to be visible (Radix portals take time to render)
     await expect(
-      this.page.locator('[data-slot="dropdown-menu"]')
-    ).toBeVisible();
+      this.page.locator('[data-slot="dropdown-menu-content"]')
+    ).toBeVisible({ timeout: 5000 });
   }
 
   /**
@@ -211,16 +211,6 @@ export class NotificationTestUtils {
     const notification = this.getNotificationByMessage(message);
     await expect(notification).toBeVisible();
 
-    // Get count before deletion
-    const beforeCount = await this.page
-      .getByTestId("notification-item")
-      .filter({
-        has: this.page
-          .getByTestId("notification-message")
-          .filter({ hasText: message }),
-      })
-      .count();
-
     await this.openNotificationMenu(notification);
     await this.page.getByTestId("notification-delete-option").click();
 
@@ -237,17 +227,16 @@ export class NotificationTestUtils {
     // Wait for network to be idle (revalidatePath was called)
     await this.page.waitForLoadState("networkidle");
 
-    // Verify the notification count decreased
-    const afterCount = await this.page
-      .getByTestId("notification-item")
-      .filter({
-        has: this.page
-          .getByTestId("notification-message")
-          .filter({ hasText: message }),
-      })
-      .count();
-
-    expect(afterCount).toBe(beforeCount - 1);
+    // Wait for the notification to actually disappear from the list
+    await expect(
+      this.page
+        .getByTestId("notification-item")
+        .filter({
+          has: this.page
+            .getByTestId("notification-message")
+            .filter({ hasText: message }),
+        })
+    ).toHaveCount(0, { timeout: 10000 });
   }
 
   /**
@@ -280,7 +269,18 @@ export class NotificationTestUtils {
     const searchInput = this.page.getByTestId("notification-search-input");
     await searchInput.fill(query);
 
-    // Wait for search to complete (wait for network idle or debounce)
+    // Wait for URL to change (search triggers router.push after debounce)
+    // The debounce is 250ms, wait for URL to include the search parameter
+    try {
+      await this.page.waitForURL(
+        (url) => url.includes(`search=${encodeURIComponent(query)}`),
+        { timeout: 5000 }
+      );
+    } catch {
+      // If URL doesn't change or times out, continue - search might still work
+    }
+
+    // Wait for page to load with new search results
     await this.page.waitForLoadState("networkidle");
   }
 
