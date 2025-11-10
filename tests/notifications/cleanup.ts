@@ -1,4 +1,5 @@
-import { expect, Page } from "@playwright/test";
+import { Page } from "@playwright/test";
+import { NotificationTestUtils } from "../utils";
 
 /**
  * Test message patterns to match for cleanup
@@ -11,39 +12,37 @@ export const TEST_PATTERNS = [
 
 /**
  * Clean up test notifications matching the test patterns
- * This is more efficient than the previous implementation - it collects
- * all matching notifications first, then deletes them without reloading
- * after each deletion.
+ * Uses the NotificationTestUtils class for simpler, more reliable deletion
  */
-export async function cleanupTestNotifications(page: Page, maxAttempts = 10) {
-  await page.goto("/dashboard/notifications");
-  await page.waitForTimeout(1000);
+export async function cleanupTestNotifications(page: Page) {
+  const utils = new NotificationTestUtils(page);
+  
+  try {
+    await page.goto("/dashboard/notifications");
+    await page.waitForLoadState("networkidle");
 
-  let attempts = 0;
-  while (attempts < maxAttempts) {
     // Get all notifications
-    const allNotifications = page.locator('[data-testid="notification-item"]');
+    const allNotifications = utils.getNotificationCards();
     const count = await allNotifications.count();
 
     if (count === 0) {
-      break; // No notifications left
+      return; // No notifications to clean up
     }
 
-    let deletedAny = false;
+    // Collect all matching notification messages (limit to prevent infinite loops)
+    const messagesToDelete: string[] = [];
+    const maxIterations = Math.min(count, 50); // Limit to prevent excessive iterations
 
-    // Collect all matching notifications first
-    const notificationsToDelete: Array<{ index: number; message: string }> = [];
-
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < maxIterations; i++) {
       try {
         const notification = allNotifications.nth(i);
-        const messageElement = notification.locator('[data-testid="notification-message"]');
+        const messageElement = notification.getByTestId("notification-message");
 
         if ((await messageElement.count()) > 0) {
           const messageText = await messageElement.textContent();
 
           if (messageText && TEST_PATTERNS.some((pattern) => pattern.test(messageText))) {
-            notificationsToDelete.push({ index: i, message: messageText || "" });
+            messagesToDelete.push(messageText.trim());
           }
         }
       } catch {
@@ -51,42 +50,27 @@ export async function cleanupTestNotifications(page: Page, maxAttempts = 10) {
       }
     }
 
-    // If no matching notifications found, we're done
-    if (notificationsToDelete.length === 0) {
-      break;
-    }
-
-    // Delete notifications (start from the end to preserve indices)
-    for (let j = notificationsToDelete.length - 1; j >= 0; j--) {
+    // Delete all matching notifications (limit deletions to prevent timeout)
+    const maxDeletions = 20;
+    for (let i = 0; i < Math.min(messagesToDelete.length, maxDeletions); i++) {
+      const message = messagesToDelete[i];
       try {
-        const { index } = notificationsToDelete[j];
-        const notification = allNotifications.nth(index);
+        // Check if notification still exists before attempting deletion
+        const notification = utils.getNotificationByMessage(message);
+        const exists = (await notification.count()) > 0;
 
-        // Check if notification still exists
-        if ((await notification.count()) > 0) {
-          await notification.locator('[data-testid="notification-menu-button"]').click();
-          await page.click('[data-testid="notification-delete-option"]');
-          await page.click('[data-testid="confirm-dialog-confirm-button"]');
-          await expect(page.locator('[data-testid="confirm-dialog"]')).not.toBeVisible({
-            timeout: 5000,
-          });
-          await page.waitForTimeout(300);
-          deletedAny = true;
+        if (exists) {
+          await utils.deleteNotification(message);
+          // Small delay between deletions to avoid overwhelming the system
+          await page.waitForTimeout(200);
         }
       } catch {
-        // Continue with next notification
+        // Continue with next notification if deletion fails
       }
     }
-
-    // Only reload if we deleted something
-    if (deletedAny) {
-      await page.reload();
-      await page.waitForTimeout(500);
-    } else {
-      break; // No more deletions possible
-    }
-
-    attempts++;
+  } catch (error) {
+    // Silently fail cleanup - don't let cleanup errors break tests
+    console.warn("Cleanup failed:", error);
   }
 }
 

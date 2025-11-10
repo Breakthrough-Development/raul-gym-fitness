@@ -1,125 +1,300 @@
 import { expect, Page } from "@playwright/test";
+import { addDays, format } from "date-fns";
 
 export class NotificationTestUtils {
   constructor(private page: Page) {}
 
-  async createNotification(data: {
+  /**
+   * Wait for toast message to appear (supports both English and Spanish)
+   */
+  private async waitForToast(message: string | RegExp, timeout = 10000) {
+    const toastLocator =
+      typeof message === "string"
+        ? this.page.getByText(message)
+        : this.page.locator(`text=${message}`);
+    await expect(toastLocator).toBeVisible({ timeout });
+  }
+
+  /**
+   * Open the create notification modal
+   */
+  async openCreateModal() {
+    await this.page.getByTestId("create-notification-button").click();
+    await expect(this.page.getByTestId("form-dialog")).toBeVisible();
+  }
+
+  /**
+   * Select a date in the date picker
+   */
+  async selectDate(date: Date) {
+    const dateButton = this.page.getByTestId("notification-form-date-picker");
+    await dateButton.click();
+
+    // Wait for calendar to be visible (the calendar has data-slot="calendar")
+    const calendar = this.page.locator('[data-slot="calendar"]');
+    await expect(calendar).toBeVisible();
+
+    // Format date as it appears in data-day attribute (matches calendar component format)
+    // Calendar uses day.date.toLocaleDateString() which defaults to system locale
+    // Use en-US to match the original test format: "M/D/YYYY"
+    const dataDay = date.toLocaleDateString("en-US");
+    const dayButton = this.page.locator(`button[data-day="${dataDay}"]`);
+
+    // Wait for the day button to be visible and clickable
+    await expect(dayButton).toBeVisible();
+    await dayButton.click();
+
+    // Wait for calendar popover to close (date picker closes automatically on selection)
+    // The calendar is inside a Radix PopoverContent which closes when date is selected
+    await expect(calendar).not.toBeVisible({ timeout: 5000 });
+  }
+
+  /**
+   * Fill the notification form
+   */
+  async fillForm(data: {
     message: string;
     templateName?: string;
-    recipientType?: "ALL" | "SELECTED";
-    sendDate?: string;
-    recurrence?: "ONE_TIME" | "WEEKLY" | "MONTHLY";
+    sendDate?: Date;
   }) {
-    // Click create notification button
-    await this.page.click('[data-testid="create-notification-button"]');
-
-    // Fill in the form
-    await this.page.fill('[data-testid="notification-form-message-input"]', data.message);
-
-    if (data.templateName) {
-      await this.page.fill('[data-testid="notification-form-template-input"]', data.templateName);
+    if (data.message) {
+      await this.page
+        .getByTestId("notification-form-message-input")
+        .fill(data.message);
     }
 
-    if (data.recipientType) {
-      // Select recipient type using the select trigger
-      await this.page.click('[data-testid="notification-form-recipient-select"]');
-      // Select the option (implementation depends on select component)
+    if (data.templateName) {
+      await this.page
+        .getByTestId("notification-form-template-input")
+        .fill(data.templateName);
     }
 
     if (data.sendDate) {
-      // Date picker is handled via the date picker component
-      await this.page.fill('[data-testid="notification-form-date-picker"]', data.sendDate);
+      await this.selectDate(data.sendDate);
     }
+  }
 
-    if (data.recurrence) {
-      // Select recurrence using the select trigger
-      await this.page.click('[data-testid="notification-form-recurrence-select"]');
-      // Select the option (implementation depends on select component)
+  /**
+   * Submit the form and wait for success
+   */
+  async submitForm(expectCreated = true) {
+    await this.page.getByTestId("form-submit-button").click();
+
+    // Wait for success toast (supports both languages)
+    if (expectCreated) {
+      await this.waitForToast(/Notificación creada|Notification created/i);
+    } else {
+      await this.waitForToast(/Notificación actualizada|Notification updated/i);
     }
-
-    // Submit the form
-    await this.page.click('[data-testid="form-submit-button"]');
-
-    // Wait for success message (toast appears in sonner portal)
-    await this.page.locator('text=Notificación creada').waitFor({ state: "visible" });
   }
 
-  async getNotificationCards() {
-    // Find notification items by data-testid
-    return this.page.locator('[data-testid="notification-item"]');
+  /**
+   * Close the form dialog
+   */
+  async closeDialog() {
+    // Wait for dialog to be visible first
+    const dialog = this.page.getByTestId("form-dialog");
+    await expect(dialog).toBeVisible();
+
+    // Press Escape to close
+    await this.page.keyboard.press("Escape");
+
+    // Wait for dialog to close
+    await expect(dialog).not.toBeVisible();
   }
 
-  async getNotificationByMessage(message: string) {
-    // Find notification by message text using data-testid
-    return this.page.locator('[data-testid="notification-item"]').filter({
-      has: this.page.locator('[data-testid="notification-message"]').filter({ hasText: message })
-    }).first();
+  /**
+   * Create a notification with default values
+   */
+  async createNotification(data: {
+    message: string;
+    templateName?: string;
+    sendDate?: Date;
+  }) {
+    await this.openCreateModal();
+
+    const sendDate = data.sendDate ?? addDays(new Date(), 1);
+    await this.fillForm({
+      message: data.message,
+      templateName: data.templateName ?? "test_template",
+      sendDate,
+    });
+
+    await this.submitForm();
+    await this.closeDialog();
+
+    // Wait for notification to appear in list (wait for network to be idle)
+    await this.page.waitForLoadState("networkidle");
+    await expect(
+      this.page
+        .getByTestId("notification-item")
+        .filter({
+          has: this.page
+            .getByTestId("notification-message")
+            .filter({ hasText: data.message }),
+        })
+        .first()
+    ).toBeVisible({ timeout: 10000 });
   }
 
+  /**
+   * Get all notification cards
+   */
+  getNotificationCards() {
+    return this.page.getByTestId("notification-item");
+  }
+
+  /**
+   * Find a notification by its message text
+   */
+  getNotificationByMessage(message: string) {
+    return this.page
+      .getByTestId("notification-item")
+      .filter({
+        has: this.page
+          .getByTestId("notification-message")
+          .filter({ hasText: message }),
+      })
+      .first();
+  }
+
+  /**
+   * Open the action menu for a notification
+   */
+  async openNotificationMenu(notification: ReturnType<typeof this.getNotificationByMessage>) {
+    await notification.getByTestId("notification-menu-button").click();
+    // Wait for dropdown menu to be visible
+    await expect(
+      this.page.locator('[data-slot="dropdown-menu"]')
+    ).toBeVisible();
+  }
+
+  /**
+   * Edit a notification
+   */
   async editNotification(message: string, newMessage: string) {
-    const notification = await this.getNotificationByMessage(message);
-    await notification.locator('[data-testid="notification-menu-button"]').click();
-    await this.page.click('[data-testid="notification-edit-option"]');
+    const notification = this.getNotificationByMessage(message);
+    await expect(notification).toBeVisible();
 
-    await this.page.fill('[data-testid="notification-form-message-input"]', newMessage);
-    await this.page.click('[data-testid="form-submit-button"]');
+    await this.openNotificationMenu(notification);
+    await this.page.getByTestId("notification-edit-option").click();
 
-    await this.page.locator('text=Notificación actualizada').waitFor({ state: "visible" });
+    // Wait for edit modal to open
+    await expect(this.page.getByTestId("form-dialog-title")).toBeVisible();
+
+    // Update the message
+    await this.page
+      .getByTestId("notification-form-message-input")
+      .fill(newMessage);
+
+    await this.submitForm(false);
+    await this.closeDialog();
+
+    // Wait for updated notification to appear
+    await this.page.waitForLoadState("networkidle");
+    await expect(
+      this.page
+        .getByTestId("notification-item")
+        .filter({
+          has: this.page
+            .getByTestId("notification-message")
+            .filter({ hasText: newMessage }),
+        })
+        .first()
+    ).toBeVisible({ timeout: 10000 });
   }
 
+  /**
+   * Delete a notification
+   */
   async deleteNotification(message: string) {
-    // Find the notification by message text using data-testid
-    const notification = await this.getNotificationByMessage(message);
+    const notification = this.getNotificationByMessage(message);
     await expect(notification).toBeVisible();
-    
-    // Get the count of notifications with this message before deletion
-    const beforeCount = await this.page.locator('[data-testid="notification-item"]').filter({
-      has: this.page.locator('[data-testid="notification-message"]').filter({ hasText: message })
-    }).count();
-    
-    // Click the menu button
-    await notification.locator('[data-testid="notification-menu-button"]').click();
-    
-    // Click delete option
-    await this.page.click('[data-testid="notification-delete-option"]');
-    
+
+    // Get count before deletion
+    const beforeCount = await this.page
+      .getByTestId("notification-item")
+      .filter({
+        has: this.page
+          .getByTestId("notification-message")
+          .filter({ hasText: message }),
+      })
+      .count();
+
+    await this.openNotificationMenu(notification);
+    await this.page.getByTestId("notification-delete-option").click();
+
+    // Wait for confirmation dialog
+    const confirmDialog = this.page.getByTestId("confirm-dialog");
+    await expect(confirmDialog).toBeVisible();
+
     // Confirm deletion
-    await this.page.click('[data-testid="confirm-dialog-confirm-button"]');
+    await this.page.getByTestId("confirm-dialog-confirm-button").click();
 
     // Wait for confirmation dialog to close
-    await expect(this.page.locator('[data-testid="confirm-dialog"]')).not.toBeVisible();
+    await expect(confirmDialog).not.toBeVisible();
 
-    // Wait for page to refresh/revalidate (revalidatePath was called)
-    await this.page.waitForTimeout(1000);
+    // Wait for network to be idle (revalidatePath was called)
+    await this.page.waitForLoadState("networkidle");
 
-    // Verify the notification count decreased by 1 (more reliable than checking for toast)
-    const afterCount = await this.page.locator('[data-testid="notification-item"]').filter({
-      has: this.page.locator('[data-testid="notification-message"]').filter({ hasText: message })
-    }).count();
-    
+    // Verify the notification count decreased
+    const afterCount = await this.page
+      .getByTestId("notification-item")
+      .filter({
+        has: this.page
+          .getByTestId("notification-message")
+          .filter({ hasText: message }),
+      })
+      .count();
+
     expect(afterCount).toBe(beforeCount - 1);
   }
 
+  /**
+   * Send a notification immediately
+   */
   async sendNotification(message: string) {
-    const notification = await this.getNotificationByMessage(message);
-    await notification.locator('[data-testid="notification-menu-button"]').click();
-    await this.page.click('[data-testid="notification-send-option"]');
+    const notification = this.getNotificationByMessage(message);
+    await expect(notification).toBeVisible();
 
-    // Wait for success message (dynamic: "Sent to X clients" - toast appears in sonner portal)
-    // The message format is "Sent to X clients" or "Sent to X clients, Y failed"
-    await this.page.locator('text=/Sent to \\d+ clients/').waitFor({ state: "visible" });
+    await this.openNotificationMenu(notification);
+
+    // Check if send option is available
+    const sendOption = this.page.getByTestId("notification-send-option");
+    const count = await sendOption.count();
+
+    if (count === 0) {
+      throw new Error("Send option not available for this notification");
+    }
+
+    await sendOption.first().click();
+
+    // Wait for success message (dynamic: "Sent to X clients")
+    await this.waitForToast(/Sent to \d+ clients/i);
   }
 
+  /**
+   * Search for notifications
+   */
   async searchNotifications(query: string) {
-    const searchInput = this.page.locator('[data-testid="notification-search-input"]');
+    const searchInput = this.page.getByTestId("notification-search-input");
     await searchInput.fill(query);
-    // Wait for search results to load
-    await this.page.waitForTimeout(500);
+
+    // Wait for search to complete (wait for network idle or debounce)
+    await this.page.waitForLoadState("networkidle");
   }
 
-  async getTomorrowDateString(): Promise<string> {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().split("T")[0];
+  /**
+   * Get tomorrow's date
+   */
+  getTomorrowDate(): Date {
+    return addDays(new Date(), 1);
+  }
+
+  /**
+   * Get a date string in ISO format (YYYY-MM-DD)
+   */
+  getDateString(date: Date): string {
+    return format(date, "yyyy-MM-dd");
   }
 }
