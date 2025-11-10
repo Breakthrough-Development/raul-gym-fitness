@@ -2,6 +2,12 @@ import { AccountTabs } from "@/app/(authenticated)/account/_navigation/account-t
 import Heading from "@/components/heading";
 import { UserUpdateForm } from "@/features/auth/component/user-update-form";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Perfil | Raul Gym Fitness",
+  description: "Gestiona tu información de perfil",
+};
 
 const profilePage = async () => {
   const { user: authUser } = await getAuthOrRedirect();

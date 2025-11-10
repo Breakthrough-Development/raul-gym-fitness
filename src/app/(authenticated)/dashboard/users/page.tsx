@@ -4,7 +4,13 @@ import { UserUpdateForm } from "@/features/auth/component/user-update-form";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { featureFlags } from "@/lib/feature-flags";
 import { homePath } from "@/paths";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Usuarios | Raul Gym Fitness",
+  description: "Gestiona los usuarios del sistema",
+};
 
 const profilePage = async () => {
   if (!featureFlags.userManagement) {

@@ -20,8 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Road to Next",
-  description: "A journey through the Next.js ecosystem by Royer Adames",
+  title: "Raul Gym Fitness",
+  description:
+    "Sistema de gestión para gimnasio - Administra clientes, pagos y notificaciones",
 };
 
 export default function RootLayout({

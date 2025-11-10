@@ -2,7 +2,14 @@ import { CardComp } from "@/components/card-comp";
 import { Button } from "@/components/ui/button";
 import { SignInForm } from "@/features/auth/component/sign-in-form";
 import { passwordForgotPath, signUpPath } from "@/paths";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Iniciar sesión | Raul Gym Fitness",
+  description: "Accede a tu cuenta de Raul Gym Fitness",
+};
+
 const SignInPage = () => {
   return (
     <div className="flex-1 flex flex-col justify-center items-center">

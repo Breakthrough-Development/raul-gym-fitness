@@ -5,8 +5,14 @@ import { NotificationUpsertForm } from "@/features/notifications/components/noti
 import { parseNotificationSearchParams } from "@/features/notifications/search-params";
 import { featureFlags } from "@/lib/feature-flags";
 import { homePath } from "@/paths";
-import { redirect } from "next/navigation";
 import { LucidePlus } from "lucide-react";
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Notificaciones WhatsApp | Raul Gym Fitness",
+  description: "Gestiona y envía notificaciones WhatsApp a tus clientes",
+};
 
 export type NotificationsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

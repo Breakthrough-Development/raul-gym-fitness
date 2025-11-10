@@ -8,12 +8,36 @@ import { getPaymentsByClient } from "@/features/payments/queries/get-payments-by
 import { PaymentSearchParamsCache } from "@/features/payments/search-params";
 import { featureFlags } from "@/lib/feature-flags";
 import { homePath } from "@/paths";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 type ClientDetailPageProps = {
   params: Promise<{ id: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const client = await getClient(id);
+
+  if (!client) {
+    return {
+      title: "Cliente no encontrado | Raul Gym Fitness",
+      description: "El cliente solicitado no fue encontrado",
+    };
+  }
+
+  const clientName = `${client.firstName} ${client.lastName}`.trim();
+
+  return {
+    title: `${clientName} | Raul Gym Fitness`,
+    description: `Detalles del cliente ${clientName} e historial de pagos`,
+  };
+}
 
 export default async function ClientDetailPage({
   params,

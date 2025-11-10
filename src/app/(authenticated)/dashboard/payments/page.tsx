@@ -11,10 +11,16 @@ import { getPayments } from "@/features/payments/queries/get-payments";
 import { PaymentSearchParamsCache } from "@/features/payments/search-params";
 import { featureFlags } from "@/lib/feature-flags";
 import { homePath } from "@/paths";
-import { SearchParams } from "nuqs";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { SearchParams } from "nuqs";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+
+export const metadata: Metadata = {
+  title: "Pagos | Raul Gym Fitness",
+  description: "Gestiona y visualiza todos los pagos de tus clientes",
+};
 
 type PaymentPageProps = {
   searchParams: Promise<SearchParams>;

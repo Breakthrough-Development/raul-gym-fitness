@@ -14,9 +14,15 @@ import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert
 import { getPayments } from "@/features/payments/queries/get-payments";
 import { PaymentSearchParamsCache } from "@/features/payments/search-params";
 import { featureFlags } from "@/lib/feature-flags";
+import type { Metadata } from "next";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+
+export const metadata: Metadata = {
+  title: "Inicio | Raul Gym Fitness",
+  description: "Panel de control - Gestiona clientes, pagos y suscripciones",
+};
 
 type HomePageProps = {
   searchParams: Promise<SearchParams>;
