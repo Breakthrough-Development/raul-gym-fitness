@@ -17,6 +17,7 @@ export const PasswordField = ({
       placeholder="Contraseña"
       label="Contraseña"
       isOptional={isOptional}
+      data-testid="password"
     />
   );
 };

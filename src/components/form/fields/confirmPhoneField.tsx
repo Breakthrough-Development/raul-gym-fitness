@@ -17,7 +17,8 @@ export const ConfirmPhoneField = ({
       actionState={actionState}
       defaultValue={defaultValue}
       isOptional={isOptional}
-      name="confirmPassword"
+      name="confirmPhone"
+      data-testid="confirm-phone"
     />
   );
 };

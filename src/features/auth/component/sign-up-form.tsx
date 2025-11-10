@@ -28,6 +28,7 @@ const SignUpForm = () => {
             label="Por favor ingrese la frase secreta"
             value={secretPhrase}
             onChange={(e) => setSecretPhrase(e.target.value)}
+            data-testid="frase-secreta"
           />
         </div>
         <fieldset

@@ -17,6 +17,7 @@ export const ConfirmPasswordField = ({
       placeholder="Confirmar contraseña"
       label="Confirmar contraseña"
       isOptional={isOptional}
+      data-testid="confirm-password"
     />
   );
 };

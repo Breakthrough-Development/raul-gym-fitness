@@ -11,6 +11,7 @@ export type DynamicTextFieldProps = {
   isOptional?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
+  "data-testid": string;
 };
 export const DynamicTextField = ({
   actionState,
@@ -20,10 +21,11 @@ export const DynamicTextField = ({
   isOptional = false,
   onChange,
   value,
+  "data-testid": dataTestId,
 }: DynamicTextFieldProps) => {
   return (
     <>
-      <Label htmlFor={name} className="text-base md:text-lg">
+      <Label htmlFor={name} className="text-base md:text-lg" data-testid={`${dataTestId}-label`}>
         {label} {isOptional ? "(opcional)" : ""}
       </Label>
       <Input
@@ -33,8 +35,9 @@ export const DynamicTextField = ({
         value={value}
         onChange={onChange}
         className="text-base md:text-lg"
+        data-testid={`${dataTestId}-input`}
       />
-      <FieldError actionState={actionState} name={name} />
+      <FieldError actionState={actionState} name={name} data-testid={`${dataTestId}-error`} />
     </>
   );
 };

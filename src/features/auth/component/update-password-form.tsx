@@ -22,6 +22,7 @@ export const ResetPasswordForm = () => {
         defaultValue={actionState.payload?.get("currentPassword") as string}
         placeholder="Contraseña actual"
         label="Contraseña actual"
+        data-testid="current-password"
       />
       <DynamicPasswordField
         actionState={actionState}
@@ -30,6 +31,7 @@ export const ResetPasswordForm = () => {
         defaultValue={actionState.payload?.get("newPassword") as string}
         placeholder="Nueva contraseña"
         label="Nueva contraseña"
+        data-testid="new-password"
       />
       <DynamicPasswordField
         actionState={actionState}
@@ -38,6 +40,7 @@ export const ResetPasswordForm = () => {
         defaultValue={actionState.payload?.get("confirmPassword") as string}
         placeholder="Confirmar contraseña"
         label="Confirmar contraseña"
+        data-testid="confirm-password"
       />
       <div className="flex flex-row flex-wrap justify-between w-full">
         <SubmitButton label="Actualizar contraseña" />

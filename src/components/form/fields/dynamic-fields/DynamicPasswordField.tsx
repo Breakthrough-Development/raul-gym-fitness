@@ -10,6 +10,7 @@ export type PasswordFieldProps = {
   placeholder: string;
   label: string;
   isOptional?: boolean;
+  "data-testid": string;
 };
 export const DynamicPasswordField = ({
   actionState,
@@ -19,10 +20,15 @@ export const DynamicPasswordField = ({
   placeholder,
   label,
   isOptional = false,
+  "data-testid": dataTestId,
 }: PasswordFieldProps) => {
   return (
     <>
-      <Label htmlFor={name} className="text-base md:text-lg">
+      <Label
+        htmlFor={name}
+        className="text-base md:text-lg"
+        data-testid={`${dataTestId}-label`}
+      >
         {label} {isOptional ? "(opcional)" : ""}
       </Label>
       <PasswordInput
@@ -31,8 +37,13 @@ export const DynamicPasswordField = ({
         placeholder={placeholder}
         defaultValue={defaultValue}
         autoComplete={autoComplete}
+        data-testid={`${dataTestId}-input`}
       />
-      <FieldError actionState={actionState} name={name} />
+      <FieldError
+        actionState={actionState}
+        name={name}
+        data-testid={`${dataTestId}-error`}
+      />
     </>
   );
 };

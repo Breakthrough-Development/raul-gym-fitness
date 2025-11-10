@@ -19,7 +19,7 @@ export const EmailField = ({
 }: EmailFieldProps) => {
   return (
     <>
-      <Label htmlFor="email" className="text-base md:text-lg">
+      <Label htmlFor="email" className="text-base md:text-lg" data-testid="email-label">
         Correo electrónico {isOptional ? "(opcional)" : ""}
       </Label>
       <Input
@@ -31,8 +31,9 @@ export const EmailField = ({
         }
         className="text-base md:text-lg"
         disabled={disabled}
+        data-testid="email-input"
       />
-      <FieldError actionState={actionState} name="email" />
+      <FieldError actionState={actionState} name="email" data-testid="email-error" />
     </>
   );
 };

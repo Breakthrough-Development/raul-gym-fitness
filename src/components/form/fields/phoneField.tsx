@@ -21,6 +21,7 @@ export const PhoneField = ({
       isOptional={isOptional}
       name="phone"
       disabled={disabled}
+      data-testid="phone"
     />
   );
 };

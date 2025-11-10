@@ -17,7 +17,11 @@ export const LastNameField = ({
 }: LastNameFieldProps) => {
   return (
     <>
-      <Label htmlFor="lastName" className="text-base md:text-lg">
+      <Label
+        htmlFor="lastName"
+        className="text-base md:text-lg"
+        data-testid="last-name-label"
+      >
         Apellido {isOptional ? "(opcional)" : ""}
       </Label>
       <Input
@@ -29,8 +33,13 @@ export const LastNameField = ({
         }
         className="text-base md:text-lg"
         disabled={disabled}
+        data-testid="last-name-input"
       />
-      <FieldError actionState={actionState} name="lastName" />
+      <FieldError
+        actionState={actionState}
+        name="lastName"
+        data-testid="last-name-error"
+      />
     </>
   );
 };

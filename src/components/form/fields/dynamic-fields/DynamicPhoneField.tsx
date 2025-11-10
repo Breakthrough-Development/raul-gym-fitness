@@ -10,6 +10,7 @@ export type PhoneInputProps = {
   isOptional?: boolean;
   name: string;
   disabled?: boolean;
+  "data-testid": string;
 };
 
 function formatPhone(value: string | null | undefined): string {
@@ -37,6 +38,7 @@ export const DynamicPhoneField = ({
   isOptional = false,
   name,
   disabled = false,
+  "data-testid": dataTestId,
 }: PhoneInputProps) => {
   const phoneDefaultValue = () => {
     const payloadValue = actionState.payload?.get(name) as string | undefined;
@@ -58,7 +60,7 @@ export const DynamicPhoneField = ({
 
   return (
     <>
-      <Label htmlFor={name} className="text-base md:text-lg">
+      <Label htmlFor={name} className="text-base md:text-lg" data-testid={`${dataTestId}-label`}>
         Teléfono {isOptional ? "(opcional)" : ""}
       </Label>
       <Input
@@ -72,8 +74,9 @@ export const DynamicPhoneField = ({
         onChange={onChange}
         className="text-base md:text-lg"
         disabled={disabled}
+        data-testid={`${dataTestId}-input`}
       />
-      <FieldError actionState={actionState} name={name} />
+      <FieldError actionState={actionState} name={name} data-testid={`${dataTestId}-error`} />
     </>
   );
 };

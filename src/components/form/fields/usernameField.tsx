@@ -17,7 +17,7 @@ export const UsernameField = ({
 }: UsernameFieldProps) => {
   return (
     <>
-      <Label htmlFor="username" className="text-base md:text-lg">
+      <Label htmlFor="username" className="text-base md:text-lg" data-testid="username-label">
         Nombre de usuario {isOptional ? "(opcional)" : ""}
       </Label>
       <Input
@@ -29,8 +29,9 @@ export const UsernameField = ({
         }
         className="text-base md:text-lg"
         disabled={disabled}
+        data-testid="username-input"
       />
-      <FieldError actionState={actionState} name="username" />
+      <FieldError actionState={actionState} name="username" data-testid="username-error" />
     </>
   );
 };
