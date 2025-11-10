@@ -109,7 +109,7 @@ export default defineConfig({
   webServer: {
     command: "bun dev",
     url: "http://localhost:3000",
-    reuseExistingServer: process.env.AI_TEST ? false : !process.env.CI,
+    reuseExistingServer: process.env.AI_TEST ? true : !process.env.CI,
     timeout: 120 * 1000,
   },
 });

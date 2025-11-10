@@ -40,8 +40,8 @@ export class NotificationTestUtils {
     // Submit the form
     await this.page.click('[data-testid="form-submit-button"]');
 
-    // Wait for success message (find toast by message content)
-    await this.page.locator('[data-testid="toaster"]').locator('text=Notificación creada').waitFor({ state: "visible" });
+    // Wait for success message (toast appears in sonner portal)
+    await this.page.locator('text=Notificación creada').waitFor({ state: "visible" });
   }
 
   async getNotificationCards() {
@@ -64,13 +64,18 @@ export class NotificationTestUtils {
     await this.page.fill('[data-testid="notification-form-message-input"]', newMessage);
     await this.page.click('[data-testid="form-submit-button"]');
 
-    await this.page.locator('[data-testid="toaster"]').locator('text=Notificación actualizada').waitFor({ state: "visible" });
+    await this.page.locator('text=Notificación actualizada').waitFor({ state: "visible" });
   }
 
   async deleteNotification(message: string) {
     // Find the notification by message text using data-testid
     const notification = await this.getNotificationByMessage(message);
     await expect(notification).toBeVisible();
+    
+    // Get the count of notifications with this message before deletion
+    const beforeCount = await this.page.locator('[data-testid="notification-item"]').filter({
+      has: this.page.locator('[data-testid="notification-message"]').filter({ hasText: message })
+    }).count();
     
     // Click the menu button
     await notification.locator('[data-testid="notification-menu-button"]').click();
@@ -81,8 +86,18 @@ export class NotificationTestUtils {
     // Confirm deletion
     await this.page.click('[data-testid="confirm-dialog-confirm-button"]');
 
-    // Wait for success message (find toast by message content)
-    await this.page.locator('[data-testid="toaster"]').locator('text=Notification deleted').waitFor({ state: "visible" });
+    // Wait for confirmation dialog to close
+    await expect(this.page.locator('[data-testid="confirm-dialog"]')).not.toBeVisible();
+
+    // Wait for page to refresh/revalidate (revalidatePath was called)
+    await this.page.waitForTimeout(1000);
+
+    // Verify the notification count decreased by 1 (more reliable than checking for toast)
+    const afterCount = await this.page.locator('[data-testid="notification-item"]').filter({
+      has: this.page.locator('[data-testid="notification-message"]').filter({ hasText: message })
+    }).count();
+    
+    expect(afterCount).toBe(beforeCount - 1);
   }
 
   async sendNotification(message: string) {
@@ -90,8 +105,9 @@ export class NotificationTestUtils {
     await notification.locator('[data-testid="notification-menu-button"]').click();
     await this.page.click('[data-testid="notification-send-option"]');
 
-    // Wait for success message (dynamic: "Sent to X clients" - find in toast)
-    await this.page.locator('[data-testid="toaster"]').locator('text=/Sent to \\d+ clients/').waitFor({ state: "visible" });
+    // Wait for success message (dynamic: "Sent to X clients" - toast appears in sonner portal)
+    // The message format is "Sent to X clients" or "Sent to X clients, Y failed"
+    await this.page.locator('text=/Sent to \\d+ clients/').waitFor({ state: "visible" });
   }
 
   async searchNotifications(query: string) {
