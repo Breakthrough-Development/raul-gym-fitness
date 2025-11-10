@@ -7,8 +7,8 @@ setup("authenticate", async ({ page }) => {
   await page.goto("/sign-in");
 
   // Fill in the login form with seed credentials
-  await page.fill('input[name="email"]', "admin@admin.com");
-  await page.fill('input[name="password"]', "gemeimnis");
+  await page.fill('[data-testid="email-input"]', "admin@admin.com");
+  await page.fill('[data-testid="password-input"]', "gemeimnis");
 
   // Submit the form
   await page.click('button[type="submit"]');
