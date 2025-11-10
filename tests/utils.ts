@@ -123,18 +123,13 @@ export class NotificationTestUtils {
     await this.submitForm();
     await this.closeDialog();
 
-    // Wait for notification to appear in list (wait for network to be idle)
-    await this.page.waitForLoadState("networkidle");
+    // Wait for notification to appear in list - Playwright auto-waits
     await expect(
       this.page
         .getByTestId("notification-item")
-        .filter({
-          has: this.page
-            .getByTestId("notification-message")
-            .filter({ hasText: data.message }),
-        })
+        .filter({ hasText: data.message })
         .first()
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible();
   }
 
   /**
@@ -146,15 +141,12 @@ export class NotificationTestUtils {
 
   /**
    * Find a notification by its message text
+   * Simplified to use hasText filter directly on notification-item
    */
   getNotificationByMessage(message: string) {
     return this.page
       .getByTestId("notification-item")
-      .filter({
-        has: this.page
-          .getByTestId("notification-message")
-          .filter({ hasText: message }),
-      })
+      .filter({ hasText: message })
       .first();
   }
 
@@ -190,18 +182,13 @@ export class NotificationTestUtils {
     await this.submitForm(false);
     await this.closeDialog();
 
-    // Wait for updated notification to appear
-    await this.page.waitForLoadState("networkidle");
+    // Wait for updated notification to appear - Playwright auto-waits
     await expect(
       this.page
         .getByTestId("notification-item")
-        .filter({
-          has: this.page
-            .getByTestId("notification-message")
-            .filter({ hasText: newMessage }),
-        })
+        .filter({ hasText: newMessage })
         .first()
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible();
   }
 
   /**
@@ -224,19 +211,12 @@ export class NotificationTestUtils {
     // Wait for confirmation dialog to close
     await expect(confirmDialog).not.toBeVisible();
 
-    // Wait for network to be idle (revalidatePath was called)
-    await this.page.waitForLoadState("networkidle");
-
-    // Wait for the notification to actually disappear from the list
+    // Wait for the notification to disappear from the list - Playwright auto-waits
     await expect(
       this.page
         .getByTestId("notification-item")
-        .filter({
-          has: this.page
-            .getByTestId("notification-message")
-            .filter({ hasText: message }),
-        })
-    ).toHaveCount(0, { timeout: 10000 });
+        .filter({ hasText: message })
+    ).toHaveCount(0);
   }
 
   /**
@@ -273,15 +253,20 @@ export class NotificationTestUtils {
     // The debounce is 250ms, wait for URL to include the search parameter
     try {
       await this.page.waitForURL(
-        (url) => url.includes(`search=${encodeURIComponent(query)}`),
+        (url) => url.toString().includes(`search=${encodeURIComponent(query)}`),
         { timeout: 5000 }
       );
     } catch {
       // If URL doesn't change or times out, continue - search might still work
     }
 
-    // Wait for page to load with new search results
-    await this.page.waitForLoadState("networkidle");
+    // Wait for search results to update - wait for notifications list to be visible
+    // This is more reliable than waiting for networkidle
+    await expect(
+      this.page.getByTestId("notification-item").first()
+    ).toBeVisible({ timeout: 5000 }).catch(() => {
+      // If no results, that's okay - search might have filtered everything
+    });
   }
 
   /**
@@ -296,5 +281,40 @@ export class NotificationTestUtils {
    */
   getDateString(date: Date): string {
     return format(date, "yyyy-MM-dd");
+  }
+
+  /**
+   * Find all pending notifications
+   */
+  findPendingNotifications() {
+    return this.page
+      .getByTestId("notification-item")
+      .filter({
+        has: this.page
+          .getByTestId("notification-status")
+          .filter({ hasText: /Pending|Pendiente/ }),
+      });
+  }
+
+  /**
+   * Get notification message text from a notification locator
+   */
+  async getNotificationMessage(notification: Locator): Promise<string> {
+    const messageElement = notification.getByTestId("notification-message");
+    await expect(messageElement).toBeVisible();
+    const text = await messageElement.textContent();
+    if (!text) {
+      throw new Error("Notification message text not found");
+    }
+    return text.trim();
+  }
+
+  /**
+   * Check if there are any pending notifications
+   */
+  async hasPendingNotifications(): Promise<boolean> {
+    const pendingNotifications = this.findPendingNotifications();
+    const count = await pendingNotifications.count();
+    return count > 0;
   }
 }

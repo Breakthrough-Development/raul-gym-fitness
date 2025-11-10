@@ -4,6 +4,7 @@ import { LucideSend } from "lucide-react";
 import { toast } from "sonner";
 import { sendNotification } from "../actions/send-notification";
 import { NotificationWithClients } from "../types";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 export type SendNotificationOptionProps = {
   notification: NotificationWithClients;
@@ -27,13 +28,13 @@ export const SendNotificationOption = ({
   };
 
   return (
-    <div
-      className="flex items-center gap-x-2 px-2 py-1.5 text-sm cursor-pointer hover:bg-accent"
+    <DropdownMenuItem
+      className="flex items-center gap-x-2 px-2 py-1.5 text-sm cursor-pointer hover:bg-accent w-full"
       onClick={handleSend}
       data-testid="notification-send-option"
     >
       <LucideSend className="h-4 w-4" />
-      Send Now
-    </div>
+      Enviar Ahora
+    </button>
   );
 };

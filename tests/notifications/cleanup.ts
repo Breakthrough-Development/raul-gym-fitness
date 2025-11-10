@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { NotificationTestUtils } from "../utils";
 
 /**
@@ -28,8 +28,11 @@ export async function cleanupTestNotifications(page: Page) {
       ),
     ]);
 
-    await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {
-      // Continue even if networkidle times out
+    // Wait for page to load - use specific element instead of networkidle
+    await expect(page.getByTestId("notifications-page-heading")).toBeVisible({
+      timeout: 5000,
+    }).catch(() => {
+      // Continue even if heading not found
     });
 
     // Get all notifications
@@ -101,6 +104,45 @@ export async function cleanupTestNotifications(page: Page) {
     if (!(error instanceof Error && error.message.includes("timeout"))) {
       console.warn("Cleanup failed:", error);
     }
+  }
+}
+
+/**
+ * Clean up a single notification by message
+ * Used by fixtures for per-test cleanup
+ */
+export async function cleanupNotification(page: Page, message: string) {
+  const utils = new NotificationTestUtils(page);
+
+  try {
+    // Navigate to notifications page
+    await page.goto("/dashboard/notifications");
+
+    // Wait for page to load
+    await expect(page.getByTestId("notifications-page-heading")).toBeVisible({
+      timeout: 5000,
+    }).catch(() => {
+      // Continue even if heading not found
+    });
+
+    // Check if notification exists
+    const notification = utils.getNotificationByMessage(message);
+    const exists = (await notification.count()) > 0;
+
+    if (exists) {
+      // Delete the notification with timeout
+      await Promise.race([
+        utils.deleteNotification(message),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Deletion timeout")), 5000)
+        ),
+      ]).catch(() => {
+        // Continue if deletion times out
+      });
+    }
+  } catch (error) {
+    // Silently fail cleanup - don't let cleanup errors break tests
+    console.warn("Individual cleanup failed:", error);
   }
 }
 

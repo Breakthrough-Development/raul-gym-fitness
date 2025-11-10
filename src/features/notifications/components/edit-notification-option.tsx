@@ -1,6 +1,7 @@
 "use client";
 
 import { FormDialog } from "@/components/form-dialog";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { LucideEdit } from "lucide-react";
 import { NotificationWithClients } from "../types";
 import { NotificationUpsertForm } from "./notification-upsert-form";
@@ -17,10 +18,13 @@ export const EditNotificationOption = ({
       title="Edit Notification"
       description="Update the notification details"
       trigger={
-        <div className="flex items-center gap-x-2 px-2 py-1.5 text-sm cursor-pointer hover:bg-accent" data-testid="notification-edit-option">
+        <DropdownMenuItem
+          className="flex items-center gap-x-2 px-2 py-1.5 text-sm cursor-pointer hover:bg-accent w-full"
+          data-testid="notification-edit-option"
+        >
           <LucideEdit className="h-4 w-4" />
-          Edit
-        </div>
+          Editar
+        </DropdownMenuItem>
       }
     >
       <NotificationUpsertForm notification={notification} />
