@@ -1,8 +1,8 @@
 "use server";
 import {
-  ActionState,
-  fromErrorToActionState,
-  toActionState,
+    ActionState,
+    fromErrorToActionState,
+    toActionState,
 } from "@/components/form/util/to-action-state";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
@@ -36,7 +36,6 @@ const signUpSchema = z.object({
       "El apellido no puede contener espacios"
     ),
   email: z
-    .string()
     .email({ message: "El correo electrónico no es válido" })
     .max(191, { message: "El correo electrónico es muy largo" })
     .optional()

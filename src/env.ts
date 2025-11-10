@@ -38,13 +38,13 @@ const serverSchema = z.object({
     .enum(["development", "test", "production"])
     .default("development"),
   // Feature Flags (all optional, default to false - industry standard safe defaults)
-  FEATURE_WHATSAPP_NOTIFICATIONS: z.coerce.boolean().default(false),
-  FEATURE_SCHEDULED_NOTIFICATIONS: z.coerce.boolean().default(false),
-  FEATURE_PAYMENT_MANAGEMENT: z.coerce.boolean().default(false),
-  FEATURE_USER_MANAGEMENT: z.coerce.boolean().default(false),
-  FEATURE_CLIENT_MANAGEMENT: z.coerce.boolean().default(false),
-  FEATURE_DASHBOARD_CHARTS: z.coerce.boolean().default(false),
-  FEATURE_PASSWORD_RESET: z.coerce.boolean().default(false),
+  FEATURE_WHATSAPP_NOTIFICATIONS: z.stringbool().default(false),
+  FEATURE_SCHEDULED_NOTIFICATIONS: z.stringbool().default(false),
+  FEATURE_PAYMENT_MANAGEMENT: z.stringbool().default(false),
+  FEATURE_USER_MANAGEMENT: z.stringbool().default(false),
+  FEATURE_CLIENT_MANAGEMENT: z.stringbool().default(false),
+  FEATURE_DASHBOARD_CHARTS: z.stringbool().default(false),
+  FEATURE_PASSWORD_RESET: z.stringbool().default(false),
   // Seed-only vars: optional
   SEED_PASSWORD: z.string().optional(),
   SEED_PHONE: z.string().optional(),
