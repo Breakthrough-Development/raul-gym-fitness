@@ -85,18 +85,18 @@ const useConfirmDialog = ({
 
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent>
+      <AlertDialogContent data-testid="confirm-dialog">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="cursor-pointer">
+          <AlertDialogCancel className="cursor-pointer" data-testid="confirm-dialog-cancel-button">
             Cancelar
           </AlertDialogCancel>
           <AlertDialogAction asChild>
             <form action={formAction}>
-              <Button type="submit">Confirmar</Button>
+              <Button type="submit" data-testid="confirm-dialog-confirm-button">Confirmar</Button>
             </form>
           </AlertDialogAction>
         </AlertDialogFooter>

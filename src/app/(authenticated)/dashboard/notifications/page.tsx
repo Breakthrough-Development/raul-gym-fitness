@@ -36,8 +36,8 @@ export default async function NotificationsPage({
     <div className="flex flex-col gap-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">WhatsApp Notifications</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-bold" data-testid="notifications-page-heading">WhatsApp Notifications</h1>
+          <p className="text-muted-foreground" data-testid="notifications-page-description">
             Manage and send WhatsApp notifications to your clients
           </p>
         </div>
@@ -46,7 +46,7 @@ export default async function NotificationsPage({
           title="Create Notification"
           description="Set up a new WhatsApp notification to send to your clients"
           trigger={
-            <Button className="flex gap-x-2" variant="ghost">
+            <Button className="flex gap-x-2" variant="ghost" data-testid="create-notification-button">
               <LucidePlus className="h-4 w-4" />
               Create Notification
             </Button>

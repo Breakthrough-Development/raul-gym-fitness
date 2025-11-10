@@ -17,6 +17,7 @@ export type SubmitButtonProps = {
     | "link";
   size?: "sm" | "default" | "lg" | "icon";
   disabled?: boolean;
+  dataTestId?: string;
 };
 
 const SubmitButton = ({
@@ -25,6 +26,7 @@ const SubmitButton = ({
   variant = "default",
   size = "default",
   disabled = false,
+  dataTestId = "form-submit-button",
 }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
   const iconElement = icon
@@ -38,6 +40,7 @@ const SubmitButton = ({
       disabled={pending || disabled}
       variant={variant}
       size={size}
+      data-testid={dataTestId}
     >
       {pending && (
         <LucideLoaderCircle

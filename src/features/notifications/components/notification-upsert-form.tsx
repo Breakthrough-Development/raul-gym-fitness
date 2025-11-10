@@ -102,6 +102,7 @@ export const NotificationUpsertForm = ({
             placeholder="e.g., Monthly membership reminder"
             defaultValue={notification?.message || ""}
             className="text-base md:text-lg"
+            data-testid="notification-form-message-input"
           />
           <FieldError actionState={actionState} name="message" />
 
@@ -116,6 +117,7 @@ export const NotificationUpsertForm = ({
                 placeholder="Enter template name (e.g., membership_reminder)"
                 defaultValue={notification?.templateName || ""}
                 className="text-base md:text-lg"
+                data-testid="notification-form-template-input"
               />
               <p className="text-base text-muted-foreground md:text-lg">
                 No templates available from WhatsApp API. Enter template name
@@ -152,7 +154,7 @@ export const NotificationUpsertForm = ({
             value={recipientType}
             onValueChange={handleRecipientTypeChange}
           >
-            <SelectTrigger className="text-base md:text-lg">
+            <SelectTrigger className="text-base md:text-lg" data-testid="notification-form-recipient-select">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -268,7 +270,7 @@ export const NotificationUpsertForm = ({
             name="recurrence"
             defaultValue={notification?.recurrence || "ONE_TIME"}
           >
-            <SelectTrigger className="text-base md:text-lg">
+            <SelectTrigger className="text-base md:text-lg" data-testid="notification-form-recurrence-select">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

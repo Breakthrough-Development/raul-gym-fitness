@@ -17,7 +17,7 @@ export const EditNotificationOption = ({
       title="Edit Notification"
       description="Update the notification details"
       trigger={
-        <div className="flex items-center gap-x-2 px-2 py-1.5 text-sm cursor-pointer hover:bg-accent">
+        <div className="flex items-center gap-x-2 px-2 py-1.5 text-sm cursor-pointer hover:bg-accent" data-testid="notification-edit-option">
           <LucideEdit className="h-4 w-4" />
           Edit
         </div>

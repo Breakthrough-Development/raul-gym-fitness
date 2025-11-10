@@ -47,10 +47,10 @@ export const useFormDialog = ({
 
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent>
+      <AlertDialogContent data-testid="form-dialog">
         <AlertDialogHeader>
           <div className="flex justify-between items-center">
-            <AlertDialogTitle>{title}</AlertDialogTitle>
+            <AlertDialogTitle data-testid="form-dialog-title">{title}</AlertDialogTitle>
             <button
               onClick={() => setIsOpen(false)}
               className="rounded-full h-6 w-6 p-0 hover:bg-secondary flex items-center justify-center"
@@ -73,7 +73,7 @@ export const useFormDialog = ({
             </button>
           </div>
           {/* Provide an accessible description to satisfy Radix requirements */}
-          <AlertDialogDescription className="sr-only">
+          <AlertDialogDescription className="sr-only" data-testid="form-dialog-description">
             {description ??
               "This dialog contains a form. Complete the fields and submit."}
           </AlertDialogDescription>

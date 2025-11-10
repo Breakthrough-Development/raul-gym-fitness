@@ -49,3 +49,6 @@ documentation/*
 
 # cursor rules
 .cursorrules
+
+# playwright
+playwright/.auth/

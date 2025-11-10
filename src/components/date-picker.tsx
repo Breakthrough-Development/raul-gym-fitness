@@ -53,6 +53,7 @@ const DatePicker = ({
           variant="outline"
           data-empty={!date}
           className="justify-start text-left front-normal"
+          data-testid="notification-form-date-picker"
         >
           <LucideCalendar className="mr-2 h-4 w-4" />
           {formattedStringDate}

@@ -27,6 +27,7 @@ export const SearchInput = ({
       defaultValue={value}
       placeholder={placeholder}
       onChange={handleSearch}
+      data-testid="notification-search-input"
     />
   );
 };

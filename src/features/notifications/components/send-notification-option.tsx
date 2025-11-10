@@ -30,6 +30,7 @@ export const SendNotificationOption = ({
     <div
       className="flex items-center gap-x-2 px-2 py-1.5 text-sm cursor-pointer hover:bg-accent"
       onClick={handleSend}
+      data-testid="notification-send-option"
     >
       <LucideSend className="h-4 w-4" />
       Send Now

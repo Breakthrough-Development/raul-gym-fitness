@@ -67,12 +67,12 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
   };
 
   return (
-    <div className="w-full max-w-[580px]">
+    <div className="w-full max-w-[580px]" data-testid="notification-item">
       <div className="flex gap-x-2">
         <Card className="w-full">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-x-2">
+              <span className="flex items-center gap-x-2" data-testid="notification-message">
                 <LucideMessageSquare className="h-4 w-4" />
                 {notification.message}
               </span>
@@ -81,6 +81,7 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
                   "text-sm font-medium",
                   getStatusColor(notification.status)
                 )}
+                data-testid="notification-status"
               >
                 {statusLabel}
               </span>
@@ -146,7 +147,7 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
         <div className="flex flex-col gap-y-1 items-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button variant="ghost" className="h-8 w-8 p-0" data-testid="notification-menu-button">
                 <span className="sr-only">Open menu</span>
                 <LucideMoreHorizontal className="h-4 w-4" />
               </Button>
