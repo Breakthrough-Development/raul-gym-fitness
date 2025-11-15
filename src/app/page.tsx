@@ -72,8 +72,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <Suspense fallback={<Spinner />}>
           <section className="flex-1 flex flex-col gap-y-8 ">
             <Heading
-              title="Página de clientes"
-              description="Todos tus clientes en un solo lugar."
+              title="Página de pagos"
+              description="Todos tus pagos en un solo lugar."
             />
 
             <CardComp
