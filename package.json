@@ -38,7 +38,13 @@
     "prereset:prod": "npm run prisma:check-prod",
     "prisma-reset:prod": "dotenv -e .env.production -- npx prisma db push --force-reset --accept-data-loss",
     "prisma:reset-prod": "npm run prereset:prod && npm run prisma-reset:prod && npm run prisma-schema:prod && npm run prisma-types:prod && npm run prisma-seed:prod",
-    "prisma-studio:prod": "dotenv -e .env.production -- npx prisma studio"
+    "prisma-studio:prod": "dotenv -e .env.production -- npx prisma studio",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f postgres",
+    "docker:psql": "docker-compose exec postgres psql -U postgres -d raul_gym_fitness",
+    "docker:reset": "docker-compose down -v && docker-compose up -d",
+    "dev:docker": "npm run docker:up && npm run dev"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",

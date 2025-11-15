@@ -178,3 +178,29 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
    - `GET /api/cron/whatsapp?dryRun=1` with header `x-cron-secret`
    - Remove `dryRun` only on the valid cohort dates
+
+## Docker Setup (Local Development)
+
+This project includes Docker Compose for running PostgreSQL locally.
+
+### Prerequisites
+
+- Docker Desktop installed and running
+- No additional Docker Desktop configuration needed
+
+### Quick Start
+
+1. **Start the database:**
+   ```bash
+   npm run docker:up
+   # or
+   docker-compose up -d
+   ```
+
+#### Troubleshooting
+
+- **Port 5432 already in use**: Stop any local PostgreSQL instances or change the port in `docker-compose.yml`.
+- **Container won't start**: Make sure Docker Desktop is running.
+- **Connection refused**: Wait a few seconds after starting the container for PostgreSQL to initialize.
+
+
