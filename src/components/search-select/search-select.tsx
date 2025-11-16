@@ -38,14 +38,6 @@ export function SearchableSelect({
     [options, search]
   );
 
-  const selectedOption =
-    options.find((option) => {
-      console.log(option.value, value);
-      return option.value === value;
-    })?.label ||
-    options[0]?.label ||
-    "Opción no encontrada";
-
   useEffect(() => {
     if (!isOpen || !inputRef.current) return;
     setTimeout(() => {
@@ -71,7 +63,7 @@ export function SearchableSelect({
       defaultValue={options[0]?.value || undefined}
     >
       <SelectTrigger className={className}>
-        <SelectValue>{selectedOption}</SelectValue>
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
         <div className="p-2 border-b">
