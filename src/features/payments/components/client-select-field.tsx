@@ -1,7 +1,7 @@
 "use client";
 import { FieldError } from "@/components/form/field-error";
 import { ActionState } from "@/components/form/util/to-action-state";
-import { SearchableSelect } from "@/components/search-select";
+import { SearchableSelect } from "@/components/search-select/search-select";
 import { Label } from "@/components/ui/label";
 import { Client } from "@prisma/client";
 import { Pencil, Plus, Trash2 } from "lucide-react";
