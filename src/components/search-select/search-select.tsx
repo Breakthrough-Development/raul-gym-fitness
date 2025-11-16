@@ -65,7 +65,6 @@ export function SearchableSelect({
     <Select
       name={name}
       value={value}
-      {...(value === undefined && { defaultValue })}
       open={isOpen}
       onOpenChange={setIsOpen}
       onValueChange={onValueChange}
