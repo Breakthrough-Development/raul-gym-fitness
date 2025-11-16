@@ -1,10 +1,10 @@
 "use client";
 
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { LucideSend } from "lucide-react";
 import { toast } from "sonner";
 import { sendNotification } from "../actions/send-notification";
 import { NotificationWithClients } from "../types";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 export type SendNotificationOptionProps = {
   notification: NotificationWithClients;

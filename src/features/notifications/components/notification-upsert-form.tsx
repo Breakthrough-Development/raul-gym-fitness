@@ -154,7 +154,10 @@ export const NotificationUpsertForm = ({
             value={recipientType}
             onValueChange={handleRecipientTypeChange}
           >
-            <SelectTrigger className="text-base md:text-lg" data-testid="notification-form-recipient-select">
+            <SelectTrigger
+              className="text-base md:text-lg"
+              data-testid="notification-form-recipient-select"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -270,7 +273,10 @@ export const NotificationUpsertForm = ({
             name="recurrence"
             defaultValue={notification?.recurrence || "ONE_TIME"}
           >
-            <SelectTrigger className="text-base md:text-lg" data-testid="notification-form-recurrence-select">
+            <SelectTrigger
+              className="text-base md:text-lg"
+              data-testid="notification-form-recurrence-select"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
