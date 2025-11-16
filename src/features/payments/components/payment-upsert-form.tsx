@@ -52,17 +52,15 @@ export const PaymentUpsertForm = ({
   return (
     <>
       <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
-        <div className="flex gap-x-2 mb-1">
-          <ClientSelectField
-            actionState={actionState}
-            clientList={clientList}
-            selectedClientId={selectedClientId}
-            onValueChange={setSelectedClientId}
-            onNewClientClick={handleNewClientClick}
-            onOptionMenuAction={handleOptionMenuAction}
-          />
-          <MembershipSelectField actionState={actionState} payment={payment} />
-        </div>
+        <ClientSelectField
+          actionState={actionState}
+          selectedClientId={selectedClientId}
+          clientList={clientList}
+          onValueChange={setSelectedClientId}
+          onNewClientClick={handleNewClientClick}
+          onOptionMenuAction={handleOptionMenuAction}
+        />
+        <MembershipSelectField actionState={actionState} payment={payment} />
         <CurrencyInput
           actionState={actionState}
           name="amount"

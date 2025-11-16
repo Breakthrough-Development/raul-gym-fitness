@@ -35,7 +35,6 @@ export const ClientSelectField = ({
           value: client.id,
           label: client.firstName + " " + client.lastName,
         }))}
-        placeholder="Selecciona un cliente"
         actionItems={[
           {
             id: "new-client",
@@ -65,4 +64,3 @@ export const ClientSelectField = ({
     </div>
   );
 };
-

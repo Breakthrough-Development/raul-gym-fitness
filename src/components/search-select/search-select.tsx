@@ -56,7 +56,6 @@ export function SearchableSelect({
     <Select
       name={name}
       value={value}
-      open={isOpen}
       onOpenChange={setIsOpen}
       onValueChange={onValueChange}
       disabled={disabled}
