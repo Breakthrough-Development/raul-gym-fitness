@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MembershipStatus, Payment } from "@prisma/client";
+import { getMembershipLabel } from "../utility/getMembershipLabel";
 
 export type MembershipSelectFieldProps = {
   actionState: ActionState;
@@ -48,7 +49,7 @@ export const MembershipSelectField = ({
             <SelectLabel>Membresía</SelectLabel>
             {membershipStatus.map((status) => (
               <SelectItem key={status} value={status}>
-                {status}
+                {getMembershipLabel(status)}
               </SelectItem>
             ))}
           </SelectGroup>
@@ -58,4 +59,3 @@ export const MembershipSelectField = ({
     </div>
   );
 };
-
