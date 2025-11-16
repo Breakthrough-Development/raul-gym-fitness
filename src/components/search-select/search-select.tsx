@@ -11,18 +11,12 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ActionItemsSection } from "./components/action-items-section";
 import { OptionItem } from "./components/option-item";
-import {
-  filterOptions,
-  getLabelText,
-  getSelectedOption,
-  stopPropagation,
-} from "./helpers";
+import { filterOptions, getLabelText, stopPropagation } from "./helpers";
 import type { SearchableSelectProps } from "./types";
 
 export function SearchableSelect({
   name,
   placeholder = "Selecciona una opción",
-  defaultValue,
   value,
   options,
   searchPlaceholder = "Buscar...",
@@ -45,7 +39,9 @@ export function SearchableSelect({
     [options, search]
   );
 
-  const selectedOption = getSelectedOption(options, value, defaultValue);
+  const selectedOption =
+    options.find((option) => option.value === value)?.label ||
+    "Opción no encontrada";
 
   useEffect(() => {
     if (!isOpen || !inputRef.current) return;
@@ -71,9 +67,7 @@ export function SearchableSelect({
       disabled={disabled}
     >
       <SelectTrigger className={className}>
-        <SelectValue placeholder={placeholder}>
-          {selectedOption?.label}
-        </SelectValue>
+        <SelectValue placeholder={placeholder}>{selectedOption}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         <div className="p-2 border-b">

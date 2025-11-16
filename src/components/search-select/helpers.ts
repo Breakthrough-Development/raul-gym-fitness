@@ -17,10 +17,8 @@ export function stopPropagation(e: React.MouseEvent | React.KeyboardEvent) {
 export function getSelectedOption(
   options: SearchableSelectOption[],
   value: string | undefined,
-  defaultValue: string | undefined
 ): SearchableSelectOption | undefined {
-  const currentValue = value ?? defaultValue;
-  return options.find((option) => option.value === currentValue);
+  return options.find((option) => option.value === value);
 }
 
 export function getLabelText(

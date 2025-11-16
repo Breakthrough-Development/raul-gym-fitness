@@ -19,7 +19,6 @@ export type SearchableSelectOptionMenuItem = {
 export type SearchableSelectProps = {
   name: string;
   placeholder?: string;
-  defaultValue?: string;
   value?: string;
   options: SearchableSelectOption[];
   searchPlaceholder?: string;
