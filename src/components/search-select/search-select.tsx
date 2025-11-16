@@ -16,7 +16,6 @@ import type { SearchableSelectProps } from "./types";
 
 export function SearchableSelect({
   name,
-  placeholder = "Selecciona una opción",
   value,
   options,
   searchPlaceholder = "Buscar...",
@@ -40,7 +39,11 @@ export function SearchableSelect({
   );
 
   const selectedOption =
-    options.find((option) => option.value === value)?.label ||
+    options.find((option) => {
+      console.log(option.value, value);
+      return option.value === value;
+    })?.label ||
+    options[0]?.label ||
     "Opción no encontrada";
 
   useEffect(() => {
@@ -65,9 +68,10 @@ export function SearchableSelect({
       onOpenChange={setIsOpen}
       onValueChange={onValueChange}
       disabled={disabled}
+      defaultValue={options[0]?.value || undefined}
     >
       <SelectTrigger className={className}>
-        <SelectValue placeholder={placeholder}>{selectedOption}</SelectValue>
+        <SelectValue>{selectedOption}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         <div className="p-2 border-b">
