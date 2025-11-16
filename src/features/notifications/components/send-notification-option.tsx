@@ -35,6 +35,6 @@ export const SendNotificationOption = ({
     >
       <LucideSend className="h-4 w-4" />
       Enviar Ahora
-    </button>
+    </DropdownMenuItem>
   );
 };
