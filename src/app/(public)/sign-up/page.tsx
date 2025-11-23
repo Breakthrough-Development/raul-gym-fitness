@@ -1,4 +1,5 @@
 import { CardComp } from "@/components/card-comp";
+import { Button } from "@/components/ui/button";
 import { SignUpForm } from "@/features/auth/component/sign-up-form";
 import { signInPath } from "@/paths";
 import type { Metadata } from "next";
@@ -17,12 +18,11 @@ const SignUpPage = () => {
         description="Regístrate para comenzar"
         content={<SignUpForm />}
         footer={
-          <Link
-            className="text-base text-muted-foreground md:text-lg"
-            href={signInPath()}
-          >
-            ¿Ya tienes cuenta? Inicia sesión ahora.
-          </Link>
+          <Button variant="ghost" className="w-full" asChild>
+            <Link href={signInPath()}>
+              ¿Ya tienes cuenta? Inicia sesión ahora.
+            </Link>
+          </Button>
         }
       ></CardComp>
     </div>
