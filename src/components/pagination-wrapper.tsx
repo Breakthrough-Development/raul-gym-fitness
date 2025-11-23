@@ -2,7 +2,7 @@
 
 import { Pagination, PaginationSizeOption } from "@/components/pagination";
 import { SingleParserBuilder, useQueryState, useQueryStates } from "nuqs";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 type PaginationWrapperProps = {
   paginationSizeOptions: PaginationSizeOption[];
@@ -86,18 +86,14 @@ export const PaginationWrapper = ({
     [setRawPagination, pageKey, sizeKey]
   );
   const [search] = useQueryState(searchKey, searchParser);
-  const prevSearch = useRef(search);
-
+  
+  // Reset pagination when search changes
   useEffect(() => {
-    if (search === prevSearch.current) {
-      return;
-    }
-    prevSearch.current = search;
     setPagination({
       ...pagination,
       page: 0,
     });
-  }, [pagination, search, setPagination]);
+  }, [search, setPagination, pagination]);
 
   return (
     <Pagination

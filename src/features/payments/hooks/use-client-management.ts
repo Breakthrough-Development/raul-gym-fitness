@@ -14,22 +14,16 @@ export const useClientManagement = (
   clients: Client[],
   initialClientId?: string
 ) => {
-  // State for managing the client list dynamically
-  const [clientList, setClientList] = useState<Client[]>(clients);
   const [selectedClientId, setSelectedClientId] = useState<string | undefined>(
     initialClientId || clients[0]?.id
   );
 
-  useEffect(() => {
-    setClientList(clients);
-  }, [clients]);
-
   // Set first client as default if no client is selected
   useEffect(() => {
-    if (!selectedClientId && clientList.length > 0) {
-      setSelectedClientId(clientList[0].id);
+    if (!selectedClientId && clients.length > 0) {
+      setSelectedClientId(clients[0].id);
     }
-  }, [selectedClientId, clientList]);
+  }, [selectedClientId, clients]);
 
   // State for controlling the "Create Client" modal
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -45,7 +39,7 @@ export const useClientManagement = (
   const [, clientFormAction] = useActionState(createClient, EMPTY_ACTION_STATE);
 
   // Get selected client for editing
-  const selectedClient = clientList.find((c) => c.id === selectedClientId);
+  const selectedClient = clients.find((c) => c.id === selectedClientId);
 
   // Handle when "+ New Client" is clicked
   const handleNewClientClick = () => {
@@ -57,8 +51,6 @@ export const useClientManagement = (
     const typedState = actionState as ActionState<Client>;
     if (typedState.status === "SUCCESS" && typedState.data) {
       const newClient = typedState.data as Client;
-      // Add new client to the local client list
-      setClientList((prev) => [...prev, newClient]);
       // Auto-select the new client
       setSelectedClientId(newClient.id);
       // Close the modal
@@ -71,20 +63,12 @@ export const useClientManagement = (
     // 1. Show loading toast
     const toastId = toast.loading("Actualizando cliente...");
 
-    // 2. Optimistically update UI
-    const optimisticClient = {
-      ...client,
-      firstName: (formData.get("firstName") as string) || client.firstName,
-      lastName: (formData.get("lastName") as string) || client.lastName || "",
-      email: (formData.get("email") as string) || client.email || null,
-      phone: (formData.get("phone") as string) || client.phone || null,
-    };
+    // 2. Optimistic update is skipped to rely on Server Action revalidation
+    // since we're removing local state sync.
+    // If we wanted true optimistic UI here, we'd need useOptimistic
+    // but for now we'll just close modal and show toast.
 
-    setClientList((prev) =>
-      prev.map((c) => (c.id === client.id ? optimisticClient : c))
-    );
-
-    // 3. Close modal immediately (optimistic)
+    // 3. Close modal immediately
     setIsEditModalOpen(false);
 
     // 4. Perform actual update in background
@@ -92,23 +76,11 @@ export const useClientManagement = (
       const result = await upsertClientInline(client.id, formData);
 
       if (result.status === "SUCCESS" && result.data) {
-        // Update with real data from server
-        setClientList((prev) =>
-          prev.map((c) => (c.id === client.id ? result.data : c))
-        );
         toast.success("Cliente actualizado", { id: toastId });
       } else {
-        // Revert optimistic update on error
-        setClientList((prev) =>
-          prev.map((c) => (c.id === client.id ? client : c))
-        );
         toast.error(result.message, { id: toastId });
       }
     } catch {
-      // Revert optimistic update on error
-      setClientList((prev) =>
-        prev.map((c) => (c.id === client.id ? client : c))
-      );
       toast.error("Error al actualizar cliente", { id: toastId });
     }
   };
@@ -118,42 +90,34 @@ export const useClientManagement = (
     // 1. Show loading toast
     const toastId = toast.loading("Eliminando cliente...");
 
-    // 2. Optimistically remove from UI
-    const previousList = clientList;
-    setClientList((prev) => prev.filter((c) => c.id !== client.id));
-
-    // 3. Clear selection if deleting selected client
+    // 2. Clear selection if deleting selected client
     if (selectedClientId === client.id) {
       setSelectedClientId(undefined);
     }
 
-    // 4. Close dialog immediately (optimistic)
+    // 3. Close dialog immediately
     setIsDeleteDialogOpen(false);
 
-    // 5. Perform actual delete in background
+    // 4. Perform actual delete in background
     try {
       const result = await deleteClientInline(client.id);
 
       if (result.status === "SUCCESS") {
         toast.success("Cliente eliminado", { id: toastId });
       } else {
-        // Revert optimistic update on error
-        setClientList(previousList);
         if (selectedClientId === undefined) {
           setSelectedClientId(client.id);
         }
         toast.error(result.message, { id: toastId });
       }
     } catch {
-      // Revert optimistic update on error
-      setClientList(previousList);
       toast.error("Error al eliminar cliente", { id: toastId });
     }
   };
 
   // Handle option menu actions (edit/delete)
   const handleOptionMenuAction = (clientId: string, actionId: string) => {
-    const client = clientList.find((c) => c.id === clientId);
+    const client = clients.find((c) => c.id === clientId);
     if (!client) return;
 
     if (actionId === "edit") {
@@ -166,7 +130,7 @@ export const useClientManagement = (
   };
 
   return {
-    clientList,
+    clientList: clients,
     selectedClientId,
     setSelectedClientId,
     selectedClient,
