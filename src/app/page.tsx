@@ -44,24 +44,28 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     }
     return (
       <Suspense fallback={<Spinner />}>
-        <section className="flex flex-wrap gap-6 justify-center">
-          <h2 className="sr-only text-3xl font-bold tracking-tight">
-            Cálculos automáticos
-          </h2>
-          <div className="flex-1 min-w-lg max-w-2xl">
-            <TotalRevenueChart />
-          </div>
-          <div className="flex-1 min-w-lg max-w-2xl">
-            <TotalSubscriptionsChart
-              title="Suscripciones diarias"
-              type="DAILY"
-            />
-          </div>
-          <div className="flex-1 min-w-lg max-w-2xl">
-            <TotalSubscriptionsChart
-              title="Suscripciones mensuales"
-              type="MONTHLY"
-            />
+        <section className="flex-1 flex flex-col gap-y-8 ">
+          <Heading
+            title="Cálculos automáticos"
+            description="Información sobre tus clientes y sus suscripciones"
+          />
+
+          <div className="flex flex-wrap gap-6 justify-center">
+            <div className="flex-1 min-w-lg max-w-2xl">
+              <TotalRevenueChart />
+            </div>
+            <div className="flex-1 min-w-lg max-w-2xl">
+              <TotalSubscriptionsChart
+                title="Suscripciones diarias"
+                type="DAILY"
+              />
+            </div>
+            <div className="flex-1 min-w-lg max-w-2xl">
+              <TotalSubscriptionsChart
+                title="Suscripciones mensuales"
+                type="MONTHLY"
+              />
+            </div>
           </div>
         </section>
       </Suspense>
@@ -105,7 +109,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <div className="flex-1 flex flex-col gap-y-8 max-w-7xl mx-auto">
-      <Heading title="Inicio" description="Tu lugar de inicio" />
       <DashboardCharts />
       <PaymentManagement />
     </div>
