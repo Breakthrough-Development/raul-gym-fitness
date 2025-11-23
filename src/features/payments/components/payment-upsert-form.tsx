@@ -1,5 +1,6 @@
 "use client";
 import { CurrencyInput } from "@/components/currency-input";
+import { DatePicker } from "@/components/date-picker";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
@@ -15,7 +16,10 @@ import { ClientSelectField } from "./client-select-field";
 import { MembershipSelectField } from "./membership-select-field";
 
 export type PaymentUpsertFormProps = {
-  payment?: Pick<Payment, "id" | "amount" | "membership" | "clientId">;
+  payment?: Pick<
+    Payment,
+    "id" | "amount" | "membership" | "clientId" | "paymentDate"
+  >;
   clients: Client[];
   onSuccess?: (actionState: unknown) => void;
 };
@@ -72,6 +76,16 @@ export const PaymentUpsertForm = ({
           onOptionMenuAction={handleOptionMenuAction}
         />
         <MembershipSelectField actionState={actionState} payment={payment} />
+        <div className="flex flex-col gap-y-2">
+          <label htmlFor="paymentDate" className="text-base md:text-lg">
+            Fecha de pago
+          </label>
+          <DatePicker
+            id="paymentDate"
+            name="paymentDate"
+            defaultValue={payment?.paymentDate?.toISOString()}
+          />
+        </div>
         <CurrencyInput
           actionState={actionState}
           name="amount"

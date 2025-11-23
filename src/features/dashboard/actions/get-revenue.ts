@@ -57,9 +57,9 @@ export async function getRevenue(
     const end = new Date(year, month, 1, 0, 0, 0, 0);
 
     const payments = await prisma.payment.findMany({
-      where: { createdAt: { gte: start, lt: end }, status: "PAID" },
-      select: { amount: true, createdAt: true },
-      orderBy: { createdAt: "asc" },
+      where: { paymentDate: { gte: start, lt: end }, status: "PAID" },
+      select: { amount: true, paymentDate: true },
+      orderBy: { paymentDate: "asc" },
     });
 
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -69,7 +69,7 @@ export async function getRevenue(
     }));
     let total = 0;
     for (const p of payments) {
-      const day = p.createdAt.getDate();
+      const day = p.paymentDate.getDate();
       series[day - 1].y += p.amount;
       total += p.amount;
     }
@@ -78,7 +78,7 @@ export async function getRevenue(
     const prevStart = new Date(year, month - 2, 1, 0, 0, 0, 0);
     const prevEnd = new Date(year, month - 1, 1, 0, 0, 0, 0);
     const prev = await prisma.payment.aggregate({
-      where: { createdAt: { gte: prevStart, lt: prevEnd }, status: "PAID" },
+      where: { paymentDate: { gte: prevStart, lt: prevEnd }, status: "PAID" },
       _sum: { amount: true },
     });
     const prevTotal = prev._sum.amount ?? 0;
@@ -97,20 +97,23 @@ export async function getRevenue(
     const start = new Date(year, 0, 1, 0, 0, 0, 0);
     const end = new Date(year + 1, 0, 1, 0, 0, 0, 0);
     const payments = await prisma.payment.findMany({
-      where: { createdAt: { gte: start, lt: end }, status: "PAID" },
-      select: { amount: true, createdAt: true },
-      orderBy: { createdAt: "asc" },
+      where: { paymentDate: { gte: start, lt: end }, status: "PAID" },
+      select: { amount: true, paymentDate: true },
+      orderBy: { paymentDate: "asc" },
     });
     const series = Array.from({ length: 12 }, (_, i) => ({ x: i + 1, y: 0 }));
     let total = 0;
     for (const p of payments) {
-      const m = p.createdAt.getMonth() + 1;
+      const m = p.paymentDate.getMonth() + 1;
       series[m - 1].y += p.amount;
       total += p.amount;
     }
     const prev = await prisma.payment.aggregate({
       where: {
-        createdAt: { gte: new Date(year - 1, 0, 1), lt: new Date(year, 0, 1) },
+        paymentDate: {
+          gte: new Date(year - 1, 0, 1),
+          lt: new Date(year, 0, 1),
+        },
         status: "PAID",
       },
       _sum: { amount: true },
@@ -122,13 +125,13 @@ export async function getRevenue(
   // all: group by year across all data
   const allPayments = await prisma.payment.findMany({
     where: { status: "PAID" },
-    select: { amount: true, createdAt: true },
-    orderBy: { createdAt: "asc" },
+    select: { amount: true, paymentDate: true },
+    orderBy: { paymentDate: "asc" },
   });
   const map = new Map<number, number>();
   let total = 0;
   for (const p of allPayments) {
-    const y = p.createdAt.getFullYear();
+    const y = p.paymentDate.getFullYear();
     map.set(y, (map.get(y) ?? 0) + p.amount);
     total += p.amount;
   }

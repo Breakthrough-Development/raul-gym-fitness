@@ -40,6 +40,7 @@ model Payment {
     id          String        @id @default(cuid())
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
+    paymentDate DateTime      @default(now())
     amount      Int
     status      PaymentStatus @default(OPEN)
     membership  MembershipStatus
