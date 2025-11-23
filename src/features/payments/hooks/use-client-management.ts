@@ -17,12 +17,19 @@ export const useClientManagement = (
   // State for managing the client list dynamically
   const [clientList, setClientList] = useState<Client[]>(clients);
   const [selectedClientId, setSelectedClientId] = useState<string | undefined>(
-    initialClientId
+    initialClientId || clients[0]?.id
   );
 
   useEffect(() => {
     setClientList(clients);
   }, [clients]);
+
+  // Set first client as default if no client is selected
+  useEffect(() => {
+    if (!selectedClientId && clientList.length > 0) {
+      setSelectedClientId(clientList[0].id);
+    }
+  }, [selectedClientId, clientList]);
 
   // State for controlling the "Create Client" modal
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
