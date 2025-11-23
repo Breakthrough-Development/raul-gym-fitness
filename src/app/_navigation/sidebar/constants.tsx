@@ -1,7 +1,7 @@
 import {
   accountProfilePath,
   clientsPath,
-  homePath,
+  dashboardPath,
   notificationsPath,
   paymentsPath,
   usersPath,
@@ -26,7 +26,7 @@ export function getNavItems(featureFlags: {
     {
       title: "Inicio",
       icon: <LucideHome />,
-      href: homePath(),
+      href: dashboardPath(),
     },
     ...(featureFlags.clientManagement
       ? [
