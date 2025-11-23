@@ -9,9 +9,9 @@ export const accountProfilePath = () => "/account/profile" as Route;
 export const accountPasswordPath = () => "/account/password" as Route;
 
 export const dashboardPath = () => "/dashboard" as Route;
-export const clientsPath = () => "/dashboard/client" as Route;
+export const clientsPath = () => "/dashboard/clients" as Route;
 export const ClientPath = (clientId: string) =>
-  `${clientsPath()}/${clientId}` as Route;
+  `/dashboard/client/${clientId}` as Route;
 export const ClientEditPath = (clientId: string) =>
   `${ClientPath(clientId)}/edit` as Route;
 export const paymentsPath = () => "/dashboard/payments" as Route;

@@ -3,8 +3,6 @@ import Heading from "@/components/heading";
 import Placeholder from "@/components/placeholder";
 import { Spinner } from "@/components/spiner";
 import { ClientSearchParamsCache } from "@/features/clients/client-search-params";
-import { ClientList } from "@/features/clients/components/client-list";
-import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 import { getClients } from "@/features/clients/queries/get-clients";
 import { TotalRevenueChart } from "@/features/dashboard/components/totalRevenueChart";
 import { TotalSubscriptionsChart } from "@/features/dashboard/components/totalSubscriptionsChart";
@@ -105,44 +103,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     );
   };
 
-  const ClientManagement = async () => {
-    if (!featureFlags.clientManagement) {
-      return null;
-    }
-    return (
-      <Suspense fallback={<Spinner />}>
-        <section className="flex-1 flex flex-col gap-y-8">
-          <Heading
-            title="Página de clientes"
-            description="Todos tus clientes en un solo lugar."
-          />
-
-          <CardComp
-            title="Lista de clientes"
-            description="Todos tus clientes en un solo lugar."
-            content={<ClientUpsertForm />}
-            className="w-full max-w-[420px] self-center"
-          ></CardComp>
-
-          <ErrorBoundary
-            fallback={<Placeholder label="Error al cargar los clientes" />}
-          >
-            <Suspense fallback={<Spinner />}>
-              <ClientList
-                searchParams={ClientSearchParamsCache.parse(await searchParams)}
-              ></ClientList>
-            </Suspense>
-          </ErrorBoundary>
-        </section>
-      </Suspense>
-    );
-  };
   return (
     <div className="flex-1 flex flex-col gap-y-8 max-w-7xl mx-auto">
       <Heading title="Inicio" description="Tu lugar de inicio" />
       <DashboardCharts />
       <PaymentManagement />
-      <ClientManagement />
     </div>
   );
 }

@@ -44,8 +44,8 @@ export default async function PaymentsPage({ searchParams }: PaymentPageProps) {
 
   const PaymentHeader = () => (
     <Heading
-      title="Página de clientes"
-      description="Todos tus clientes en un solo lugar."
+      title="Página de pagos"
+      description="Todos tus pagos en un solo lugar."
     />
   );
 

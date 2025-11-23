@@ -8,8 +8,8 @@ export async function SidebarWrapper() {
     userManagement: featureFlags.userManagement,
     whatsappNotifications: featureFlags.whatsappNotifications,
     scheduledNotifications: featureFlags.scheduledNotifications,
+    clientManagement: featureFlags.clientManagement,
   });
 
   return <Sidebar navItems={navItems} />;
 }
-

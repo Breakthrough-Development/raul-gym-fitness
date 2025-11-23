@@ -1,5 +1,6 @@
 import {
   accountProfilePath,
+  clientsPath,
   homePath,
   notificationsPath,
   paymentsPath,
@@ -19,6 +20,7 @@ export function getNavItems(featureFlags: {
   userManagement: boolean;
   whatsappNotifications: boolean;
   scheduledNotifications: boolean;
+  clientManagement: boolean;
 }): NavItem[] {
   return [
     {
@@ -26,6 +28,15 @@ export function getNavItems(featureFlags: {
       icon: <LucideHome />,
       href: homePath(),
     },
+    ...(featureFlags.clientManagement
+      ? [
+          {
+            title: "Clientes",
+            icon: <LucideUsers />,
+            href: clientsPath(),
+          },
+        ]
+      : []),
     ...(featureFlags.paymentManagement
       ? [
           {
