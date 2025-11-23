@@ -45,7 +45,10 @@ export function SearchableSelect({
     }, 0);
   }, [isOpen]);
 
-  const handleClose = () => setIsOpen(false);
+  const handleClose = () => {
+    setIsOpen(false);
+    setSearch("");
+  };
   const labelText = getLabelText(
     search,
     filteredOptions.length,
@@ -56,10 +59,14 @@ export function SearchableSelect({
     <Select
       name={name}
       value={value}
-      onOpenChange={setIsOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (!open) {
+          setSearch("");
+        }
+      }}
       onValueChange={onValueChange}
       disabled={disabled}
-      defaultValue={options[0]?.value || undefined}
     >
       <SelectTrigger className={className}>
         <SelectValue />

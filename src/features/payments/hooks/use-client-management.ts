@@ -7,7 +7,7 @@ import { createClient } from "@/features/clients/actions/create-client";
 import { deleteClientInline } from "@/features/clients/actions/delete-client-inline";
 import { upsertClientInline } from "@/features/clients/actions/upsert-client-inline";
 import { Client } from "@prisma/client";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const useClientManagement = (
@@ -19,6 +19,10 @@ export const useClientManagement = (
   const [selectedClientId, setSelectedClientId] = useState<string | undefined>(
     initialClientId
   );
+
+  useEffect(() => {
+    setClientList(clients);
+  }, [clients]);
 
   // State for controlling the "Create Client" modal
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -175,4 +179,3 @@ export const useClientManagement = (
     setClientToDelete,
   };
 };
-
