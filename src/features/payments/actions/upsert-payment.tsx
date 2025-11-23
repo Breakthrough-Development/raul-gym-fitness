@@ -14,7 +14,9 @@ import { revalidatePath } from "next/cache";
 import z from "zod";
 
 const upsertPaymentSchema = z.object({
-  amount: z.coerce.number().positive({ message: "El monto debe ser un número positivo" }),
+  amount: z.coerce
+    .number()
+    .positive({ message: "El monto debe ser un número positivo" }),
   membership: z.enum(["DAILY", "MONTHLY"]),
   clientId: z.cuid({ message: "Debes seleccionar un cliente válido" }),
 });
@@ -32,7 +34,7 @@ export const upsertPayment = async (
       membership: formData.get("membership"),
       clientId: formData.get("clientId"),
     });
-    
+
     const data = {
       ...parsed,
       membership: parsed.membership as MembershipStatus,
@@ -59,6 +61,7 @@ export const upsertPayment = async (
   }
 
   revalidatePath(dashboardPath());
+  revalidatePath("/"); // Revalidate home page to update dashboard charts
 
   if (id) {
     await setCookieByKey("toast", "Pago actualizado");
