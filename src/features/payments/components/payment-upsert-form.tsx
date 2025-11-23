@@ -4,6 +4,7 @@ import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
 import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { Client, Payment } from "@prisma/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { useActionState } from "react";
 import { upsertPayment } from "../actions/upsert-payment";
 import { useClientManagement } from "../hooks/use-client-management";
@@ -24,10 +25,16 @@ export const PaymentUpsertForm = ({
   clients,
   onSuccess,
 }: PaymentUpsertFormProps) => {
+  const queryClient = useQueryClient();
   const [actionState, formAction] = useActionState(
     upsertPayment.bind(null, payment?.id),
     EMPTY_ACTION_STATE
   );
+
+  const handleSuccess = (state: unknown) => {
+    queryClient.invalidateQueries({ queryKey: ["metric"] });
+    onSuccess?.(state);
+  };
 
   const {
     clientList,
@@ -51,7 +58,11 @@ export const PaymentUpsertForm = ({
 
   return (
     <>
-      <Form action={formAction} actionState={actionState} onSuccess={onSuccess}>
+      <Form
+        action={formAction}
+        actionState={actionState}
+        onSuccess={handleSuccess}
+      >
         <ClientSelectField
           actionState={actionState}
           selectedClientId={selectedClientId}

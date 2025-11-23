@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
@@ -73,7 +74,10 @@ const amount: ColumnDef<PaymentType> = {
   },
 };
 
-const actionsColumn = (clients: Client[]): ColumnDef<PaymentType> => ({
+const actionsColumn = (
+  clients: Client[],
+  onSuccess: () => void
+): ColumnDef<PaymentType> => ({
   id: "actions",
   enableHiding: false,
   cell: ({ row }) => {
@@ -90,7 +94,11 @@ const actionsColumn = (clients: Client[]): ColumnDef<PaymentType> => ({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Acciones</DropdownMenuLabel>
           <EditPaymentOption payment={payment} clients={clients} />
-          <DeleteOption id={payment.id} action={deletePayment} />
+          <DeleteOption
+            id={payment.id}
+            action={deletePayment}
+            onSuccess={onSuccess}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
     );
@@ -116,6 +124,10 @@ export function PaymentDataTable({
   pagination,
   clients,
 }: PaymentDataTableProps) {
+  const queryClient = useQueryClient();
+  const handleInvalidate = () =>
+    queryClient.invalidateQueries({ queryKey: ["metric"] });
+
   const tableData: PaymentType[] = data.map((payment) => ({
     ...payment,
     name: payment.client.firstName + " " + payment.client.lastName,
@@ -126,7 +138,7 @@ export function PaymentDataTable({
     name,
     date,
     status,
-    actionsColumn(clients),
+    actionsColumn(clients, handleInvalidate),
   ];
   return (
     <DataTable

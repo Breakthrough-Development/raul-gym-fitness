@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { prisma } from "@/lib/prisma";
 
 test("Happy path: Client registration, Monthly & Daily Payment with Graphs", async ({
   page,
@@ -10,8 +11,9 @@ test("Happy path: Client registration, Monthly & Daily Payment with Graphs", asy
   const clientPhone = "1234567890";
   const clientEmail = `test${timestamp}@example.com`;
 
-  // 1. Go to Dashboard (Home)
-  await page.goto("/");
+  try {
+    // 1. Go to Dashboard (Home)
+    await page.goto("/");
   await page.waitForLoadState("networkidle");
 
   // Wait for main heading to ensure page loaded
@@ -166,4 +168,12 @@ test("Happy path: Client registration, Monthly & Daily Payment with Graphs", asy
       // expect(newDailyCount).toBeGreaterThan(initialDailyCount);
     }).toPass({ timeout: 10000 });
   });
+  } finally {
+    console.log(`Cleaning up test client: ${clientName}`);
+    await prisma.client.deleteMany({
+      where: {
+        firstName: clientName,
+      },
+    });
+  }
 });
