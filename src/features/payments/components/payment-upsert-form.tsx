@@ -83,7 +83,9 @@ export const PaymentUpsertForm = ({
           <DatePicker
             id="paymentDate"
             name="paymentDate"
-            defaultValue={payment?.paymentDate?.toISOString()}
+            defaultValue={
+              payment?.paymentDate?.toISOString() ?? new Date().toISOString()
+            }
           />
         </div>
         <CurrencyInput
