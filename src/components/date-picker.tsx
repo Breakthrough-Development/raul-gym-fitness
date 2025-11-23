@@ -60,7 +60,7 @@ const DatePicker = ({
           <input type="hidden" name={name} value={formattedStringDate} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="w-auto p-0 z-50">
         <Calendar
           mode="single"
           selected={date}
