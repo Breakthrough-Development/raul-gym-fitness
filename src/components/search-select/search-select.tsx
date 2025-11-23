@@ -32,7 +32,6 @@ export function SearchableSelect({
   const {
     search,
     setSearch,
-    isOpen,
     setIsOpen,
     filteredOptions,
     handleClose,

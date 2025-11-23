@@ -43,6 +43,7 @@ export const useMetricChart = ({
     queryFn: async () => {
       return await queryFn({ mode, year, month });
     },
+    staleTime: 0,
   });
 
   const titleText = useMemo(() => {

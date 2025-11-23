@@ -273,7 +273,7 @@ const RecipientsSection = ({
 
 type SchedulingSectionProps = {
   notification?: NotificationWithClients;
-  actionState: any;
+  actionState: ActionState;
 };
 
 const SchedulingSection = ({

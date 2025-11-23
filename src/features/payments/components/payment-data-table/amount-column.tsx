@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { toDollarAndCent } from "@/utils/currency";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { PaymentType } from "./types";
@@ -25,7 +26,7 @@ export const amountColumn: ColumnDef<PaymentType> = {
     const formatted = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(amount);
+    }).format(toDollarAndCent(Number(amount)));
 
     return <div className="text-right font-medium pr-8">{formatted}</div>;
   },

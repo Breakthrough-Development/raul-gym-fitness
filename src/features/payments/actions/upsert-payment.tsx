@@ -9,6 +9,7 @@ import {
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { dashboardPath } from "@/paths";
+import { toCent } from "@/utils/currency";
 import { MembershipStatus, PaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import z from "zod";
@@ -39,6 +40,7 @@ export const upsertPayment = async (
 
     const data = {
       ...parsed,
+      amount: toCent(parsed.amount),
       membership: parsed.membership as MembershipStatus,
       status: PaymentStatus.PAID,
       paymentDate: parsed.paymentDate,

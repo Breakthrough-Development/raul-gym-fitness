@@ -11,7 +11,10 @@ import { PaymentPagination } from "@/features/payments/components/payment-pagina
 import { PaymentUpsertForm } from "@/features/payments/components/payment-upsert-form";
 import { getPayments } from "@/features/payments/queries/get-payments";
 import { PaymentSearchParamsCache } from "@/features/payments/search-params";
+import { PaymentWithMetadata } from "@/features/payments/types";
 import { featureFlags } from "@/lib/feature-flags";
+import { PaginatedData } from "@/types/pagination";
+import { Client } from "@prisma/client";
 import type { Metadata } from "next";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
@@ -40,79 +43,94 @@ export default async function DashboardPage({
     getClients({ ...cacheClientSearchParams, clientSize: 999 }),
   ]);
 
-  const DashboardCharts = () => {
-    if (!featureFlags.dashboardCharts) {
-      return null;
-    }
-    return (
-      <Suspense fallback={<Spinner />}>
-        <section className="flex-1 flex flex-col gap-y-8 ">
-          <Heading
-            title="Cálculos automáticos"
-            description="Información sobre tus clientes y sus suscripciones"
-          />
-
-          <div className="flex flex-wrap gap-6 justify-center">
-            <div className="flex-1 min-w-lg max-w-2xl">
-              <TotalRevenueChart />
-            </div>
-            <div className="flex-1 min-w-lg max-w-2xl">
-              <TotalSubscriptionsChart
-                title="Suscripciones diarias"
-                type="DAILY"
-              />
-            </div>
-            <div className="flex-1 min-w-lg max-w-2xl">
-              <TotalSubscriptionsChart
-                title="Suscripciones mensuales"
-                type="MONTHLY"
-              />
-            </div>
-          </div>
-        </section>
-      </Suspense>
-    );
-  };
-  const PaymentManagement = () => {
-    if (!featureFlags.paymentManagement) {
-      return null;
-    }
-    return (
-      <Suspense fallback={<Spinner />}>
-        <section className="flex-1 flex flex-col gap-y-8 ">
-          <Heading
-            title="Página de pagos"
-            description="Todos tus pagos en un solo lugar."
-          />
-
-          <CardComp
-            title="Lista de pagos"
-            description="Todos tus pagos en un solo lugar."
-            content={<PaymentUpsertForm clients={clients.list} />}
-            className="w-full max-w-[420px] self-center"
-          ></CardComp>
-
-          <ErrorBoundary
-            fallback={<Placeholder label="Error al cargar los pagos" />}
-          >
-            <Suspense fallback={<Spinner />}>
-              <PaymentDataTable
-                className="animate-fade-from-top"
-                data={payments}
-                pagination={<PaymentPagination paginatedMetaData={metadata} />}
-                clients={clients.list}
-              />
-            </Suspense>
-          </ErrorBoundary>
-        </section>
-      </Suspense>
-    );
-  };
-
   return (
     <div className="flex-1 flex flex-col gap-y-8 max-w-7xl mx-auto">
       <DashboardCharts />
-      <PaymentManagement />
+      <PaymentManagement
+        payments={payments}
+        clients={clients.list}
+        metadata={metadata}
+      />
     </div>
   );
 }
+
+const DashboardCharts = () => {
+  if (!featureFlags.dashboardCharts) {
+    return null;
+  }
+  return (
+    <Suspense fallback={<Spinner />}>
+      <section className="flex-1 flex flex-col gap-y-8 ">
+        <Heading
+          title="Cálculos automáticos"
+          description="Información sobre tus clientes y sus suscripciones"
+        />
+
+        <div className="flex flex-wrap gap-6 justify-center">
+          <div className="flex-1 min-w-lg max-w-2xl">
+            <TotalRevenueChart />
+          </div>
+          <div className="flex-1 min-w-lg max-w-2xl">
+            <TotalSubscriptionsChart
+              title="Suscripciones diarias"
+              type="DAILY"
+            />
+          </div>
+          <div className="flex-1 min-w-lg max-w-2xl">
+            <TotalSubscriptionsChart
+              title="Suscripciones mensuales"
+              type="MONTHLY"
+            />
+          </div>
+        </div>
+      </section>
+    </Suspense>
+  );
+};
+
+type PaymentManagementProps = {
+  payments: PaymentWithMetadata[];
+  clients: Client[];
+  metadata: PaginatedData<unknown>["metadata"];
+};
+
+const PaymentManagement = ({
+  payments,
+  clients,
+  metadata,
+}: PaymentManagementProps) => {
+  if (!featureFlags.paymentManagement) {
+    return null;
+  }
+  return (
+    <Suspense fallback={<Spinner />}>
+      <section className="flex-1 flex flex-col gap-y-8 ">
+        <Heading
+          title="Página de pagos"
+          description="Todos tus pagos en un solo lugar."
+        />
+
+        <CardComp
+          title="Lista de pagos"
+          description="Todos tus pagos en un solo lugar."
+          content={<PaymentUpsertForm clients={clients} />}
+          className="w-full max-w-[420px] self-center"
+        ></CardComp>
+
+        <ErrorBoundary
+          fallback={<Placeholder label="Error al cargar los pagos" />}
+        >
+          <Suspense fallback={<Spinner />}>
+            <PaymentDataTable
+              className="animate-fade-from-top"
+              data={payments}
+              pagination={<PaymentPagination paginatedMetaData={metadata} />}
+              clients={clients}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </section>
+    </Suspense>
+  );
+};
