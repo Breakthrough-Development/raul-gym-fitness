@@ -26,10 +26,11 @@ type PaymentPageProps = {
   searchParams: Promise<SearchParams>;
 };
 
-const profilePage = async ({ searchParams }: PaymentPageProps) => {
+export default async function PaymentsPage({ searchParams }: PaymentPageProps) {
   if (!featureFlags.paymentManagement) {
     redirect(homePath());
   }
+
   const cacheClientSearchParams = ClientSearchParamsCache.parse(
     await searchParams
   );
@@ -41,36 +42,42 @@ const profilePage = async ({ searchParams }: PaymentPageProps) => {
     getClients({ ...cacheClientSearchParams, clientSize: 999 }),
   ]);
 
+  const PaymentHeader = () => (
+    <Heading
+      title="Página de clientes"
+      description="Todos tus clientes en un solo lugar."
+    />
+  );
+
+  const PaymentUpsertSection = () => (
+    <CardComp
+      title="Lista de pagos"
+      description="Todos tus pagos en un solo lugar."
+      content={<PaymentUpsertForm clients={clients.list} />}
+      className="w-full max-w-[420px] self-center"
+    />
+  );
+
+  const PaymentListSection = () => (
+    <ErrorBoundary fallback={<Placeholder label="Error al cargar los pagos" />}>
+      <Suspense fallback={<Spinner />}>
+        <PaymentDataTable
+          className="animate-fade-from-top"
+          data={payments}
+          pagination={<PaymentPagination paginatedMetaData={metadata} />}
+          clients={clients.list}
+        />
+      </Suspense>
+    </ErrorBoundary>
+  );
+
   return (
     <Suspense fallback={<Spinner />}>
       <section className="flex-1 flex flex-col gap-y-8 ">
-        <Heading
-          title="Página de clientes"
-          description="Todos tus clientes en un solo lugar."
-        />
-
-        <CardComp
-          title="Lista de pagos"
-          description="Todos tus pagos en un solo lugar."
-          content={<PaymentUpsertForm clients={clients.list} />}
-          className="w-full max-w-[420px] self-center"
-        ></CardComp>
-
-        <ErrorBoundary
-          fallback={<Placeholder label="Error al cargar los pagos" />}
-        >
-          <Suspense fallback={<Spinner />}>
-            <PaymentDataTable
-              className="animate-fade-from-top"
-              data={payments}
-              pagination={<PaymentPagination paginatedMetaData={metadata} />}
-              clients={clients.list}
-            />
-          </Suspense>
-        </ErrorBoundary>
+        <PaymentHeader />
+        <PaymentUpsertSection />
+        <PaymentListSection />
       </section>
     </Suspense>
   );
-};
-
-export default profilePage;
+}

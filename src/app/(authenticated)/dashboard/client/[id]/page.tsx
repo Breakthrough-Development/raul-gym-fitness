@@ -60,19 +60,29 @@ export default async function ClientDetailPage({
     return <Placeholder label="Cliente no encontrado" />;
   }
 
+  const ClientHeader = () => (
+    <Heading
+      title="Cliente"
+      description="Detalles del cliente e historial de pagos"
+    />
+  );
+
+  const ClientInfoSection = () => <ClientItem client={client} isDetail />;
+
+  const ClientPaymentsSection = () => (
+    <PaymentDataTable
+      className="animate-fade-from-top"
+      data={payments}
+      pagination={<PaymentPagination paginatedMetaData={metadata} />}
+      clients={[client]}
+    />
+  );
+
   return (
     <section className="flex-1 flex flex-col gap-y-8 max-w-7xl mx-auto">
-      <Heading
-        title="Cliente"
-        description="Detalles del cliente e historial de pagos"
-      />
-      <ClientItem client={client} isDetail />
-      <PaymentDataTable
-        className="animate-fade-from-top"
-        data={payments}
-        pagination={<PaymentPagination paginatedMetaData={metadata} />}
-        clients={[client]}
-      />
+      <ClientHeader />
+      <ClientInfoSection />
+      <ClientPaymentsSection />
     </section>
   );
 }
