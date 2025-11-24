@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { parseAsInteger, parseAsStringEnum, useQueryState } from "nuqs";
+import { useMemo } from "react";
 import { ApiResponse, Mode, QueryParams } from "../types";
 
 const monthNamesShort = [
@@ -29,9 +30,22 @@ export const useMetricChart = ({
   title,
 }: UseMetricChartProps) => {
   const now = new Date();
-  const [mode, setMode] = useState<Mode>("month");
-  const [year, setYear] = useState<number>(now.getFullYear());
-  const [month, setMonth] = useState<number>(now.getMonth() + 1);
+
+  // Replace local state with URL search params using nuqs
+  const [mode, setMode] = useQueryState(
+    "mode",
+    parseAsStringEnum<Mode>(["month", "year"]).withDefault("month")
+  );
+
+  const [year, setYear] = useQueryState(
+    "year",
+    parseAsInteger.withDefault(now.getFullYear())
+  );
+
+  const [month, setMonth] = useQueryState(
+    "month",
+    parseAsInteger.withDefault(now.getMonth() + 1)
+  );
 
   const queryKey = useMemo(
     () => ["metric", baseQueryKey, { mode, year, month }],
@@ -41,6 +55,8 @@ export const useMetricChart = ({
   const { data } = useQuery<ApiResponse>({
     queryKey,
     queryFn: async () => {
+      // Ensure params are valid before fetching
+      // nuqs handles parsing, but we pass them explicitly
       return await queryFn({ mode, year, month });
     },
     staleTime: 0,

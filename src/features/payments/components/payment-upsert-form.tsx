@@ -1,14 +1,11 @@
 "use client";
 import { CurrencyInput } from "@/components/currency-input";
-import { DatePicker } from "@/components/date-picker";
+import { PaymentDateField } from "@/components/form/fields/paymentDateField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
-import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { Client, Payment } from "@prisma/client";
-import { useQueryClient } from "@tanstack/react-query";
-import { useActionState } from "react";
-import { upsertPayment } from "../actions/upsert-payment";
 import { useClientManagement } from "../hooks/use-client-management";
+import { usePaymentForm } from "../hooks/use-payment-form";
 import { ClientCreateModal } from "./client-create-modal";
 import { ClientDeleteDialog } from "./client-delete-dialog";
 import { ClientEditModal } from "./client-edit-modal";
@@ -29,16 +26,10 @@ export const PaymentUpsertForm = ({
   clients,
   onSuccess,
 }: PaymentUpsertFormProps) => {
-  const queryClient = useQueryClient();
-  const [actionState, formAction] = useActionState(
-    upsertPayment.bind(null, payment?.id),
-    EMPTY_ACTION_STATE
-  );
-
-  const handleSuccess = (state: unknown) => {
-    queryClient.invalidateQueries({ queryKey: ["metric"] });
-    onSuccess?.(state);
-  };
+  const { actionState, formAction, handleSuccess } = usePaymentForm({
+    paymentId: payment?.id,
+    onSuccess,
+  });
 
   const {
     clientList,
@@ -76,18 +67,12 @@ export const PaymentUpsertForm = ({
           onOptionMenuAction={handleOptionMenuAction}
         />
         <MembershipSelectField actionState={actionState} payment={payment} />
-        <div className="flex flex-col gap-y-2">
-          <label htmlFor="paymentDate" className="text-base md:text-lg">
-            Fecha de pago
-          </label>
-          <DatePicker
-            id="paymentDate"
-            name="paymentDate"
-            defaultValue={
-              payment?.paymentDate?.toISOString() ?? new Date().toISOString()
-            }
-          />
-        </div>
+        <PaymentDateField
+          actionState={actionState}
+          defaultValue={
+            payment?.paymentDate?.toISOString() ?? new Date().toISOString()
+          }
+        />
         <CurrencyInput
           actionState={actionState}
           name="amount"

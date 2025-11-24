@@ -86,14 +86,14 @@ export const PaginationWrapper = ({
     [setRawPagination, pageKey, sizeKey]
   );
   const [search] = useQueryState(searchKey, searchParser);
-  
+
   // Reset pagination when search changes
   useEffect(() => {
-    setPagination({
-      ...pagination,
+    setPagination((prev) => ({
+      ...prev,
       page: 0,
-    });
-  }, [search, setPagination, pagination]);
+    }));
+  }, [search, setPagination]);
 
   return (
     <Pagination
