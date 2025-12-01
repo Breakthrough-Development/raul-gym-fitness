@@ -23,10 +23,9 @@ type DataTableContentProps<TData> = {
 };
 
 export const DataTableContent = <TData,>({
-  table,
-  columns,
+  table: { getRowModel, getHeaderGroups },
+  columns: { length: columnCount },
 }: DataTableContentProps<TData>) => {
-  const { getRowModel, getHeaderGroups } = table;
   const rows = getRowModel().rows;
 
   return (
@@ -41,7 +40,7 @@ export const DataTableContent = <TData,>({
           ))}
         </TableHeader>
         <TableBody>
-          {rows.length === 0 && <EmptyRow colSpan={columns.length} />}
+          {rows.length === 0 && <EmptyRow colSpan={columnCount} />}
           {rows.map((row) => (
             <DataTableRowCell key={row.id} row={row} />
           ))}
@@ -54,34 +53,36 @@ export const DataTableContent = <TData,>({
 // Co-located helper components
 
 const DataTableHeaderRow = <TData,>({
-  headerGroup,
+  headerGroup: { id, headers },
 }: {
   headerGroup: HeaderGroup<TData>;
 }) => (
-  <TableRow>
-    {headerGroup.headers.map((header) => (
+  <TableRow key={id}>
+    {headers.map((header) => (
       <DataTableHeadCell key={header.id} header={header} />
     ))}
   </TableRow>
 );
 
 const DataTableHeadCell = <TData,>({
-  header,
+  header: { isPlaceholder, column, getContext },
 }: {
   header: Header<TData, unknown>;
 }) => {
-  if (header.isPlaceholder) return null;
+  if (isPlaceholder) return null;
 
   return (
-    <TableHead>
-      {flexRender(header.column.columnDef.header, header.getContext())}
-    </TableHead>
+    <TableHead>{flexRender(column.columnDef.header, getContext())}</TableHead>
   );
 };
 
-const DataTableRowCell = <TData,>({ row }: { row: Row<TData> }) => (
-  <TableRow data-state={row.getIsSelected() && "selected"}>
-    {row.getVisibleCells().map((cell) => (
+const DataTableRowCell = <TData,>({
+  row: { getIsSelected, getVisibleCells },
+}: {
+  row: Row<TData>;
+}) => (
+  <TableRow data-state={getIsSelected() && "selected"}>
+    {getVisibleCells().map((cell) => (
       <TableCell key={cell.id}>
         {flexRender(cell.column.columnDef.cell, cell.getContext())}
       </TableCell>
