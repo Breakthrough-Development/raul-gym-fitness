@@ -2,7 +2,7 @@
 
 import { ColumnDef, flexRender } from "@tanstack/react-table";
 
-import { Input } from "@/components/ui/input";
+import { SearchInput } from "@/components/search-input";
 import {
   Table,
   TableBody,
@@ -34,7 +34,7 @@ export const DataTable = <TData,>({
   searchKey,
   searchParser,
 }: DataTableProps<TData>) => {
-  const { table, search, handleSearch } = useDataTable({
+  const { table, search, setSearch } = useDataTable({
     data,
     columns,
     searchKey,
@@ -44,11 +44,10 @@ export const DataTable = <TData,>({
   return (
     <section className={cn("w-full", className)}>
       <header className="flex items-center py-4 gap-x-2">
-        <Input
+        <SearchInput
           placeholder={searchPlaceholder}
-          defaultValue={search}
-          onChange={handleSearch}
-          className="max-w-sm text-base md:text-lg"
+          value={search ?? ""}
+          onChange={setSearch}
         />
       </header>
       <div className="overflow-hidden rounded-md border">

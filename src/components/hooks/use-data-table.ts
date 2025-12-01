@@ -10,7 +10,6 @@ import {
 } from "@tanstack/react-table";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
 import type { StringParserType } from "@/types/nuqs-parsers";
 
 type UseDataTableProps<TData> = {
@@ -31,13 +30,6 @@ export const useDataTable = <TData>({
   const [rowSelection, setRowSelection] = useState({});
   const [search, setSearch] = useQueryState(searchKey, searchParser);
 
-  const handleSearch = useDebouncedCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearch(event.target.value);
-    },
-    250
-  );
-
   const table = useReactTable({
     data,
     columns,
@@ -56,7 +48,6 @@ export const useDataTable = <TData>({
   return {
     table,
     search,
-    handleSearch,
+    setSearch,
   };
 };
-
