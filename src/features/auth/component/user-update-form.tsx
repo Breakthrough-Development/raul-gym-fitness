@@ -7,10 +7,9 @@ import { PhoneField } from "@/components/form/fields/phoneField";
 import { UsernameField } from "@/components/form/fields/usernameField";
 import { Form } from "@/components/form/form";
 import { SubmitButton } from "@/components/form/submit-button";
-import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { Button } from "@/components/ui/button";
-import { useActionState, useEffect, useState } from "react";
 import { updateUser } from "../actions/update-user";
+import { useEditableForm } from "../hooks/use-editable-form";
 
 type UserUpdateFormProps = {
   lastName: string;
@@ -27,19 +26,10 @@ export const UserUpdateForm = ({
   email = "",
   phone = "",
 }: UserUpdateFormProps) => {
-  const [actionState, action] = useActionState(updateUser, EMPTY_ACTION_STATE);
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleAction = (formData: FormData) => {
-    setIsEditing(false);
-    action(formData);
-  };
-
-  useEffect(() => {
-    if (actionState.status === "ERROR") {
-      setIsEditing(true);
-    }
-  }, [actionState]);
+  const { actionState, isEditing, toggleEditing, handleAction } =
+    useEditableForm({
+      action: updateUser,
+    });
 
   return (
     <Form action={handleAction} actionState={actionState}>
@@ -81,11 +71,7 @@ export const UserUpdateForm = ({
           variant="outline"
           disabled={!isEditing}
         />
-        <Button
-          type="button"
-          variant="default"
-          onClick={() => setIsEditing((state) => !state)}
-        >
+        <Button type="button" variant="default" onClick={toggleEditing}>
           {isEditing ? "Desactivar edición" : "Editar"}
         </Button>
       </div>
