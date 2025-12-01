@@ -1,17 +1,6 @@
 "use client";
 
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
-import { useQueryState } from "nuqs";
-import * as React from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { ColumnDef, flexRender } from "@tanstack/react-table";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -24,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { StringParserType } from "@/types/nuqs-parsers";
+import { useDataTable } from "./hooks/use-data-table";
 
 type DataTableProps<TData> = {
   data: TData[];
@@ -44,32 +34,11 @@ export const DataTable = <TData,>({
   searchKey,
   searchParser,
 }: DataTableProps<TData>) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [search, setSearch] = useQueryState(searchKey, searchParser);
-
-  const handleSearch = useDebouncedCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearch(event.target.value);
-    },
-    250
-  );
-
-  const table = useReactTable({
+  const { table, search, handleSearch } = useDataTable({
     data,
     columns,
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-    },
+    searchKey,
+    searchParser,
   });
 
   return (
