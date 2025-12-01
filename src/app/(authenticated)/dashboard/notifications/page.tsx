@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "Gestiona y envía notificaciones WhatsApp a tus clientes",
 };
 
-export type NotificationsPageProps = {
+type NotificationsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 

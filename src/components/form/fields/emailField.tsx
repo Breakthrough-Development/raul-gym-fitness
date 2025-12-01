@@ -1,11 +1,11 @@
 "use client";
 
 import { FieldError } from "@/components/form/field-error";
-import { ActionState } from "@/components/form/util/to-action-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { ActionState } from "@/types/action-state";
 
-export type EmailFieldProps = {
+type EmailFieldProps = {
   actionState: ActionState;
   isOptional?: boolean;
   disabled?: boolean;
@@ -19,7 +19,11 @@ export const EmailField = ({
 }: EmailFieldProps) => {
   return (
     <>
-      <Label htmlFor="email" className="text-base md:text-lg" data-testid="email-label">
+      <Label
+        htmlFor="email"
+        className="text-base md:text-lg"
+        data-testid="email-label"
+      >
         Correo electrónico {isOptional ? "(opcional)" : ""}
       </Label>
       <Input
@@ -33,7 +37,11 @@ export const EmailField = ({
         disabled={disabled}
         data-testid="email-input"
       />
-      <FieldError actionState={actionState} name="email" data-testid="email-error" />
+      <FieldError
+        actionState={actionState}
+        name="email"
+        data-testid="email-error"
+      />
     </>
   );
 };

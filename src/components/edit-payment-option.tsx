@@ -7,7 +7,7 @@ import { PaymentWithMetadata } from "@/features/payments/types";
 import { Client } from "@prisma/client";
 import { LucidePencil } from "lucide-react";
 
-export type EditPaymentOptionProps = {
+type EditPaymentOptionProps = {
   payment: PaymentWithMetadata;
   clients: Client[];
 };

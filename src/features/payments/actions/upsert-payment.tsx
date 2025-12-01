@@ -2,13 +2,13 @@
 
 import { setCookieByKey } from "@/actions/cookies";
 import {
-  ActionState,
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { dashboardPath } from "@/paths";
+import type { ActionState } from "@/types/action-state";
 import { toCent } from "@/utils/currency";
 import { MembershipStatus, PaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";

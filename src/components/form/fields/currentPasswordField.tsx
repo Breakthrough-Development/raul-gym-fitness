@@ -1,6 +1,6 @@
-import { ActionState } from "../util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 import { DynamicPasswordField } from "./dynamic-fields/DynamicPasswordField";
-export type CurrentPasswordFieldProps = {
+type CurrentPasswordFieldProps = {
   actionState: ActionState;
   isOptional?: boolean;
 };

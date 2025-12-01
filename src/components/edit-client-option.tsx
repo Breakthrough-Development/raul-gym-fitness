@@ -6,7 +6,7 @@ import { ClientUpsertForm } from "@/features/clients/components/client-upsert-fo
 import { Client } from "@prisma/client";
 import { LucidePencil } from "lucide-react";
 
-export type EditClientOptionProps = {
+type EditClientOptionProps = {
   client: Client;
 };
 

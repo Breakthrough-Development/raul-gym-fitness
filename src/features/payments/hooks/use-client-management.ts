@@ -1,11 +1,9 @@
 "use client";
-import {
-  ActionState,
-  EMPTY_ACTION_STATE,
-} from "@/components/form/util/to-action-state";
+import { EMPTY_ACTION_STATE } from "@/components/form/util/to-action-state";
 import { createClient } from "@/features/clients/actions/create-client";
 import { deleteClientInline } from "@/features/clients/actions/delete-client-inline";
 import { upsertClientInline } from "@/features/clients/actions/upsert-client-inline";
+import type { ActionState } from "@/types/action-state";
 import { Client } from "@prisma/client";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";

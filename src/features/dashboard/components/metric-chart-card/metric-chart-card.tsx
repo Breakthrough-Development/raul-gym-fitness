@@ -13,7 +13,7 @@ import { ApiResponse, QueryParams } from "../../types";
 import { MetricChartControls } from "./metric-chart-controls";
 import { MetricChartVisualization } from "./metric-chart-visualization";
 
-export type MetricChartCardProps = {
+type MetricChartCardProps = {
   title: string;
   queryKey: string;
   queryFn: (params: QueryParams) => Promise<ApiResponse>;

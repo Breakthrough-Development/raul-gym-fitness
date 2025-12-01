@@ -5,7 +5,7 @@ import { NotificationItem } from "./notification-item";
 import { NotificationPagination } from "./notification-pagination";
 import { NotificationSearchInput } from "./notification-search-input";
 
-export type NotificationListProps = {
+type NotificationListProps = {
   searchParams: NotificationSearchParams;
 };
 

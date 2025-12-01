@@ -12,7 +12,7 @@ import { ClientEditModal } from "./client-edit-modal";
 import { ClientSelectField } from "./client-select-field";
 import { MembershipSelectField } from "./membership-select-field";
 
-export type PaymentUpsertFormProps = {
+type PaymentUpsertFormProps = {
   payment?: Pick<
     Payment,
     "id" | "amount" | "membership" | "clientId" | "paymentDate"

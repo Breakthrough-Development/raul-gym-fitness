@@ -1,7 +1,7 @@
 import { useActionFeedback } from "@/components/form/hooks/use-action-feedback";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { ActionState } from "./util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 type FormProps<T = unknown> = {
   action: (payload: FormData) => void;
   actionState: ActionState<T>;

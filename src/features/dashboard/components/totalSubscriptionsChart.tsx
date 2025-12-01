@@ -3,7 +3,7 @@ import { getSubscriptions } from "@/features/dashboard/actions/get-subscriptions
 import { MembershipStatus } from "@prisma/client";
 import { MetricChartCard } from "./metric-chart-card";
 
-export type TotalSubscriptionsProps = {
+type TotalSubscriptionsProps = {
   title: string;
   type: MembershipStatus;
 };

@@ -1,7 +1,7 @@
 "use client";
-import { ActionState } from "../util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 import { DynamicPhoneField } from "./dynamic-fields/DynamicPhoneField";
-export type PhoneInputProps = {
+type PhoneInputProps = {
   actionState: ActionState;
   defaultValue?: string;
   isOptional?: boolean;

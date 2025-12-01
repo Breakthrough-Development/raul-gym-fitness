@@ -1,8 +1,8 @@
 import { PasswordInput } from "@/components/password-input";
 import { Label } from "@/components/ui/label";
 import { FieldError } from "../../field-error";
-import { ActionState } from "../../util/to-action-state";
-export type PasswordFieldProps = {
+import type { ActionState } from "@/types/action-state";
+type PasswordFieldProps = {
   actionState: ActionState;
   name: string;
   autoComplete: "current-password" | "new-password";

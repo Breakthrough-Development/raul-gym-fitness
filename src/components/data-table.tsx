@@ -25,7 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { StringParserType } from "@/types/nuqs-parsers";
 
-export type DataTableProps<TData> = {
+type DataTableProps<TData> = {
   data: TData[];
   pagination: React.ReactElement;
   className?: string;

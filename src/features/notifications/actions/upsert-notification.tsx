@@ -1,9 +1,7 @@
 "use server";
 
-import {
-  ActionState,
-  toActionState,
-} from "@/components/form/util/to-action-state";
+import type { ActionState } from "@/types/action-state";
+import { toActionState } from "@/components/form/util/to-action-state";
 import { prisma } from "@/lib/prisma";
 import { notificationsPath } from "@/paths";
 import { MembershipFilter, RecipientType } from "@prisma/client";

@@ -10,7 +10,7 @@ import { useImperativeHandle, useState } from "react";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 
-export type ImperativeHandleFromDatePicker = {
+type ImperativeHandleFromDatePicker = {
   reset: () => void;
 };
 

@@ -2,8 +2,8 @@
 import { FieldError } from "@/components/form/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ActionState } from "./form/util/to-action-state";
-export type CurrencyInputProps = {
+import type { ActionState } from "@/types/action-state";
+type CurrencyInputProps = {
   actionState: ActionState;
   defaultValue?: number;
   name: string;

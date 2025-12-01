@@ -9,7 +9,7 @@ import {
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 import { Client } from "@prisma/client";
 
-export type ClientEditModalProps = {
+type ClientEditModalProps = {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   client: Client | undefined;

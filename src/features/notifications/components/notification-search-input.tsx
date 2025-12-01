@@ -4,7 +4,7 @@ import { SearchInput } from "@/components/search-input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
-export type NotificationSearchInputProps = {
+type NotificationSearchInputProps = {
   placeholder?: string;
 };
 

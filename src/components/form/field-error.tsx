@@ -1,5 +1,5 @@
 import { AlertCircle } from "lucide-react";
-import { ActionState } from "./util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 
 type FieldErrorProps = {
   actionState: ActionState;

@@ -1,13 +1,5 @@
+import type { ActionState } from "@/types/action-state";
 import { ZodError, flattenError } from "zod";
-
-export type ActionState<T = unknown> = {
-  status: "IDLE" | "SUCCESS" | "ERROR";
-  message: string;
-  fieldErrors: Record<string, string[] | undefined>;
-  timestamp: number;
-  payload?: FormData;
-  data?: T;
-};
 
 export const EMPTY_ACTION_STATE: ActionState<undefined> = {
   status: "IDLE",

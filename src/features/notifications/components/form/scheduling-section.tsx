@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { RECURRENCE_OPTIONS } from "@/features/notifications/constants";
 import { NotificationWithClients } from "@/features/notifications/types";
-import { ActionState } from "@/components/form/util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 
 type SchedulingSectionProps = {
   notification?: NotificationWithClients;
@@ -58,4 +58,3 @@ export const SchedulingSection = ({
     <FieldError actionState={actionState} name="recurrence" />
   </div>
 );
-

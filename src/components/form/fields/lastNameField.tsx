@@ -1,9 +1,9 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FieldError } from "../field-error";
-import { ActionState } from "../util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 
-export type LastNameFieldProps = {
+type LastNameFieldProps = {
   actionState: ActionState;
   isOptional?: boolean;
   defaultValue?: string;

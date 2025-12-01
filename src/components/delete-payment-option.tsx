@@ -1,9 +1,9 @@
 import { useConfirmDialog } from "@/components/confirm-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import type { ActionState } from "@/types/action-state";
 import { LucideTrash } from "lucide-react";
-import { ActionState } from "./form/util/to-action-state";
 
-export type DeleteOptionProps = {
+type DeleteOptionProps = {
   id: string;
   action: (id: string) => Promise<ActionState>;
   onSuccess?: (actionState: ActionState) => void;

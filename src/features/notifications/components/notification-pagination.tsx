@@ -11,7 +11,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
-export type NotificationPaginationProps = {
+type NotificationPaginationProps = {
   currentPage: number;
   totalPages: number;
 };

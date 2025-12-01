@@ -7,7 +7,8 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { useActionFeedback } from "./form/hooks/use-action-feedback";
-import { ActionState, EMPTY_ACTION_STATE } from "./form/util/to-action-state";
+import type { ActionState } from "@/types/action-state";
+import { EMPTY_ACTION_STATE } from "./form/util/to-action-state";
 import {
   AlertDialog,
   AlertDialogAction,

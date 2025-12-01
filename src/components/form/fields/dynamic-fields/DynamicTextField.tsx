@@ -1,9 +1,9 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FieldError } from "../../field-error";
-import { ActionState } from "../../util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 
-export type DynamicTextFieldProps = {
+type DynamicTextFieldProps = {
   actionState: ActionState;
   name: string;
   placeholder: string;

@@ -8,9 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { WhatsAppTemplate } from "@/lib/whatsapp";
 import { NotificationWithClients } from "@/features/notifications/types";
-import { ActionState } from "@/components/form/util/to-action-state";
+import { WhatsAppTemplate } from "@/lib/whatsapp";
+import type { ActionState } from "@/types/action-state";
 
 type BasicInfoSectionProps = {
   notification?: NotificationWithClients;
@@ -75,4 +75,3 @@ export const BasicInfoSection = ({
     <FieldError actionState={actionState} name="templateName" />
   </div>
 );
-

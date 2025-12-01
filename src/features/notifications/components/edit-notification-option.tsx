@@ -6,7 +6,7 @@ import { LucideEdit } from "lucide-react";
 import { NotificationWithClients } from "../types";
 import { NotificationUpsertForm } from "./notification-upsert-form";
 
-export type EditNotificationOptionProps = {
+type EditNotificationOptionProps = {
   notification: NotificationWithClients;
 };
 

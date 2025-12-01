@@ -4,10 +4,10 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import { CardTitle } from "@/components/ui/card";
 
-export interface CardCompProps {
+interface CardCompProps {
   title: string;
   description: string;
   content: React.ReactNode;

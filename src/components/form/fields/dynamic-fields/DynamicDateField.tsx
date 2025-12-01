@@ -1,9 +1,9 @@
 import { DatePicker } from "@/components/date-picker";
 import { Label } from "@/components/ui/label";
 import { FieldError } from "../../field-error";
-import { ActionState } from "../../util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 
-export type DynamicDateFieldProps = {
+type DynamicDateFieldProps = {
   actionState: ActionState;
   name: string;
   label: string;

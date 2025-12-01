@@ -10,7 +10,7 @@ import { Client } from "@prisma/client";
 import { useActionState } from "react";
 import { upsertClient } from "../actions/upsert-client";
 
-export type ClientUpsertFormProps = {
+type ClientUpsertFormProps = {
   client?: Client;
   onSuccess?: (actionState: unknown) => void;
   formAction?: (formData: FormData) => void;

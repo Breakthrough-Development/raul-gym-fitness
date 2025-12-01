@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Client } from "@prisma/client";
 
-export type ClientDeleteDialogProps = {
+type ClientDeleteDialogProps = {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   client: Client | null;

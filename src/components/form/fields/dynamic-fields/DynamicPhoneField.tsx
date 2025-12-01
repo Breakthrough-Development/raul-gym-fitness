@@ -3,8 +3,8 @@ import { FieldError } from "@/components/form/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react";
-import { ActionState } from "../../util/to-action-state";
-export type PhoneInputProps = {
+import type { ActionState } from "@/types/action-state";
+type PhoneInputProps = {
   actionState: ActionState;
   defaultValue?: string;
   isOptional?: boolean;

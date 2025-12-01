@@ -9,7 +9,7 @@ import { BasicInfoSection } from "./form/basic-info-section";
 import { RecipientsSection } from "./form/recipients-section";
 import { SchedulingSection } from "./form/scheduling-section";
 
-export type NotificationUpsertFormProps = {
+type NotificationUpsertFormProps = {
   notification?: NotificationWithClients;
 };
 

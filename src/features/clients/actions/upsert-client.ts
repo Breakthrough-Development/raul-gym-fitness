@@ -1,8 +1,8 @@
 "use server";
 
 import { setCookieByKey } from "@/actions/cookies";
+import type { ActionState } from "@/types/action-state";
 import {
-  ActionState,
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/util/to-action-state";

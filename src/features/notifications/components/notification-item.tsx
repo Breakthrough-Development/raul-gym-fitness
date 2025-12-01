@@ -29,7 +29,7 @@ import { NotificationWithClients } from "../types";
 import { EditNotificationOption } from "./edit-notification-option";
 import { SendNotificationOption } from "./send-notification-option";
 
-export type NotificationItemProps = {
+type NotificationItemProps = {
   notification: NotificationWithClients;
 };
 

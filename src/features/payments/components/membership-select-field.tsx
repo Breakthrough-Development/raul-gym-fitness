@@ -1,6 +1,5 @@
 "use client";
 import { FieldError } from "@/components/form/field-error";
-import { ActionState } from "@/components/form/util/to-action-state";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -11,10 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { ActionState } from "@/types/action-state";
 import { MembershipStatus, Payment } from "@prisma/client";
 import { getMembershipLabel } from "../utility/getMembershipLabel";
 
-export type MembershipSelectFieldProps = {
+type MembershipSelectFieldProps = {
   actionState: ActionState;
   payment?: Pick<Payment, "membership">;
 };

@@ -22,7 +22,7 @@ import {
 import Link from "next/link";
 import { ClientWithMetadata } from "../types";
 
-export type ClientItemProps = {
+type ClientItemProps = {
   client: ClientWithMetadata;
   isDetail?: boolean;
 };

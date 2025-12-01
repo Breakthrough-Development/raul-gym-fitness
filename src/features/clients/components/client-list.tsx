@@ -5,7 +5,7 @@ import { ClientSearchInput } from "@/features/clients/components/client-search-i
 import { getClients } from "../queries/get-clients";
 import { ClientItem } from "./client-item";
 
-export type ClientListProps = {
+type ClientListProps = {
   searchParams: ClientParsedSearchParams;
 };
 

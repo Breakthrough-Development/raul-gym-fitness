@@ -16,7 +16,7 @@ import { statusColumn } from "./status-column";
 import { PaymentType } from "./types";
 import { updatedAtColumn } from "./updated-at-column";
 
-export type PaymentDataTableProps = {
+type PaymentDataTableProps = {
   data: PaymentWithMetadata[];
   pagination: React.ReactElement;
   className?: string;

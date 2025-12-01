@@ -1,7 +1,7 @@
-import { ActionState } from "@/components/form/util/to-action-state";
+import type { ActionState } from "@/types/action-state";
 import { DynamicDateField } from "./dynamic-fields/DynamicDateField";
 
-export type PaymentDateFieldProps = {
+type PaymentDateFieldProps = {
   actionState: ActionState;
   defaultValue?: string;
 };

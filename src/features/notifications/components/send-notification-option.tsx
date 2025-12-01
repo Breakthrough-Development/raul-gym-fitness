@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { sendNotification } from "../actions/send-notification";
 import { NotificationWithClients } from "../types";
 
-export type SendNotificationOptionProps = {
+type SendNotificationOptionProps = {
   notification: NotificationWithClients;
 };
 

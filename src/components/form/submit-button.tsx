@@ -5,7 +5,7 @@ import { cloneElement } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "../ui/button";
 
-export type SubmitButtonProps = {
+type SubmitButtonProps = {
   label?: string;
   icon?: React.ReactElement<{ className?: string }>;
   variant?:

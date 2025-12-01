@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ClientUpsertForm } from "@/features/clients/components/client-upsert-form";
 
-export type ClientCreateModalProps = {
+type ClientCreateModalProps = {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: (actionState: unknown) => void;
