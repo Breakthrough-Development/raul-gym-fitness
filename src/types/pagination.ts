@@ -15,3 +15,9 @@ export type PaginatedData<T> = {
 
 /** Shorthand for PaginatedData metadata */
 export type PaginatedMetaData = PaginatedData<unknown>["metadata"];
+
+/** Option for pagination size dropdown */
+export type PaginationSizeOption = {
+  value: string;
+  label: string;
+};

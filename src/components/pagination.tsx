@@ -8,7 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PageAndSize, PaginatedMetaData } from "@/types/pagination";
+import {
+  PageAndSize,
+  PaginatedMetaData,
+  PaginationSizeOption,
+} from "@/types/pagination";
 
 type PaginationProps = {
   pagination: PageAndSize;
@@ -16,8 +20,6 @@ type PaginationProps = {
   paginatedMetaData: PaginatedMetaData;
   paginationSizeOptions: PaginationSizeOption[];
 };
-
-export type PaginationSizeOption = { value: string; label: string };
 
 export const Pagination = ({
   pagination,

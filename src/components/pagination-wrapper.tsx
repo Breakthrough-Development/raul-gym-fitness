@@ -1,13 +1,13 @@
 "use client";
 
-import { Pagination, PaginationSizeOption } from "@/components/pagination";
+import { Pagination } from "@/components/pagination";
 import { usePaginationWithSearchReset } from "@/hooks/use-pagination-with-search-reset";
 import {
   NumericParserType,
   PaginationOptions,
   StringParserType,
 } from "@/types/nuqs-parsers";
-import { PaginatedMetaData } from "@/types/pagination";
+import { PaginatedMetaData, PaginationSizeOption } from "@/types/pagination";
 
 // Re-export for backward compatibility
 export type { PaginatedMetaData } from "@/types/pagination";
