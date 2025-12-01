@@ -1,27 +1,31 @@
 "use client";
 
 import { Pagination, PaginationSizeOption } from "@/components/pagination";
-import { SingleParserBuilder, useQueryState, useQueryStates } from "nuqs";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { usePaginationWithSearchReset } from "@/hooks/use-pagination-with-search-reset";
+import { SingleParserBuilder } from "nuqs";
+
+type PaginationParserType = Omit<
+  SingleParserBuilder<number>,
+  "parseServerSide"
+> & {
+  readonly defaultValue: number;
+  parseServerSide(value: string | string[] | undefined): number;
+};
+
+type SearchParserType = Omit<SingleParserBuilder<string>, "parseServerSide"> & {
+  readonly defaultValue: string;
+  parseServerSide(value: string | string[] | undefined): string;
+};
 
 type PaginationWrapperProps = {
   paginationSizeOptions: PaginationSizeOption[];
   paginatedMetaData: PaginatedMetaData;
-  paginationParser: Record<
-    string,
-    Omit<SingleParserBuilder<number>, "parseServerSide"> & {
-      readonly defaultValue: number;
-      parseServerSide(value: string | string[] | undefined): number;
-    }
-  >;
+  paginationParser: Record<string, PaginationParserType>;
   paginationOptions: {
     shallow: boolean;
     clearOnDefault: boolean;
   };
-  searchParser: Omit<SingleParserBuilder<string>, "parseServerSide"> & {
-    readonly defaultValue: string;
-    parseServerSide(value: string | string[] | undefined): string;
-  };
+  searchParser: SearchParserType;
   searchKey?: string;
   pageKey?: string;
   sizeKey?: string;
@@ -46,57 +50,14 @@ export const PaginationWrapper = ({
   sizeKey = "size",
   paginationSizeOptions,
 }: PaginationWrapperProps) => {
-  const derivedPaginationParsers = {
-    [pageKey]:
-      (
-        paginationParser as Record<
-          string,
-          PaginationWrapperProps["paginationParser"]["page"]
-        >
-      )[pageKey] ?? paginationParser.page,
-    [sizeKey]:
-      (
-        paginationParser as Record<
-          string,
-          PaginationWrapperProps["paginationParser"]["size"]
-        >
-      )[sizeKey] ?? paginationParser.size,
-  } as Record<
-    string,
-    | PaginationWrapperProps["paginationParser"]["page"]
-    | PaginationWrapperProps["paginationParser"]["size"]
-  >;
-  const [rawPagination, setRawPagination] = useQueryStates(
-    derivedPaginationParsers as Record<string, SingleParserBuilder<number>>,
-    paginationOptions
-  );
-  const pagination = useMemo(
-    () => ({
-      page: (rawPagination as Record<string, number>)[pageKey] ?? 0,
-      size: (rawPagination as Record<string, number>)[sizeKey] ?? 0,
-    }),
-    [rawPagination, pageKey, sizeKey]
-  );
-  const setPagination = useCallback(
-    ({ page, size }: { page: number; size: number }) =>
-      setRawPagination({ [pageKey]: page, [sizeKey]: size } as Record<
-        string,
-        number
-      >),
-    [setRawPagination, pageKey, sizeKey]
-  );
-  const [search] = useQueryState(searchKey, searchParser);
-
-  // Track previous search value to detect actual changes
-  const prevSearchRef = useRef(search);
-
-  // Reset pagination when search changes (not on initial mount)
-  useEffect(() => {
-    if (prevSearchRef.current !== search) {
-      prevSearchRef.current = search;
-      setRawPagination({ [pageKey]: 0 });
-    }
-  }, [search, setRawPagination, pageKey]);
+  const { pagination, setPagination } = usePaginationWithSearchReset({
+    pageKey,
+    sizeKey,
+    searchKey,
+    paginationParser,
+    paginationOptions,
+    searchParser,
+  });
 
   return (
     <Pagination
