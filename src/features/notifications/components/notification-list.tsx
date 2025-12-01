@@ -35,10 +35,7 @@ export async function NotificationList({
       </ul>
 
       <footer className="w-full max-w-[580px] self-center">
-        <NotificationPagination
-          currentPage={searchParams.page}
-          totalPages={totalPages}
-        />
+        <NotificationPagination totalPages={totalPages} />
       </footer>
     </section>
   );

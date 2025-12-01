@@ -28,3 +28,19 @@ export const NOTIFICATION_STATUS_LABELS = {
   FAILED: "Failed",
   CANCELLED: "Cancelled",
 } as const;
+
+export const NOTIFICATION_STATUS_COLORS = {
+  PENDING: "text-yellow-600",
+  SENT: "text-green-600",
+  FAILED: "text-red-600",
+  CANCELLED: "text-gray-600",
+} as const;
+
+/**
+ * Get a label from an options array by value.
+ * Useful for displaying human-readable labels from enum-like option arrays.
+ */
+export const getOptionLabel = <T extends { value: unknown; label: string }>(
+  options: readonly T[],
+  value: unknown
+): string | undefined => options.find((opt) => opt.value === value)?.label;

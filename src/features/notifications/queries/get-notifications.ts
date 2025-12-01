@@ -1,7 +1,14 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { NotificationSearchParams } from "../search-params";
+import { ScheduledNotificationStatus } from "@prisma/client";
+import {
+  NOTIFICATION_PAGINATION_PAGE_DEFAULT,
+  NOTIFICATION_PAGINATION_SIZE_DEFAULT,
+  notificationPageKey,
+  notificationSearchKey,
+  NotificationSearchParams,
+} from "../search-params";
 import { NotificationWithClients } from "../types";
 
 export async function getNotifications(
@@ -11,8 +18,24 @@ export async function getNotifications(
   totalCount: number;
   totalPages: number;
 }> {
-  const { page, search, status, sort, order } = searchParams;
-  const limit = 10;
+  // Support both legacy (page, search) and nuqs (notificationPage, notificationSearch) keys
+  const params = searchParams as Record<string, unknown>;
+
+  const page =
+    (params[notificationPageKey] as number) ??
+    (params["page"] as number) ??
+    NOTIFICATION_PAGINATION_PAGE_DEFAULT;
+
+  const search =
+    (params[notificationSearchKey] as string) ??
+    (params["search"] as string) ??
+    "";
+
+  const status = params["status"] as ScheduledNotificationStatus | undefined;
+  const sort = (params["sort"] as string) ?? "createdAt";
+  const order = (params["order"] as "asc" | "desc") ?? "desc";
+
+  const limit = NOTIFICATION_PAGINATION_SIZE_DEFAULT;
   const offset = (page - 1) * limit;
 
   const where = {
