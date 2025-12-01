@@ -2,16 +2,16 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
   SortingState,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
+import { SingleParserBuilder, useQueryState } from "nuqs";
 import * as React from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -30,7 +30,11 @@ export type DataTableProps<TData> = {
   className?: string;
   columns: ColumnDef<TData>[];
   searchPlaceholder: string;
-  searchColumn: string & keyof TData;
+  searchKey: string;
+  searchParser: Omit<SingleParserBuilder<string>, "parseServerSide"> & {
+    readonly defaultValue: string;
+    parseServerSide(value: string | string[] | undefined): string;
+  };
 };
 
 export const DataTable = <TData,>({
@@ -39,29 +43,32 @@ export const DataTable = <TData,>({
   className,
   columns,
   searchPlaceholder,
-  searchColumn,
+  searchKey,
+  searchParser,
 }: DataTableProps<TData>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [search, setSearch] = useQueryState(searchKey, searchParser);
+
+  const handleSearch = useDebouncedCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearch(event.target.value);
+    },
+    250
+  );
 
   const table = useReactTable({
     data,
     columns,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
-      columnFilters,
       columnVisibility,
       rowSelection,
     },
@@ -72,12 +79,8 @@ export const DataTable = <TData,>({
       <header className="flex items-center py-4 gap-x-2">
         <Input
           placeholder={searchPlaceholder}
-          value={
-            (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn(searchColumn)?.setFilterValue(event.target.value)
-          }
+          defaultValue={search}
+          onChange={handleSearch}
           className="max-w-sm text-base md:text-lg"
         />
       </header>

@@ -4,6 +4,7 @@ import { DataTable } from "@/components/data-table";
 import { Client } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
+import { paymentSearchKey, searchParser } from "../../search-params";
 import { PaymentWithMetadata } from "../../types";
 import { actionsColumn } from "./actions-column";
 import { amountColumn } from "./amount-column";
@@ -55,7 +56,8 @@ export function PaymentDataTable({
       pagination={pagination}
       columns={columns}
       searchPlaceholder="Filtrar pagos por nombre..."
-      searchColumn="name"
+      searchKey={paymentSearchKey}
+      searchParser={searchParser}
     />
   );
 }
