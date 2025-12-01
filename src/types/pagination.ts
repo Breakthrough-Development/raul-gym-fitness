@@ -1,3 +1,9 @@
+/** Pagination state with current page and page size */
+export type PageAndSize = {
+  page: number;
+  size: number;
+};
+
 export type PaginatedData<T> = {
   list: T[];
   metadata: {
@@ -6,3 +12,6 @@ export type PaginatedData<T> = {
     cursor?: { id: string; createdAt: number };
   };
 };
+
+/** Shorthand for PaginatedData metadata */
+export type PaginatedMetaData = PaginatedData<unknown>["metadata"];

@@ -7,6 +7,10 @@ import {
   PaginationOptions,
   StringParserType,
 } from "@/types/nuqs-parsers";
+import { PaginatedMetaData } from "@/types/pagination";
+
+// Re-export for backward compatibility
+export type { PaginatedMetaData } from "@/types/pagination";
 
 type PaginationWrapperProps = {
   paginationSizeOptions: PaginationSizeOption[];
@@ -17,15 +21,6 @@ type PaginationWrapperProps = {
   searchKey?: string;
   pageKey?: string;
   sizeKey?: string;
-};
-
-export type PaginatedMetaData = {
-  count: number;
-  hasNextPage: boolean;
-  cursor?: {
-    id: string;
-    createdAt: number;
-  };
 };
 
 export const PaginationWrapper = ({

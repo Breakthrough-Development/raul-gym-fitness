@@ -5,6 +5,7 @@ import {
   PaginationOptions,
   StringParserType,
 } from "@/types/nuqs-parsers";
+import { PageAndSize } from "@/types/pagination";
 import { SingleParserBuilder, useQueryState, useQueryStates } from "nuqs";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
@@ -15,11 +16,6 @@ type UsePaginationWithSearchResetConfig = {
   paginationParser: Record<string, NumericParserType>;
   paginationOptions: PaginationOptions;
   searchParser: StringParserType;
-};
-
-type Pagination = {
-  page: number;
-  size: number;
 };
 
 /**
@@ -57,7 +53,7 @@ export const usePaginationWithSearchReset = ({
     paginationOptions
   );
 
-  const pagination = useMemo<Pagination>(
+  const pagination = useMemo<PageAndSize>(
     () => ({
       page: (rawPagination as Record<string, number>)[pageKey] ?? 0,
       size: (rawPagination as Record<string, number>)[sizeKey] ?? 0,
@@ -66,7 +62,7 @@ export const usePaginationWithSearchReset = ({
   );
 
   const setPagination = useCallback(
-    ({ page, size }: Pagination) =>
+    ({ page, size }: PageAndSize) =>
       setRawPagination({ [pageKey]: page, [sizeKey]: size }),
     [setRawPagination, pageKey, sizeKey]
   );
