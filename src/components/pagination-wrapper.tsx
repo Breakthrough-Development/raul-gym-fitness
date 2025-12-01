@@ -2,30 +2,18 @@
 
 import { Pagination, PaginationSizeOption } from "@/components/pagination";
 import { usePaginationWithSearchReset } from "@/hooks/use-pagination-with-search-reset";
-import { SingleParserBuilder } from "nuqs";
-
-type PaginationParserType = Omit<
-  SingleParserBuilder<number>,
-  "parseServerSide"
-> & {
-  readonly defaultValue: number;
-  parseServerSide(value: string | string[] | undefined): number;
-};
-
-type SearchParserType = Omit<SingleParserBuilder<string>, "parseServerSide"> & {
-  readonly defaultValue: string;
-  parseServerSide(value: string | string[] | undefined): string;
-};
+import {
+  NumericParserType,
+  PaginationOptions,
+  StringParserType,
+} from "@/types/nuqs-parsers";
 
 type PaginationWrapperProps = {
   paginationSizeOptions: PaginationSizeOption[];
   paginatedMetaData: PaginatedMetaData;
-  paginationParser: Record<string, PaginationParserType>;
-  paginationOptions: {
-    shallow: boolean;
-    clearOnDefault: boolean;
-  };
-  searchParser: SearchParserType;
+  paginationParser: Record<string, NumericParserType>;
+  paginationOptions: PaginationOptions;
+  searchParser: StringParserType;
   searchKey?: string;
   pageKey?: string;
   sizeKey?: string;

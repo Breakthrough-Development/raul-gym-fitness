@@ -1,28 +1,20 @@
 "use client";
 
+import {
+  NumericParserType,
+  PaginationOptions,
+  StringParserType,
+} from "@/types/nuqs-parsers";
 import { SingleParserBuilder, useQueryState, useQueryStates } from "nuqs";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-
-type PaginationParserType = Omit<
-  SingleParserBuilder<number>,
-  "parseServerSide"
-> & {
-  readonly defaultValue: number;
-  parseServerSide(value: string | string[] | undefined): number;
-};
-
-type SearchParserType = Omit<SingleParserBuilder<string>, "parseServerSide"> & {
-  readonly defaultValue: string;
-  parseServerSide(value: string | string[] | undefined): string;
-};
 
 type UsePaginationWithSearchResetConfig = {
   pageKey: string;
   sizeKey: string;
   searchKey: string;
-  paginationParser: Record<string, PaginationParserType>;
-  paginationOptions: { shallow: boolean; clearOnDefault: boolean };
-  searchParser: SearchParserType;
+  paginationParser: Record<string, NumericParserType>;
+  paginationOptions: PaginationOptions;
+  searchParser: StringParserType;
 };
 
 type Pagination = {
@@ -51,10 +43,10 @@ export const usePaginationWithSearchReset = ({
   const derivedPaginationParsers = useMemo(
     () => ({
       [pageKey]:
-        (paginationParser as Record<string, PaginationParserType>)[pageKey] ??
+        (paginationParser as Record<string, NumericParserType>)[pageKey] ??
         paginationParser.page,
       [sizeKey]:
-        (paginationParser as Record<string, PaginationParserType>)[sizeKey] ??
+        (paginationParser as Record<string, NumericParserType>)[sizeKey] ??
         paginationParser.size,
     }),
     [pageKey, sizeKey, paginationParser]

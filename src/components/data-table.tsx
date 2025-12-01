@@ -9,7 +9,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { SingleParserBuilder, useQueryState } from "nuqs";
+import { useQueryState } from "nuqs";
 import * as React from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -23,6 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { StringParserType } from "@/types/nuqs-parsers";
 
 export type DataTableProps<TData> = {
   data: TData[];
@@ -31,10 +32,7 @@ export type DataTableProps<TData> = {
   columns: ColumnDef<TData>[];
   searchPlaceholder: string;
   searchKey: string;
-  searchParser: Omit<SingleParserBuilder<string>, "parseServerSide"> & {
-    readonly defaultValue: string;
-    parseServerSide(value: string | string[] | undefined): string;
-  };
+  searchParser: StringParserType;
 };
 
 export const DataTable = <TData,>({
