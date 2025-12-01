@@ -1,5 +1,6 @@
 "use client";
 
+import type { StringParserType } from "@/types/nuqs-parsers";
 import {
   ColumnDef,
   getCoreRowModel,
@@ -10,7 +11,6 @@ import {
 } from "@tanstack/react-table";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
-import type { StringParserType } from "@/types/nuqs-parsers";
 
 type UseDataTableProps<TData> = {
   data: TData[];
