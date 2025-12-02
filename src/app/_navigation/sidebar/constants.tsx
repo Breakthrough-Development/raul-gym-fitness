@@ -67,7 +67,7 @@ export function getNavItems(featureFlags: {
       : []),
     {
       separator: true,
-      title: "Account",
+      title: "Perfil",
       icon: <LucideCircleUser />,
       href: accountProfilePath(),
     },

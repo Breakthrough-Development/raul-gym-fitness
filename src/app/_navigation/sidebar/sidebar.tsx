@@ -13,6 +13,7 @@ import {
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { signInPath, signUpPath } from "@/paths";
 import { getActivePath } from "@/utils/get-active-path";
+import { Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavItem } from "./types";
@@ -42,7 +43,11 @@ export const Sidebar = ({ navItems }: SidebarProps) => {
             <SidebarMenu>
               {navItems.map((item, index) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={activeIndex === index}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={activeIndex === index}
+                    tooltip={item.title}
+                  >
                     <Link href={item.href}>
                       {item.icon}
                       <span>{item.title}</span>
@@ -54,9 +59,16 @@ export const Sidebar = ({ navItems }: SidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarFooter>
-          <SidebarMenuButton asChild>
-            <AccountDropdown user={user} showName />
-          </SidebarMenuButton>
+          <AccountDropdown
+            user={user}
+            showName
+            trigger={
+              <SidebarMenuButton tooltip="Cuenta">
+                <Settings />
+                <span>Perfil</span>
+              </SidebarMenuButton>
+            }
+          />
         </SidebarFooter>
       </SidebarContent>
     </SidebarUI>

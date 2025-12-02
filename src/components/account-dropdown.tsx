@@ -16,25 +16,34 @@ import Link from "next/link";
 type AccountDropdownProps = {
   user: User;
   showName?: boolean;
+  trigger?: React.ReactNode;
 };
 
-const AccountDropdown = ({ user, showName = false }: AccountDropdownProps) => {
+const AccountDropdown = ({
+  user,
+  showName = false,
+  trigger,
+}: AccountDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarFallback>
-              {user.username.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          {showName && (
-            <>
-              <span>{user.firstName}</span>
-              <span>{user.lastName}</span>
-            </>
-          )}
-        </div>
+        {trigger ? (
+          trigger
+        ) : (
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarFallback>
+                {user.username.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            {showName && (
+              <>
+                <span>{user.firstName}</span>
+                <span>{user.lastName}</span>
+              </>
+            )}
+          </div>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Cuenta</DropdownMenuLabel>
