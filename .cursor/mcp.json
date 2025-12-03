@@ -2,9 +2,11 @@
   "mcpServers": {
     "console-ninja": {
       "command": "node",
-      "args": [
-        "~/.console-ninja/mcp/"
-      ]
+      "args": ["~/.console-ninja/mcp/"]
+    },
+    "next-devtools": {
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@latest"]
     }
   }
 }
